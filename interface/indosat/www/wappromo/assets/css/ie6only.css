@@ -1,0 +1,25 @@
+.clearfix{
+height:1%;
+}
+
+
+#content{
+position:relative;
+}
+
+.sidecontent{
+position:absolute;
+left:0;
+}
+
+#navigation a{
+width:200px;
+}
+
+#navigation li li a{
+width:180px;
+}
+
+#navigation a, #navigation li, #navigation ul, #navigation{
+float:left;
+}

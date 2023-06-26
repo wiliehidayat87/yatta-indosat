@@ -1,0 +1,65 @@
+<html>
+  <head>
+    {include file='tpl_head.html'}
+    <script type="text/javascript" src="{$base_url}lib/jquery-1.3.2.min.js"></script>
+    <script type="text/javascript" src="{$base_url}lib/jquery-ui-1.7.2.custom.min.js"></script>
+    <script type="text/javascript">
+    {literal}
+      $(function(){
+    	  
+      });
+    {/literal}
+    </script>
+  </head>
+  <body>
+    {include file='tpl_navigation.html'}
+    <div id="wrapper">
+      <div id="content_1000">
+      	<div id="module">:: DV Menu ::</div>
+      	<div id="module"><a href="{$base_url}9011/dv/DV_9011_Main/dv_content">Content</a> | <a href="{$base_url}9011/dv/DV_9011_Main/prizeInfo">Prize</a> | <a href="{$base_url}9011/dv/DV_9011_Main/undian">Pemenang</a></div>
+      	<br />
+      	<div style="font-weight: bold;">Prize</div>
+      	<div style="border-bottom:1px solid #666;" class="cititation">Show prize that listed on dv service.</div>
+      	
+      	<div>
+        	<!-- <input type="button" name="add" value="Add Prize" onClick="location='{$base_url}9011/dv/DV_9011_Main/prize/new'"/> -->
+            	<input type="button" name="prizeInfo" value="Add Prize" onClick="location='{$base_url}9011/dv/DV_9011_Main/formPrizeInfo/new'"/> 
+            	{if isset($msg)}<font color="red">{$msg}</font>{/if}
+        </div>
+        <form method="post" action="{$base_url}9011/dv/DV_9011_Main/prize">      	
+            {*<div>Date: {html_select_date start_year=2009 end_year=2012 field_order=DMY time=$date} <input type="submit" name="submit" value="submit"/></div>*}
+        </form>
+    
+        <div style="margin-top:2px;">
+            <div class="headTable clear float-left" style="width:50px;">Type</div>
+            <div class="headTable float-left" style="width:150px;">Name</div>
+            <div class="headTable float-left" style="width:40px;">Point</div>
+            <div class="headTable float-left" style="width:80px;">Date</div>
+            <div class="headTable float-left" style="width:80px;">Edit</div>
+            <div class="headTable float-left" style="width:80px;">Remove</div>		
+        <div>	
+      	{if isset($prize) }
+      	  {assign var="rowCount" value="0"}
+      	  {foreach from=$prize item=item}
+      	    {assign var="rowCount" value="`$rowCount+1`"}      	          	    
+      	    {foreach from=$item item=row}
+	      	    {if $row.name!=''}
+	      	    <div style="margin-top:2px;">
+                	  <div class="{if ($rowCount%2)=='1'}bodyTable{else}bodyTable2{/if} clear float-left" style="width:50px;">{$row.prize_type}</div>
+			          <div class="{if ($rowCount%2)=='1'}bodyTable{else}bodyTable2{/if} float-left" style="width:150px;">{$row.name}</div>
+			          <div class="{if ($rowCount%2)=='1'}bodyTable{else}bodyTable2{/if} float-left" style="width:40px;" align="center">{$row.point}</div>
+			          <div class="{if ($rowCount%2)=='1'}bodyTable{else}bodyTable2{/if} float-left" style="width:80px;" align="center">{$row.keyword}</div>
+			          <div class="{if ($rowCount%2)=='1'}bodyTable{else}bodyTable2{/if} float-left" style="width:80px;" align="center">{$row.keyword_point}</div>
+			          <div class="{if ($rowCount%2)=='1'}bodyTable{else}bodyTable2{/if} float-left" style="width:80px;" align="center">{$row.date}</div>
+			          <div class="{if ($rowCount%2)=='1'}bodyTable{else}bodyTable2{/if} float-left" style="width:80px;" align="center">{if $row.status==1}<a href="{$base_url}9011/dv/DV_9011_Main/prize/disable/{$row.id}">Yes</a>{else}<a href="{$base_url}9011/dv/DV_9011_Main/prize/enable/{$row.id}">No</a>{/if}</div>
+			          <div class="{if ($rowCount%2)=='1'}bodyTable{else}bodyTable2{/if} float-left" style="width:80px;" align="center"><a href="{$base_url}9011/dv/DV_9011_Main/prize/edit/{$row.id}">Edit</a></div>
+			          <div class="{if ($rowCount%2)=='1'}bodyTable{else}bodyTable2{/if} float-left" style="width:80px;" align="center"><a href="{$base_url}9011/dv/DV_9011_Main/prize/remove/{$row.id}" onClick="return confirm ('Are you sure want to remove it?')">Remove</a></div>      
+			        <div>
+			        {/if}
+			      {/foreach}
+      	  {/foreach}
+      	{/if}
+      </div>
+    </div>
+  </body>
+</html>

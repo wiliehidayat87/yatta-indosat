@@ -1,0 +1,74 @@
+<?php
+
+class model_pushbuffer extends model_base {
+
+    public function save(model_data_pushbuffer $data) {
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "Start : " . serialize($data)));
+
+        $sql = sprintf("
+                INSERT INTO
+                    push_buffer(
+                        pid,
+                        src,
+                        dest,
+                        oprid,
+                        service,
+                        subject,
+                        message,
+                        price,
+                        stat,
+                        created,
+                        tid,
+                        obj
+                    )
+                VALUES(
+                        '%s',
+                        '%s',
+                        '%s',
+                        '%s',
+                        '%s',
+                        '%s',
+                        '%s',
+                        '%s',
+                        '%s',
+                        NOW(),
+                        '%s',
+                        '%s'
+                )", mysql_real_escape_string($data->pid), mysql_real_escape_string($data->src), mysql_real_escape_string($data->dest), mysql_real_escape_string($data->oprid), mysql_real_escape_string($data->service), mysql_real_escape_string($data->subject), mysql_real_escape_string($data->message), mysql_real_escape_string($data->price), mysql_real_escape_string($data->stat), mysql_real_escape_string($data->tid), mysql_real_escape_string(trim($data->obj)));
+
+        $query = $this->databaseObj->query($sql);
+        return $this->databaseObj->last_insert_id();
+    }
+
+    public function update(model_data_pushbuffer $data) {
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "Start : " . serialize($data)));
+
+        $sql = sprintf("UPDATE push_buffer SET stat = '%s' where id = '%s'", $data->stat, $data->id);
+        return $this->databaseObj->query($sql);
+    }
+
+    public function execPushbuffer($pid, $service, $operatorId) {
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "Start : [" . $pid . "][" . $service . "]"));
+
+        $sql = sprintf("SELECT id,obj FROM push_buffer WHERE pid = '%s' AND service = '%s' AND oprid = '%s' AND stat = 'ON_QUEUE' limit 1000", mysql_real_escape_string($pid), mysql_real_escape_string($service), mysql_real_escape_string($operatorId));
+        $data = $this->databaseObj->fetch($sql);
+        if (count($data) > 0) {
+            return $data;
+        } else {
+            return false;
+        }
+    }
+
+    public function clearBuffer($deleteList) {
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "Start : " . serialize($deleteList)));
+
+        $deleteList = implode(",", $deleteList);
+        $sql = sprintf("DELETE FROM push_buffer where id in(%s)", $deleteList);
+        return $this->databaseObj->query($sql);
+    }
+
+}

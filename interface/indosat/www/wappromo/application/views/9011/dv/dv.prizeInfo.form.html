@@ -1,0 +1,50 @@
+<html>
+  <head>
+    {include file='tpl_head.html'}    
+  </head>
+  <body>
+    {include file='tpl_navigation.html'}
+    <div id="wrapper">
+      <div id="content_1000">
+      	<div id="module">:: DV Menu ::</div>
+      	<div id="module">
+		<a href="{$base_url}9011/dv/DV_9011_Main/dv_content">Content</a> | 
+		<a href="{$base_url}9011/dv/DV_9011_Main/prizeInfo">Prize</a> | 
+		<a href="{$base_url}9011/dv/DV_9011_Main/undian">Pemenang</a>
+	</div>
+      	<br />
+      	<div style="font-weight: bold;">Prize Information / {if isset($isNew)}New{else}Edit{/if}</div>
+      	<div style="border-bottom:1px solid #666;" class="cititation">{if isset($isNew)}Add new prize information.{else}Edit prize information.{/if}</div>
+      	
+      	<div style="margin-top:2px;">
+          {if isset($msg)}<div><font color="red">{$msg}</font></div>{/if}
+          <form method="post" action="{if isset($isNew)}{$base_url}9011/dv/DV_9011_Main/formPrizeInfo/new/submit{else}{$base_url}9011/dv/DV_9011_Main/formPrizeInfo/edit/submit{/if}">   
+	  <div class="clear float-left" style="width:100px;margin:4px 4px 0 0;" align="right">Type :</div>
+          	<div class="float-left" style="width:200px;margin:4px 4px 0 0;">
+          	<select name="prizeType">
+            	<option value="Day" {if isset($isEdit) && $prizeInfo.prize_type=='Day'}selected{/if}> Per Day </option>
+                <option value="Week" {if isset($isEdit) && $prizeInfo.prize_type=='Week'}selected{/if}> Per Week </option>
+                <option value="Final" {if isset($isEdit) && $prizeInfo.prize_type=='Final'}selected{/if}> Final </option>
+                <option value="Block" {if isset($isEdit) && $prizeInfo.prize_type=='Block'}selected{/if}> Block</option>
+           	</select>
+          	</div>      
+            <input type="hidden" name="keyword" value="100{if isset($prizeInfo.keyword)}{$prizeInfo.keyword}{/if}"/>
+            <input type="hidden" name="keyword_point" value="100{if isset($prizeInfo.keyword_point)}{$prizeInfo.keyword_point}{/if}"/>
+          <div class="clear float-left" style="width:100px;margin:4px 4px 0 0;" align="right">Name :</div>{if isset($isEdit)}
+		<input type="hidden" name="id" value="{$prizeInfo.id}">{/if}
+          	<div class="float-left" style="width:200px;margin:4px 4px 0 0;">
+		<input type="text" name="name" size="40" value="{if isset($prizeInfo.name)}{$prizeInfo.name}{/if}"/>
+		</div>
+          <div class="clear float-left" style="width:100px;margin:4px 4px 0 0;" align="right">Desc :</div>
+          	<div class="float-left" style="width:200px;margin:4px 4px 0 0;">
+		<textarea name="desc">{if isset($prizeInfo.desc)}{$prizeInfo.desc}{/if}</textarea>
+		</div>       
+          <div class="clear float-left" style="width:190px; margin:10px 4px 0 0;" align="right">
+		<input type="button" name="back" value="Back" onClick="location='{$base_url}9011/dv/DV_9011_Main/prizeInfo'"/>
+		<input type="submit" name="submit" value="Submit"/>
+	  	</div>
+          </form>       
+        <div>  
+    </div>
+  </body>
+</html>

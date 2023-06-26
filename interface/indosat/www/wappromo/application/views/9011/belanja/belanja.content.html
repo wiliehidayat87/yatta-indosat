@@ -1,0 +1,45 @@
+<html>
+  <head>
+    {include file='tpl_head.html'}
+  </head>
+  <body>
+    {include file='tpl_navigation.html'}
+    <div id="wrapper">
+      <div id="content_1000">
+      	<div id="module">:: Belanja Menu ::</div>
+      	<div id="module"><a href="{$base_url}9011/belanja/Belanja_9011_Main/claim">Claim List</a></div>
+      	<br />
+      	<div style="font-weight: bold;">Content List</div>
+      	<div style="border-bottom:1px solid #666;" class="cititation">Show content that listed on wap kado.</div>
+      	
+      	<div><input type="button" name="add" value="Add Content" onclick="location='{$base_url}9011/belanja/Belanja_9011_Main/content/add'"/> {if isset($msg)}<font color="red">{$msg}</font>{/if}</div>
+      	<div style="margin-top:2px;">
+      	  <div class="headTable clear float-left" style="width:60px;">Code</div>
+      	  <div class="headTable float-left" style="width:200px;">Title</div>
+      	  <div class="headTable float-left" style="width:80px;">Type</div>
+      	  <div class="headTable float-left" style="width:80px;">Point</div>
+      	  <div class="headTable float-left" style="width:90px;">Images</div>
+      	  <div class="headTable float-left" style="width:80px;">IsEnable</div>
+      	  <div class="headTable float-left" style="width:80px;">Edit</div>
+      	  <div class="headTable float-left" style="width:80px;">Remove</div>		
+      	<div>	
+      	{if isset($listContent) }
+      	  {foreach from=$listContent item=content}
+      	    {if $content.code!=''}
+      	    <div style="margin-top:2px;" class="bodyTable3 clear float-left">      	      
+		          <div class="clear float-left" style="width:60px; text-align:center; padding: 4px;">{$content.code}</div>
+		          <div class="float-left" style="width:200px; padding: 4px;">{$content.name}</div>
+		          <div class="float-left" style="width:80px; text-align:center; padding: 4px;">{$content.type}</div>
+		          <div class="float-left" style="width:80px; text-align:center; padding: 4px;">{$content.point}</div>
+		          <div class="float-left" style="width:90px; text-align:center; padding: 4px;">{if isset($content.url) && $content.url!=''}<img src="{$preview_path}{$content.url}" width="80"/>{else} {/if}</div>
+		          <div class="float-left" style="width:80px; text-align:center; padding: 4px;">{if $content.isEnabled=='1'}<a href="{$base_url}9011/belanja/Belanja_9011_Main/content/disable/{$content.id}">Yes</a>{else}<a href="{$base_url}9011/belanja/Belanja_9011_Main/content/enable/{$content.id}">No</a>{/if}</div>
+		          <div class="float-left" style="width:80px; text-align:center; padding: 4px;"><a href="{$base_url}9011/belanja/Belanja_9011_Main/content/edit/{$content.id}">Edit</a></div>
+		          <div class="float-left" style="width:80px; text-align:center; padding: 4px;"><a href="{$base_url}9011/belanja/Belanja_9011_Main/content/remove/{$content.id}" onclick="return confirm ('Are you sure want to remove it?')">Remove</a></div>    
+		        </div>
+		        {/if}
+      	  {/foreach}
+      	{/if}
+      </div>
+    </div>
+  </body>
+</html>

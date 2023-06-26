@@ -1,0 +1,56 @@
+{include file='common/tpl_header.html'}
+
+<div id="content" class="clearfix">
+    <div id="maincontent">
+        <div class="pageTitle">
+            <span>Change Password</span>
+        </div>
+		<form ="" method="post">
+        <div class="actionbar">
+            <div class="clearfix fl">
+                <span>Enter your current password to continue:&nbsp;</span>
+                <br />
+                <div class="cl">
+                <input type="password" name="currentpass" id="currentpass" size=50 />
+                </div>
+            </div>
+
+            <div id="loadContainer" class="closePanel">
+                <!-- -->
+            </div>
+        </div>
+
+        <fieldset class="fieldset">
+        <legend>Edit Password (Optional)</legend>
+        <table cellpadding="0" cellspacing="3" border="0">
+				<tr>
+					<td>
+						<div>New Password:</div>
+
+						<div><input type="password" class="bginput" name="newpassword" size="50" maxlength="50" /></div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div>Confirm New Password:</div>
+						<div><input type="password" class="bginput" name="newpasswordconfirm" size="50" maxlength="50" /></div>
+					</td>
+
+				</tr>
+				</table>
+		{if $errormessage neq ""}
+        <div class="errormsg"><font color=red>{$errormessage}</font></div>
+        {else}
+        <br>
+        {/if}
+        </fieldset>
+        <div style="margin-top:6px">
+			<input type="submit" class="button" value="Save Changes" name="changepass"/>
+
+			<input type="reset" class="button" value="Reset Fields" />
+		</div>
+	</form>
+    </div>
+</div>
+
+{include file='common/tpl_footer.html'}

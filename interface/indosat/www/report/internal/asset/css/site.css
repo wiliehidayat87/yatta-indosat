@@ -1,0 +1,83 @@
+/* STICKY FOOTER */
+html, body { height: 100%; } 
+#container { min-height: 100%; } 
+#content { overflow:auto; padding-bottom: 70px;}
+#footer { position: relative; margin-top: -50px; height: 30px; clear:both; padding: 10px 0; }
+
+/*Opera Fix*/
+body:before { content:""; height:100%; float:left; width:0; margin-top:-32767px; }
+/* END STICKY FOOTER */
+
+a { color: #1161d9; font-weight: bold; text-decoration: none; }
+button, label { cursor: pointer; }
+h1,h2,h3,h4,h5,h6 { margin-bottom: 1em;}
+ul#navigation li { font-weight: bold; margin-top: 2px; }
+span.subNavigation { color: #000; cursor: pointer; font-size: 11px; margin: 15px 0 0 5px; }
+
+.center { text-align: center;}
+.left { text-align: left; }
+.right { text-align: right; }
+.mostLeftColumn { font-weight: bold; }
+.pointer { cursor: pointer; }
+
+ul.error_text { color: #f00; }
+div#hidden { display: none; }
+
+div#revenueTable { border: 0; width: 100%; }
+table tr th, table tr td { padding: 5px; }
+thead tr th { font-weight: bold; text-align: center; text-transform: uppercase; }
+tr.highlightRow td { font-weight: bold; text-align: left; }
+
+
+#chart-table { margin: 0; padding: 0; }
+#chart-table li { 
+    list-style-type: none; 
+    float: left; 
+    width: 310px; 
+    margin: 0 6px 10px 4px;
+    
+}
+#chart-table .rptRevenue{
+margin-top:10px;    
+}
+#chart-table .rptRevenue th,
+#chart-table .rptRevenue td{
+    line-height:1em;
+}
+#chart-table .module-content{
+    min-height:159px;
+    _height:159px; /*ie 6 hacks*/
+}
+#mrt-canvas{ width:966px; height:755px; position:relative; background:url(../../asset/image/rail.png) no-repeat 10px 18px;} 
+#mrt-canvas li{ position:absolute; list-style:none;} 
+#mrt-canvas li a{ display:block; width:48px; height:48px; overflow:visible; background:url(../../asset/image/small-nodes-on.png) no-repeat left top; text-align:center;} 
+#mrt-canvas li a span{ border:#8abbcf solid 1px; background:#e9f4f8; padding:0 5px; position:absolute; width:50px; max-width:80px; display:block; float:left; left:-15%; top:-20px;} 
+#mrt-canvas li.off a{ background:url(../../asset/image/small-nodes-off.gif) no-repeat left top;} 
+#node1{ left:362px; top:0px;} 
+#node2{ left:362px; top:95px;} 
+#node3{ left:90px; top:166px;} 
+#node4{ left:90px; top:212px;} 
+#node5{ left:180px; top:190px;} 
+#node6{ left:270px; top:190px;} 
+#node7{ left:544px; top:190px;} 
+#node8{ left:454px; top:282px;} 
+#node9{ left:544px; top:282px;} 
+#node10{ left:634px; top:282px;} 
+#node11{ left:715px; top:282px;} 
+#node12{ left:454px; top:365px;} 
+#node13{ left:0; top:502px;} 
+#node14{ left:180px; top:502px;} 
+#node15{ left:920px; top:502px;} 
+#node16{ left:270px; top:677px;} 
+#node17{ left:454px; top:677px;} 
+#node18{ left:634px; top:677px;} 
+#mrt-canvas .big a{ width:108px; height:108px; background:url(../../asset/image/big-nodes-on.png) no-repeat left top;} 
+#mrt-canvas li.big.off a{ background:url(../../asset/image/big-nodes-off.gif) no-repeat left top;} 
+#node19{ left:332px; top:252px;} 
+#node20{ left:332px; top:472px;} 
+#node21{ left:735px; top:472px;} 
+#node22{ left:150px; top:647px;} 
+
+
+.modulebox .module-header{ text-align: center; }
+.tableWithFloatingHeader { clear: both; width: 100%; }

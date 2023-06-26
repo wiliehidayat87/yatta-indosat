@@ -1,0 +1,38 @@
+<html>
+  <head>
+    {include file='tpl_head.html'}
+    <script type="text/javascript" src="{$base_url}lib/jquery-1.3.2.min.js"></script>
+    <script type="text/javascript" src="{$base_url}lib/jquery-ui-1.7.2.custom.min.js"></script>
+  </head>
+  <body>
+    {include file='tpl_navigation.html'}
+    <div id="wrapper">
+      <div id="content_1000">
+      	<div id="module">:: Wap Registration AK Schedule ::</div><br />
+      	<div style="border-bottom:1px solid #666;" class="cititation">Show wap registration AK Schedule Template</div>
+      	<br /><a href="{$base_url}{$activeShortcode}/wapreg/wapreg_ak/add">Add new</a>
+      	{if count($result) gt 0 && $result.0.id != ''}
+      	<div class="width_900">
+        <div class="rows">
+          <div class="width_200 float_left border align_center padding head_color">Name</div>
+          <div class="width_300 float_left border align_center padding head_color">Description</div>
+          <div class="width_200 float_left border align_center padding head_color">&nbsp;</div>
+        </div>
+        {foreach from=$result item=item}
+        <div class="rows">
+        	<div class="width_200 float_left border align_center padding">{$item.name}</div>
+          <div class="width_300 float_left border align_center padding">{$item.description}</div>
+          <div class="width_200 float_left border align_center padding">
+          	<a href="{$base_url}{$activeShortcode}/wapreg/wapreg_ak/edit/{$item.id}">Edit</a> | 
+          	<a href="{$base_url}{$activeShortcode}/wapreg/wapreg_ak/delete/{$item.id}">Delete</a> |
+          	<a href="{$base_url}{$activeShortcode}/wapreg/wapreg_ak_detail/index/{$item.id}">View Time</a>
+          </div>
+        </div>
+        {/foreach}
+      	{else}
+      		<br /><br />No data yet
+      	{/if}
+      </div>
+    </div>
+  </body>
+</html>

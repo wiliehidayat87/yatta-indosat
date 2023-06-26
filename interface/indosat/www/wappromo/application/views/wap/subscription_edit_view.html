@@ -1,0 +1,3056 @@
+{include file='common/tpl_header.html'}
+<style>
+{literal}
+#sortable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
+#sortable li { margin: 0 5px 5px 5px; padding: 5px; font-size: 9pt; font-weight:normal;  }
+html>body #sortable li { height: 1.5em; line-height: 1.2em; }
+.ui-state-highlight { height: 1.5em; line-height: 1.2em; }
+.ui-state-default{ padding:8px; font-family:Verdana, Geneva, sans-serif; font-size:9pt;}
+#buttonCatalogB {display: none}
+{/literal}
+</style>
+<script language="javascript">
+{literal}
+function toogle_clickable(id){
+	if(document.getElementById(id).disabled){
+		document.getElementById(id).disabled=false;
+	}else{
+		document.getElementById(id).disabled=true;
+	}
+}
+function toogle_choise(id_ena_id_dis){
+	if(document.getElementById(id_ena).disabled){
+		document.getElementById(id_ena).disabled=false;
+		document.getElementById(id_dis).disabled=true;
+	}else{
+		document.getElementById(id_ena).disabled=true;
+		document.getElementById(id_dis).disabled=false;
+	}
+}
+function ganti(elm){
+    if (elm.value == 'catalog-b'){
+        $('#buttonCatalogB').show();
+    } else {
+        $('#buttonCatalogB').hide();
+    }
+}
+$(function(){
+	$('#accordion').multiOpenAccordion({
+		active: [0,1,2,3],
+		click: function(event, ui) {},
+		init: function(event, ui) {},
+		tabShown: function(event, ui) {},
+		tabHidden: function(event, ui) {}
+	});
+	$( "#tabs" ).tabs({ selected: 0 });
+	$( "#tabs-preview" ).tabs({ selected: 0 });
+	$( "#sortable_landing" ).sortable({
+		placeholder: "ui-state-highlight",
+		stop: function(event, ui) {}
+	});
+	$( "#sortable_landing" ).disableSelection();
+	$( "#sortable_confirmation" ).sortable({
+		placeholder: "ui-state-highlight"
+	});
+	$( "#sortable_confirmation" ).disableSelection();
+	$( "#sortable_thankyou" ).sortable({
+		placeholder: "ui-state-highlight"
+	});
+	$( "#sortable_thankyou" ).disableSelection();
+	$( "#sortable_info" ).sortable({
+		placeholder: "ui-state-highlight"
+	});
+	$( "#sortable_info" ).disableSelection();
+	$( ".btn-ui").button();
+
+});
+var counter_landing_page = 0;
+var counter_confirmation_page = 0;
+var counter_thankyou_page = 0;
+var counter_info_page = 0;
+function remove_component(id,prev){
+	$("#"+id).remove();
+	$("#div_content_landing_prev_"+prev).remove();
+	$("#div_content_confirmation_prev_"+prev).remove();
+	$("#div_content_thankyou_prev_"+prev).remove();
+	$("#div_content_info_prev_"+prev).remove();
+}
+function show_landing_page(){
+	if($('#sortable_landing li').length==0) counter_landing_page = 0; else counter_landing_page    = $('#sortable_landing li').length;
+	$("#landing-page-form").dialog({
+		open: function(){ 
+			$('#landing_page_value').wysiwyg({
+				controls: {
+					colorpicker: {
+						groupIndex: 11,
+						visible: true,
+						css: {
+							"color": function (cssValue, Wysiwyg) {
+								var document = Wysiwyg.innerDocument(),
+									defaultTextareaColor = $(document.body).css("color");
+
+								if (cssValue !== defaultTextareaColor) {
+									return true;
+								}
+
+								return false;
+							}
+						},
+						exec: function() {
+							if ($.wysiwyg.controls.colorpicker) {
+								$.wysiwyg.controls.colorpicker.init(this);
+							}
+						},
+						tooltip: "Colorpicker"
+					},
+					bold          : { visible : true },
+					italic        : { visible : true },
+					underline     : { visible : true },
+					strikeThrough : { visible : true },
+					justifyLeft   : { visible : true },
+					justifyCenter : { visible : true },
+					justifyRight  : { visible : true },
+					justifyFull   : { visible : true },
+					indent  : { visible : true },
+					outdent : { visible : true },
+					subscript   : { visible : true },
+					superscript : { visible : true },
+					undo : { visible : true },
+					redo : { visible : true },
+					insertOrderedList    : { visible : true },
+					insertUnorderedList  : { visible : true },
+					insertHorizontalRule : { visible : true },
+					h4: {
+						visible: true,
+						className: 'h4',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h4>' : 'h4',
+						tags: ['h4'],
+						tooltip: 'Header 4'
+					},
+					h5: {
+						visible: true,
+						className: 'h5',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h5>' : 'h5',
+						tags: ['h5'],
+						tooltip: 'Header 5'
+					},
+					h6: {
+						visible: true,
+						className: 'h6',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h6>' : 'h6',
+						tags: ['h6'],
+						tooltip: 'Header 6'
+					},
+					cut   : { visible : true },
+					copy  : { visible : true },
+					paste : { visible : true },
+					html  : { visible: true },
+					increaseFontSize : { visible : true },
+					decreaseFontSize : { visible : true },
+					exam_html: {
+						exec: function() {
+							this.insertHtml('<abbr title="exam">Jam</abbr>');
+							return true;
+						},
+						visible: true
+					}
+				},
+				events: {
+					click: function(event) {
+						if ($("#click-inform:checked").length > 0) {
+							event.preventDefault();
+							alert("You have clicked jWysiwyg content!");
+						}
+					}
+				}
+			});
+		},
+		close: function(){
+			$('#landing_page_name').val('');
+			$('#landing_page_type').val('');
+			$('#landing_page_value').val('');
+			$('#landing_msgtext_value').val('');
+			$('#landing_page_clickable').val('');
+			$('#landing_page_image').val('');
+			$('#uploaded-picture-landing').html('');
+			$('#landing_page_value').wysiwyg('destroy');
+			$(this).dialog("destroy");
+		},
+		title: 'Add New Component for Landing Page',
+		modal: true,
+		draggable: false,
+		height: 550,
+		width: 670,
+		resizable: false,
+		position: 'center',
+		buttons: {
+			Close: function() {
+				$('#landing_page_name').val('');
+				$('#landing_page_type').val('');
+				$('#landing_page_value').val('');
+				$('#landing_page_clickable').val('');
+				$('#landing_page_msgtext').val('');
+				$('#landing_page_image').val('');
+				$('#landing_page_image_old').val('');
+				$('#uploaded-picture-landing').html('');
+				$('#landing_page_value').wysiwyg('destroy');
+				$(this).dialog("destroy");
+			},
+			Add: function() {
+				if($('#landing_page_name').val()==''){
+					$('#dialogBox').html('');
+					$('#dialog').html('<p align="center">Component Name cannot empty!</p>');
+					$('#dialog').dialog({
+						title: 'Dialog Box',
+						resizable: true,
+						show: 'fade',
+						hide: 'fade',
+						height:140,
+						modal: true
+					});
+					return false;
+				}
+				var value = $('#landing_page_name').val();
+				$('.landing_page_sortable').append('<li id="comp_landing_page_'+counter_landing_page+'" class="ui-state-default"><div style="width:90px; float:left"><a style="text-decoration:underline;" onclick="edit_landing_page('+counter_landing_page+');">Edit</a> | <a style="text-decoration:underline;" onclick="remove_component(\'comp_landing_page_'+counter_landing_page+'\');">Delete</a></div><div style="width:580px; float:left"><b style="color:#000;">Name</b> : '+(value.substring(0,60))+'<span id="landing_page_name_value_'+counter_landing_page+'" style="display:none;">'+$('#landing_page_name').val()+'</span></div><div style="float:left"><b style="color:#000;">Type</b> : <span id="landing_page_type_value_'+counter_landing_page+'">'+$('#landing_page_type').val()+'</span><span id="landing_page_value_value_'+counter_landing_page+'" style="display:none;">'+$('#landing_page_value').val()+'</span><span id="landing_page_clickable_value_'+counter_landing_page+'" style="display:none;">'+$('#landing_page_clickable').val()+'</span><span id="landing_page_msgtext_value_'+counter_landing_page+'" style="display:none;">'+$('#landing_page_msgtext').val()+'</span><span id="landing_page_image_value_old'+counter_landing_page+'" style="display:none;">'+$('#landing_page_image_old').val()+'</span><span id="landing_page_image_value_'+counter_landing_page+'" style="display:none;">'+$('#landing_page_image').val()+'</span></div></li>');
+				if($('#landing_page_type').val()=='image'){
+					$('#content-landing').append('<div id="div_content_landing_prev_'+counter_landing_page+'"style="margin-left:20px; margin-bottom:10px;"><img id="img_content_landing_prev_'+counter_landing_page+'" src="{/literal}{$base_url}{literal}upload/tmp_pic/landing_'+$('#landing_page_image').val()+'"width="200"/></div>');
+				}else if($('#landing_page_type').val()=='text'){
+					$('#content-landing').append('<div id="div_content_landing_prev_'+counter_landing_page+'"style="margin-left:20px; margin-bottom:10px;"><span id="txt_content_landing_prev_'+counter_landing_page+'">'+$('#landing_page_value').val()+'</span></div>');
+				}else if($('#landing_page_type').val()=='title'){
+					$('#content-landing').append('<div id="div_content_landing_prev_'+counter_landing_page+'"style="margin-left:20px; margin-bottom:10px;"><span id="ttl_content_landing_prev_'+counter_landing_page+'">'+$('#landing_page_value').val()+'</span></div>');
+				}else if($('#landing_page_type').val()=='space'){
+					$('#content-landing').append('<div id="div_content_landing_prev_'+counter_landing_page+'"style="margin-left:20px; margin-bottom:10px;"><span id="spc_content_landing_prev_'+counter_landing_page+'"><br /></span></div>');
+				}else if($('#landing_page_type').val()=='url'){
+					$('#content-landing').append('<div id="div_content_landing_prev_'+counter_landing_page+'"style="margin-left:20px; margin-bottom:10px;"><span id="url_content_landing_prev_'+counter_landing_page+'"><font color="blue"><u>'+$('#landing_page_value').val()+'</u></font></span></div>');
+				}else if($('#landing_page_type').val()=='catalog-a'){
+					$('#content-landing').append('<div id="div_content_landing_prev_'+counter_landing_page+'"style="margin-left:20px; margin-bottom:10px;"><table><tr><td><img id="cata_content_landing_prev_'+counter_landing_page+'" src="{/literal}{$base_url}{literal}upload/tmp_pic/landing_'+$('#landing_page_image').val()+'"width="100" align="left" style="margin-right:5px;" /></td><td valign="top">'+$('#landing_page_value').val()+'</td></tr></table></div>');
+				}else if($('#landing_page_type').val()=='catalog-b'){
+					$('#content-landing').append('<div id="div_content_landing_prev_'+counter_landing_page+'"style="margin-left:20px; margin-bottom:10px;"><table><tr><td><img id="catb_content_landing_prev_'+counter_landing_page+'" src="{/literal}{$base_url}{literal}upload/tmp_pic/landing_'+$('#landing_page_image').val()+'"width="100" align="left" style="margin-right:5px;" /></td><td valign="top">'+$('#landing_page_value').val()+'<br><img id="catb_btn_content_landing_prev_'+counter_landing_page+'" src="'+cat_image+'"width="50" /></td></tr></table></div>');
+				}else if($('#landing_page_type').val()=='ivr'){
+					$('#content-landing').append('<div id="div_content_landing_prev_'+counter_landing_page+'"style="margin-left:20px; margin-bottom:10px;"><span id="ivr_content_landing_prev_'+counter_landing_page+'">'+$('#landing_page_value').val()+'</span></div>');
+				}
+				$('#landing_page_name').val('');
+				$('#landing_page_type').val('');
+				$('#landing_page_value').val('');
+				$('#landing_page_clickable').val('');
+				$('#landing_page_msgtext').val('');
+				$('#landing_page_image').val('');
+				$('#landing_page_image_old').val('');
+				$('#uploaded-picture-landing').html('');
+				$('#landing_page_value').wysiwyg('destroy');
+				$(this).dialog('close');
+				$(this).dialog('destroy');
+				counter_landing_page++;
+			}
+		}
+	});
+}
+function edit_landing_page(id){       
+	var img = new Image();
+	$(img).load(function(){
+		$(this).hide();
+		$("#uploaded-picture-landing").html($(this));
+		$(this).fadeIn();
+	}).attr('src', '{/literal}{$base_url}{literal}upload/tmp_pic/landing_'+$("#landing_page_image_value_"+id).text()).error(function(){
+	});
+	$('#landing_page_name').val($('#landing_page_name_value_'+id).text());
+	$("#landing_page_type option[value='"+$('#landing_page_type_value_'+id).text()+"']").attr('selected', 'selected');
+	$('#landing_page_value').val($('#landing_page_value_value_'+id).html());
+	$('#landing_page_msgtext').val($('#landing_page_msgtext_value_'+id).text());
+	$("#landing_page_clickable option[value='"+$('#landing_page_clickable_value_'+id).text()+"']").attr('selected', 'selected');
+	$('#landing_page_image').val($('#landing_page_value_image_'+id).text());
+	$('#landing_page_image_old').val($('#landing_page_value_image_old'+id).text());
+	$('#landing-page-form').dialog({
+		open: function(){
+			$('#landing_page_value').wysiwyg({
+				controls: {
+					colorpicker: {
+						groupIndex: 11,
+						visible: true,
+						css: {
+							"color": function (cssValue, Wysiwyg) {
+								var document = Wysiwyg.innerDocument(),
+									defaultTextareaColor = $(document.body).css("color");
+
+								if (cssValue !== defaultTextareaColor) {
+									return true;
+								}
+
+								return false;
+							}
+						},
+						exec: function() {
+							if ($.wysiwyg.controls.colorpicker) {
+								$.wysiwyg.controls.colorpicker.init(this);
+							}
+						},
+						tooltip: "Colorpicker"
+					},
+					bold          : { visible : true },
+					italic        : { visible : true },
+					underline     : { visible : true },
+					strikeThrough : { visible : true },
+					justifyLeft   : { visible : true },
+					justifyCenter : { visible : true },
+					justifyRight  : { visible : true },
+					justifyFull   : { visible : true },
+					indent  : { visible : true },
+					outdent : { visible : true },
+					subscript   : { visible : true },
+					superscript : { visible : true },
+					undo : { visible : true },
+					redo : { visible : true },
+					insertOrderedList    : { visible : true },
+					insertUnorderedList  : { visible : true },
+					insertHorizontalRule : { visible : true },
+					h4: {
+						visible: true,
+						className: 'h4',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h4>' : 'h4',
+						tags: ['h4'],
+						tooltip: 'Header 4'
+					},
+					h5: {
+						visible: true,
+						className: 'h5',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h5>' : 'h5',
+						tags: ['h5'],
+						tooltip: 'Header 5'
+					},
+					h6: {
+						visible: true,
+						className: 'h6',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h6>' : 'h6',
+						tags: ['h6'],
+						tooltip: 'Header 6'
+					},
+					cut   : { visible : true },
+					copy  : { visible : true },
+					paste : { visible : true },
+					html  : { visible: true },
+					increaseFontSize : { visible : true },
+					decreaseFontSize : { visible : true },
+					exam_html: {
+						exec: function() {
+							this.insertHtml('<abbr title="exam">Jam</abbr>');
+							return true;
+						},
+						visible: true
+					}
+				},
+				events: {
+					click: function(event) {
+						if ($("#click-inform:checked").length > 0) {
+							event.preventDefault();
+							alert("You have clicked jWysiwyg content!");
+						}
+					}
+				}
+			});
+		},
+		close: function(){
+			$('#landing_page_name').val('');
+			$('#landing_page_type').val('');
+			$('#landing_page_value').val('');
+			$('#landing_page_msgtext').val('');
+			$('#landing_page_clickable').val('');
+			$('#landing_page_image').val('');
+			$('#uploaded-picture-landing').html('');
+			$('#landing_page_value').wysiwyg('destroy');
+			$(this).dialog("destroy");
+		},
+		title: 'Edit Component for Landing Page',
+		modal: true,
+		draggable: false,
+		height: 550,
+		width: 670,
+		resizable: false,
+		position: 'center',
+		buttons: {
+			Close: function() {
+				$('#landing_page_name').val('');
+				$('#landing_page_type').val('');
+				$('#landing_page_value').val('');
+				$('#landing_page_msgtext').val('');
+				$('#landing_page_clickable').val('');
+				$('#landing_page_image').val('');
+                $('#landing_page_image_old').val('');
+				$('#uploaded-picture-landing').html('');
+				$('#landing_page_value').wysiwyg('destroy');
+				$(this).dialog("destroy");
+			},
+			Edit: function() {
+				if($('#landing_page_name').val()==''){
+					$('#dialogBox').html('');
+					$('#dialog').html('<p align="center">Component Name cannot empty!</p>');
+					$('#dialog').dialog({
+						title: 'Dialog Box',
+						resizable: true,
+						show: 'fade',
+						hide: 'fade',
+						height:140,
+						modal: true
+					});
+					return false;
+				}
+				$('#landing_page_name_value_'+id).text($('#landing_page_name').val());
+				$('#landing_page_type_value_'+id).text($('#landing_page_type').val());
+				$('#landing_page_value_value_'+id).html($('#landing_page_value').val());
+				$('#landing_page_msgtext_value_'+id).text($('#landing_page_msgtext').val());
+				$('#landing_page_clickable_value_'+id).text($('#landing_page_clickable').val());
+				$('#landing_page_image_value_'+id).text($('#landing_page_image').val());
+				if($('#landing_page_type').val()=='image'){
+					$('#img_content_landing_prev_'+id).attr('src','{/literal}{$base_url}{literal}upload/tmp_pic/landing_'+$('#landing_page_image').val());
+				}else if($('#landing_page_type').val()=='text'){
+					$('#txt_content_landing_prev_'+id).html($('#landing_page_value').val());
+				}else if($('#landing_page_type').val()=='title'){
+					$('#ttl_content_landing_prev_'+id).html($('#landing_page_value').val());
+				}else if($('#landing_page_type').val()=='space'){
+					$('#spc_content_landing_prev_'+id).html('<br />');
+				}else if($('#landing_page_type').val()=='url'){
+					$('#url_content_landing_prev_'+id).html('<font color="blue"><u>'+$('#landing_page_value').val()+'</u></font');
+				}else if($('#landing_page_type').val()=='catalog-a'){
+					$('#div_content_landing_prev_'+counter_landing_page).html('<table><tr><td><img id="cata_content_landing_prev_'+counter_landing_page+'" src="{/literal}{$base_url}{literal}upload/tmp_pic/landing_'+$('#landing_page_image').val()+'"width="100" align="left" style="margin-right:5px;" /></td><td valign="top">'+$('#landing_page_value').val()+'</td></tr></table>');
+				}else if($('#landing_page_type').val()=='catalog-b'){
+					$('#div_content_landing_prev_'+counter_landing_page).html('<table><tr><td><img id="catb_content_landing_prev_'+counter_landing_page+'" src="{/literal}{$base_url}{literal}upload/tmp_pic/landing_'+$('#landing_page_image').val()+'"width="100" align="left" style="margin-right:5px;" /></td><td valign="top">'+$('#landing_page_value').val()+'<br><img id="catb_btn_content_landing_prev_'+counter_landing_page+'" src="'+cat_image+'"width="50" /></td></tr></table>');
+				}else if($('#landing_page_type').val()=='ivr'){
+					$('#ivr_content_landing_prev_'+id).html($('#landing_page_value').val());
+				}
+				$('#landing_page_image_value_old'+id).text($('#landing_page_image_old').val());
+				$('#landing_page_name').val('');
+				$('#landing_page_type').val('');
+				$('#landing_page_value').val('');
+				$('#landing_page_msgtext').val('');
+				$('#landing_page_clickable').val('');
+				$('#landing_page_image').val('');
+                $('#landing_page_image_old').val('');
+				$('#uploaded-picture-landing').html('');
+				$('#landing_page_value').wysiwyg('destroy');
+				$(this).dialog('close');
+				$(this).dialog('destroy');
+			}
+		}
+	});
+}
+function edit_landing_page_old(id){
+	var img = new Image();
+	$(img).load(function(){
+		$(this).hide();
+		$("#uploaded-picture-landing").html($(this));
+		$(this).fadeIn();
+	}).attr('src', '{/literal}{$url_image_wapsub}{literal}landing_'+$('#landing_page_image_value_old_'+id).text()).error(function(){});
+	$('#landing_page_name').val($('#landing_page_name_value_'+id).text());
+	$("#landing_page_type option[value='"+$('#landing_page_type_value_'+id).text()+"']").attr('selected', 'selected');
+	$('#landing_page_value').val($('#landing_page_value_value_'+id).html());
+	$('#landing_page_msgtext').val($('#landing_page_msgtext_value_'+id).text());
+	$("#landing_page_clickable option[value='"+$('#landing_page_clickable_value_'+id).text()+"']").attr('selected', 'selected');
+	$('#landing-page-form').dialog({
+		open: function(){
+			$('#landing_page_value').wysiwyg({
+				controls: {
+					colorpicker: {
+						groupIndex: 11,
+						visible: true,
+						css: {
+							"color": function (cssValue, Wysiwyg) {
+								var document = Wysiwyg.innerDocument(),
+									defaultTextareaColor = $(document.body).css("color");
+
+								if (cssValue !== defaultTextareaColor) {
+									return true;
+								}
+
+								return false;
+							}
+						},
+						exec: function() {
+							if ($.wysiwyg.controls.colorpicker) {
+								$.wysiwyg.controls.colorpicker.init(this);
+							}
+						},
+						tooltip: "Colorpicker"
+					},
+					bold          : { visible : true },
+					italic        : { visible : true },
+					underline     : { visible : true },
+					strikeThrough : { visible : true },
+					justifyLeft   : { visible : true },
+					justifyCenter : { visible : true },
+					justifyRight  : { visible : true },
+					justifyFull   : { visible : true },
+					indent  : { visible : true },
+					outdent : { visible : true },
+					subscript   : { visible : true },
+					superscript : { visible : true },
+					undo : { visible : true },
+					redo : { visible : true },
+					insertOrderedList    : { visible : true },
+					insertUnorderedList  : { visible : true },
+					insertHorizontalRule : { visible : true },
+					h4: {
+						visible: true,
+						className: 'h4',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h4>' : 'h4',
+						tags: ['h4'],
+						tooltip: 'Header 4'
+					},
+					h5: {
+						visible: true,
+						className: 'h5',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h5>' : 'h5',
+						tags: ['h5'],
+						tooltip: 'Header 5'
+					},
+					h6: {
+						visible: true,
+						className: 'h6',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h6>' : 'h6',
+						tags: ['h6'],
+						tooltip: 'Header 6'
+					},
+					cut   : { visible : true },
+					copy  : { visible : true },
+					paste : { visible : true },
+					html  : { visible: true },
+					increaseFontSize : { visible : true },
+					decreaseFontSize : { visible : true },
+					exam_html: {
+						exec: function() {
+							this.insertHtml('<abbr title="exam">Jam</abbr>');
+							return true;
+						},
+						visible: true
+					}
+				},
+				events: {
+					click: function(event) {
+						if ($("#click-inform:checked").length > 0) {
+							event.preventDefault();
+							alert("You have clicked jWysiwyg content!");
+						}
+					}
+				}
+			});
+		},
+		close: function(){
+			$('#landing_page_name').val('');
+			$('#landing_page_type').val('');
+			$('#landing_page_value').val('');
+			$('#landing_page_msgtext').val('');
+			$('#landing_page_clickable').val('');
+			$('#landing_page_image').val('');
+			$('#uploaded-picture-landing').html('');
+			$('#landing_page_value').wysiwyg('destroy');
+			$(this).dialog("destroy");
+		},
+		title: 'Edit Component for Landing Page',
+		modal: true,
+		draggable: false,
+		height: 550,
+		width: 670,
+		resizable: false,
+		position: 'center',
+		buttons: {
+			Close: function() {
+				$('#landing_page_name').val('');
+				$('#landing_page_type').val('');
+				$('#landing_page_value').val('');
+				$('#landing_page_msgtext').val('');
+				$('#landing_page_clickable').val('');
+				$('#landing_page_image').val('');
+				$('#landing_page_image_old').val('');
+				$('#uploaded-picture-landing').html('');
+				$('#landing_page_value').wysiwyg('destroy');
+				$(this).dialog("destroy");
+			},
+			Edit: function() {
+				if($('#landing_page_name').val()==''){
+					$('#dialogBox').html('');
+					$('#dialog').html('<p align="center">Component Name cannot empty!</p>');
+					$('#dialog').dialog({
+						title: 'Dialog Box',
+						resizable: true,
+						show: 'fade',
+						hide: 'fade',
+						height:140,
+						modal: true
+					});
+					return false;
+				}
+				$('#landing_page_name_value_'+id).text($('#landing_page_name').val());
+				$('#landing_page_type_value_'+id).text($('#landing_page_type').val());
+				$('#landing_page_value_value_'+id).html($('#landing_page_value').val());
+				$('#landing_page_msgtext_value_'+id).text($('#landing_page_msgtext').val());
+				$('#landing_page_clickable_value_'+id).text($('#landing_page_clickable').val());
+				$('#landing_page_image_value_'+id).text($('#landing_page_image').val());
+				$('#landing_page_image_value_old'+id).text($('#landing_page_image_old').val());
+				if($('#landing_page_type').val()=='image'){
+					$('#img_content_landing_prev_'+id).attr('src','{/literal}{$base_url}{literal}upload/tmp_pic/landing_'+$('#landing_page_image').val());
+				}else if($('#landing_page_type').val()=='text'){
+					$('#txt_content_landing_prev_'+id).html($('#landing_page_value').val());
+				}else if($('#landing_page_type').val()=='title'){
+					$('#ttl_content_landing_prev_'+id).html($('#landing_page_value').val());
+				}else if($('#landing_page_type').val()=='space'){
+					$('#spc_content_landing_prev_'+id).html('<br />');
+				}else if($('#landing_page_type').val()=='url'){
+					$('#url_content_landing_prev_'+id).html('<font color="blue"><u>'+$('#landing_page_value').val()+'</u></font');
+				}else if($('#landing_page_type').val()=='catalog-a'){
+					$('#div_content_landing_prev_'+counter_landing_page).html('<table><tr><td><img id="cata_content_landing_prev_'+counter_landing_page+'" src="{/literal}{$base_url}{literal}upload/tmp_pic/landing_'+$('#landing_page_image').val()+'"width="100" align="left" style="margin-right:5px;" /></td><td valign="top">'+$('#landing_page_value').val()+'</td></tr></table>');
+				}else if($('#landing_page_type').val()=='catalog-b'){
+					$('#div_content_landing_prev_'+counter_landing_page).html('<table><tr><td><img id="catb_content_landing_prev_'+counter_landing_page+'" src="{/literal}{$base_url}{literal}upload/tmp_pic/landing_'+$('#landing_page_image').val()+'"width="100" align="left" style="margin-right:5px;" /></td><td valign="top">'+$('#landing_page_value').val()+'<br><img id="catb_btn_content_landing_prev_'+counter_landing_page+'" src="'+cat_image+'"width="50" /></td></tr></table>');
+				}else if($('#landing_page_type').val()=='ivr'){
+					$('#ivr_content_landing_prev_'+id).html($('#landing_page_value').val());
+				}
+				$('#landing_page_name').val('');
+				$('#landing_page_type').val('');
+				$('#landing_page_value').val('');
+				$('#landing_page_msgtext').val('');
+				$('#landing_page_clickable').val('');
+				$('#landing_page_image').val('');
+				$('#landing_page_image_old').val('');
+				$('#uploaded-picture-landing').html('');
+				$('#landing_page_value').wysiwyg('destroy');
+				$(this).dialog('close');
+				$(this).dialog('destroy');
+			}
+		}
+	});
+}
+function show_confirmation_page(){
+	if($('#sortable_confirmation li').length==0){
+		counter_confirmation_page = 0;
+	}else{
+		counter_confirmation_page    = $('#sortable_confirmation li').length;
+	}
+	$("#confirmation-page-form").dialog({
+		open: function(){
+			$('#confirmation_page_value').wysiwyg({
+				controls: {
+					colorpicker: {
+						groupIndex: 11,
+						visible: true,
+						css: {
+							"color": function (cssValue, Wysiwyg) {
+								var document = Wysiwyg.innerDocument(),
+									defaultTextareaColor = $(document.body).css("color");
+
+								if (cssValue !== defaultTextareaColor) {
+									return true;
+								}
+
+								return false;
+							}
+						},
+						exec: function() {
+							if ($.wysiwyg.controls.colorpicker) {
+								$.wysiwyg.controls.colorpicker.init(this);
+							}
+						},
+						tooltip: "Colorpicker"
+					},
+					bold          : { visible : true },
+					italic        : { visible : true },
+					underline     : { visible : true },
+					strikeThrough : { visible : true },
+					justifyLeft   : { visible : true },
+					justifyCenter : { visible : true },
+					justifyRight  : { visible : true },
+					justifyFull   : { visible : true },
+					indent  : { visible : true },
+					outdent : { visible : true },
+					subscript   : { visible : true },
+					superscript : { visible : true },
+					undo : { visible : true },
+					redo : { visible : true },
+					insertOrderedList    : { visible : true },
+					insertUnorderedList  : { visible : true },
+					insertHorizontalRule : { visible : true },
+					h4: {
+						visible: true,
+						className: 'h4',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h4>' : 'h4',
+						tags: ['h4'],
+						tooltip: 'Header 4'
+					},
+					h5: {
+						visible: true,
+						className: 'h5',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h5>' : 'h5',
+						tags: ['h5'],
+						tooltip: 'Header 5'
+					},
+					h6: {
+						visible: true,
+						className: 'h6',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h6>' : 'h6',
+						tags: ['h6'],
+						tooltip: 'Header 6'
+					},
+					cut   : { visible : true },
+					copy  : { visible : true },
+					paste : { visible : true },
+					html  : { visible: true },
+					increaseFontSize : { visible : true },
+					decreaseFontSize : { visible : true },
+					exam_html: {
+						exec: function() {
+							this.insertHtml('<abbr title="exam">Jam</abbr>');
+							return true;
+						},
+						visible: true
+					}
+				},
+				events: {
+					click: function(event) {
+						if ($("#click-inform:checked").length > 0) {
+							event.preventDefault();
+							alert("You have clicked jWysiwyg content!");
+						}
+					}
+				}
+			});
+		},
+		close: function(){
+			$('#confirmation_page_name').val('');
+			$('#confirmation_page_type').val('');
+			$('#confirmation_page_value').val('');
+			$('#confirmation_page_clickable').val('');
+			$('#confirmation_page_image').val('');
+			$('#uploaded-picture-confirmation').html('');
+			$('#confirmation_page_value').wysiwyg('destroy');
+			$(this).dialog("destroy");
+		},
+		title: 'Add New Component for Confirmation Page',
+		modal: true,
+		draggable: false,
+		height: 550,
+		width: 670,
+		resizable: false,
+		position: 'center',
+		buttons: {
+			Close: function() {
+				$('#confirmation_page_name').val('');
+				$('#confirmation_page_type').val('');
+				$('#confirmation_page_value').val('');
+				$('#confirmation_page_clickable').val('');
+				$('#confirmation_page_image').val('');
+				$('#uploaded-picture-confirmation').html('');
+				$('#confirmation_page_value').wysiwyg('destroy');
+				$(this).dialog("destroy");
+			},
+			Add: function() {
+				if($('#confirmation_page_name').val()==''){
+					$('#dialogBox').html('');
+					$('#dialog').html('<p align="center">Component Name cannot empty!</p>');
+					$('#dialog').dialog({
+						title: 'Dialog Box',
+						resizable: true,
+						show: 'fade',
+						hide: 'fade',
+						height:140,
+						modal: true
+					});
+					return false;
+				}
+				var value = $('#confirmation_page_name').val();
+				$('.confirmation_page_sortable').append('<li id="comp_confirmation_page_'+counter_confirmation_page+'" class="ui-state-default"><div style="width:90px; float:left"><a style="text-decoration:underline;" onclick="edit_confirmation_page('+counter_confirmation_page+');">Edit</a> | <a style="text-decoration:underline;" onclick="remove_component(\'comp_confirmation_page_'+counter_confirmation_page+'\');">Delete</a></div><div style="width:580px; float:left"><b style="color:#000;">Name</b> : '+(value.substring(0,60))+'<span id="confirmation_page_name_value_'+counter_confirmation_page+'" style="display:none;">'+$('#confirmation_page_name').val()+'</span></div><div style="float:left"><b style="color:#000;">Type</b> : <span id="confirmation_page_type_value_'+counter_confirmation_page+'">'+$('#confirmation_page_type').val()+'</span><span id="confirmation_page_value_value_'+counter_confirmation_page+'" style="display:none;">'+$('#confirmation_page_value').val()+'</span><span id="confirmation_page_clickable_value_'+counter_confirmation_page+'" style="display:none;">'+$('#confirmation_page_clickable').val()+'</span><span id="confirmation_page_image_value_'+counter_confirmation_page+'" style="display:none;">'+$('#confirmation_page_image').val()+'</span></div></li>');
+				if($('#confirmation_page_type').val()=='image'){
+					$('#img_content_confirmation_prev_'+counter_confirmation_page).attr('src','{/literal}{$base_url}{literal}upload/tmp_pic/confirmation_'+$('#confirmation_page_image').val());
+				}else if($('#confirmation_page_type').val()=='text'){
+					$('#txt_content_confirmation_prev_'+counter_confirmation_page).html($('#confirmation_page_value').val());
+				}else if($('#confirmation_page_type').val()=='title'){
+					$('#ttl_content_confirmation_prev_'+counter_confirmation_page).html($('#confirmation_page_value').val());
+				}else if($('#confirmation_page_type').val()=='space'){
+					$('#spc_content_confirmation_prev_'+counter_confirmation_page).html('<br />');
+				}else if($('#confirmation_page_type').val()=='url'){
+					$('#url_content_confirmation_prev_'+counter_confirmation_page).html('<font color="blue"><u>'+$('#confirmation_page_value').val()+'</u></font');
+				}else if($('#confirmation_page_type').val()=='catalog-a'){
+					$('#div_content_confirmation_prev_'+counter_confirmation_page).html('<table><tr><td><img id="cata_content_confirmation_prev_'+counter_confirmation_page+'" src="{/literal}{$base_url}{literal}upload/tmp_pic/confirmation_'+$('#confirmation_page_image').val()+'"width="100" align="left" style="margin-right:5px;" /></td><td valign="top">'+$('#confirmation_page_value').val()+'</td></tr></table>');
+				}else if($('#confirmation_page_type').val()=='catalog-b'){
+					$('#div_content_confirmation_prev_'+counter_confirmation_page).html('<table><tr><td><img id="catb_content_confirmation_prev_'+counter_confirmation_page+'" src="{/literal}{$base_url}{literal}upload/tmp_pic/confirmation_'+$('#confirmation_page_image').val()+'"width="100" align="left" style="margin-right:5px;" /></td><td valign="top">'+$('#confirmation_page_value').val()+'<br><img id="catb_btn_content_confirmation_prev_'+counter_confirmation_page+'" src="'+cat_image+'"width="50" /></td></tr></table>');
+				}else if($('#confirmation_page_type').val()=='ivr'){
+					$('#ivr_content_confirmation_prev_'+counter_confirmation_page).html($('#confirmation_page_value').val());
+				}
+				$('#confirmation_page_name').val('');
+				$('#confirmation_page_type').val('');
+				$('#confirmation_page_value').val('');
+				$('#confirmation_page_clickable').val('');
+				$('#confirmation_page_image').val('');
+				$('#uploaded-picture-confirmation').html('');
+				$('#confirmation_page_value').wysiwyg('destroy');
+				$(this).dialog('destroy');
+				counter_confirmation_page++;
+			}
+		}
+	});
+}
+function edit_confirmation_page(id){
+	var img = new Image();
+	$(img).load(function(){
+		$(this).hide();
+		$("#uploaded-picture-confirmation").html($(this));
+		$(this).fadeIn();
+	}).attr('src', '{/literal}{$base_url}{literal}upload/tmp_pic/confirmation_'+$("#confirmation_page_image_value_"+id).text()).error(function(){});
+	$('#confirmation_page_name').val($('#confirmation_page_name_value_'+id).text());
+    $("#confirmation_page_type option[value='"+$('#confirmation_page_type_value_'+id).text()+"']").attr('selected', 'selected');
+	$('#confirmation_page_value').val($('#confirmation_page_value_value_'+id).html());
+	$("#confirmation_page_clickable option[value='"+$('#confirmation_page_clickable_value_'+id).text()+"']").attr('selected', 'selected');
+	$('#confirmation_page_image').val($('#confirmation_page_value_image_'+id).text());
+	$('#confirmation-page-form').dialog({
+		open: function(){
+			$('#confirmation_page_value').wysiwyg({
+				controls: {
+					colorpicker: {
+						groupIndex: 11,
+						visible: true,
+						css: {
+							"color": function (cssValue, Wysiwyg) {
+								var document = Wysiwyg.innerDocument(),
+									defaultTextareaColor = $(document.body).css("color");
+
+								if (cssValue !== defaultTextareaColor) {
+									return true;
+								}
+
+								return false;
+							}
+						},
+						exec: function() {
+							if ($.wysiwyg.controls.colorpicker) {
+								$.wysiwyg.controls.colorpicker.init(this);
+							}
+						},
+						tooltip: "Colorpicker"
+					},
+					bold          : { visible : true },
+					italic        : { visible : true },
+					underline     : { visible : true },
+					strikeThrough : { visible : true },
+					justifyLeft   : { visible : true },
+					justifyCenter : { visible : true },
+					justifyRight  : { visible : true },
+					justifyFull   : { visible : true },
+					indent  : { visible : true },
+					outdent : { visible : true },
+					subscript   : { visible : true },
+					superscript : { visible : true },
+					undo : { visible : true },
+					redo : { visible : true },
+					insertOrderedList    : { visible : true },
+					insertUnorderedList  : { visible : true },
+					insertHorizontalRule : { visible : true },
+					h4: {
+						visible: true,
+						className: 'h4',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h4>' : 'h4',
+						tags: ['h4'],
+						tooltip: 'Header 4'
+					},
+					h5: {
+						visible: true,
+						className: 'h5',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h5>' : 'h5',
+						tags: ['h5'],
+						tooltip: 'Header 5'
+					},
+					h6: {
+						visible: true,
+						className: 'h6',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h6>' : 'h6',
+						tags: ['h6'],
+						tooltip: 'Header 6'
+					},
+					cut   : { visible : true },
+					copy  : { visible : true },
+					paste : { visible : true },
+					html  : { visible: true },
+					increaseFontSize : { visible : true },
+					decreaseFontSize : { visible : true },
+					exam_html: {
+						exec: function() {
+							this.insertHtml('<abbr title="exam">Jam</abbr>');
+							return true;
+						},
+						visible: true
+					}
+				},
+				events: {
+					click: function(event) {
+						if ($("#click-inform:checked").length > 0) {
+							event.preventDefault();
+							alert("You have clicked jWysiwyg content!");
+						}
+					}
+				}
+			});
+		},
+		close: function(){
+			$('#confirmation_page_name').val('');
+			$('#confirmation_page_type').val('');
+			$('#confirmation_page_value').val('');
+			$('#confirmation_page_clickable').val('');
+			$('#confirmation_page_image').val('');
+			$('#uploaded-picture-confirmation').html('');
+			$('#confirmation_page_value').wysiwyg('destroy');
+			$(this).dialog("destroy");
+		},
+		title: 'Edit Component for Confirmation Page',
+		modal: true,
+		draggable: false,
+		height: 550,
+		width: 670,
+		resizable: false,
+		position: 'center',
+		buttons: {
+			Close: function() {
+				$('#confirmation_page_name').val('');
+				$('#confirmation_page_type').val('');
+				$('#confirmation_page_value').val('');
+				$('#confirmation_page_clickable').val('');
+				$('#confirmation_page_image').val('');
+				$('#uploaded-picture-confirmation').html('');
+				$('#confirmation_page_value').wysiwyg('destroy');
+				$(this).dialog("destroy");
+			},
+			Edit: function() {
+				if($('#confirmation_page_name').val()==''){
+					$('#dialogBox').html('');
+					$('#dialog').html('<p align="center">Component Name cannot empty!</p>');
+					$('#dialog').dialog({
+						title: 'Dialog Box',
+						resizable: true,
+						show: 'fade',
+						hide: 'fade',
+						height:140,
+						modal: true
+					});
+					return false;
+				}
+				$('#confirmation_page_name_value_'+id).text($('#confirmation_page_name').val());
+				$('#confirmation_page_type_value_'+id).text($('#confirmation_page_type').val());
+				$('#confirmation_page_value_value_'+id).html($('#confirmation_page_value').val());
+				$('#confirmation_page_clickable_value_'+id).text($('#confirmation_page_clickable').val());
+				$('#confirmation_page_image_value_'+id).text($('#confirmation_page_image').val());
+				if($('#confirmation_page_type').val()=='image'){
+					$('#img_content_confirmation_prev_'+id).attr('src','{/literal}{$base_url}{literal}upload/tmp_pic/confirmation_'+$('#confirmation_page_image').val());
+				}else if($('#confirmation_page_type').val()=='text'){
+					$('#txt_content_confirmation_prev_'+id).html($('#confirmation_page_value').val());
+				}else if($('#confirmation_page_type').val()=='title'){
+					$('#ttl_content_confirmation_prev_'+id).html($('#confirmation_page_value').val());
+				}else if($('#confirmation_page_type').val()=='space'){
+					$('#spc_content_confirmation_prev_'+id).html('<br />');
+				}else if($('#confirmation_page_type').val()=='url'){
+					$('#url_content_confirmation_prev_'+id).html('<font color="blue"><u>'+$('#confirmation_page_value').val()+'</u></font');
+				}else if($('#confirmation_page_type').val()=='catalog-a'){
+					$('#div_content_confirmation_prev_'+counter_confirmation_page).html('<table><tr><td><img id="cata_content_confirmation_prev_'+counter_confirmation_page+'" src="{/literal}{$base_url}{literal}upload/tmp_pic/confirmation_'+$('#confirmation_page_image').val()+'"width="100" align="left" style="margin-right:5px;" /></td><td valign="top">'+$('#confirmation_page_value').val()+'</td></tr></table>');
+				}else if($('#confirmation_page_type').val()=='catalog-b'){
+					$('#div_content_confirmation_prev_'+counter_confirmation_page).html('<table><tr><td><img id="catb_content_confirmation_prev_'+counter_confirmation_page+'" src="{/literal}{$base_url}{literal}upload/tmp_pic/confirmation_'+$('#confirmation_page_image').val()+'"width="100" align="left" style="margin-right:5px;" /></td><td valign="top">'+$('#confirmation_page_value').val()+'<br><img id="catb_btn_content_confirmation_prev_'+counter_confirmation_page+'" src="'+cat_image+'"width="50" /></td></tr></table>');
+				}else if($('#confirmation_page_type').val()=='ivr'){
+					$('#ivr_content_confirmation_prev_'+id).html($('#confirmation_page_value').val());
+				}
+				$('#confirmation_page_name').val('');
+				$('#confirmation_page_type').val('');
+				$('#confirmation_page_value').val('');
+				$('#confirmation_page_clickable').val('');
+				$('#confirmation_page_image').val('');
+				$('#uploaded-picture-confirmation').html('');
+				$('#confirmation_page_value').wysiwyg('destroy');
+				$(this).dialog('close');
+				$(this).dialog('destroy');
+			}
+		}
+	});
+}
+function edit_confirmation_page_old(id){
+	var img = new Image();
+	$(img).load(function(){
+		$(this).hide();
+		$("#uploaded-picture-confirmation").html($(this));
+		$(this).fadeIn();
+	}).attr('src', '{/literal}{$url_image_wapsub}{literal}confirmation_'+$("#confirmation_page_image_value_old_"+id).text()).error(function(){});
+	$('#confirmation_page_name').val($('#confirmation_page_name_value_'+id).text());
+    $("#confirmation_page_type option[value='"+$('#confirmation_page_type_value_'+id).text()+"']").attr('selected', 'selected');
+	$('#confirmation_page_value').val($('#confirmation_page_value_value_'+id).html());
+	$("#confirmation_page_clickable option[value='"+$('#confirmation_page_clickable_value_'+id).text()+"']").attr('selected', 'selected');
+	$('#confirmation-page-form').dialog({
+		open: function(){
+			$('#confirmation_page_value').wysiwyg({
+				controls: {
+					colorpicker: {
+						groupIndex: 11,
+						visible: true,
+						css: {
+							"color": function (cssValue, Wysiwyg) {
+								var document = Wysiwyg.innerDocument(),
+									defaultTextareaColor = $(document.body).css("color");
+
+								if (cssValue !== defaultTextareaColor) {
+									return true;
+								}
+
+								return false;
+							}
+						},
+						exec: function() {
+							if ($.wysiwyg.controls.colorpicker) {
+								$.wysiwyg.controls.colorpicker.init(this);
+							}
+						},
+						tooltip: "Colorpicker"
+					},
+					bold          : { visible : true },
+					italic        : { visible : true },
+					underline     : { visible : true },
+					strikeThrough : { visible : true },
+					justifyLeft   : { visible : true },
+					justifyCenter : { visible : true },
+					justifyRight  : { visible : true },
+					justifyFull   : { visible : true },
+					indent  : { visible : true },
+					outdent : { visible : true },
+					subscript   : { visible : true },
+					superscript : { visible : true },
+					undo : { visible : true },
+					redo : { visible : true },
+					insertOrderedList    : { visible : true },
+					insertUnorderedList  : { visible : true },
+					insertHorizontalRule : { visible : true },
+					h4: {
+						visible: true,
+						className: 'h4',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h4>' : 'h4',
+						tags: ['h4'],
+						tooltip: 'Header 4'
+					},
+					h5: {
+						visible: true,
+						className: 'h5',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h5>' : 'h5',
+						tags: ['h5'],
+						tooltip: 'Header 5'
+					},
+					h6: {
+						visible: true,
+						className: 'h6',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h6>' : 'h6',
+						tags: ['h6'],
+						tooltip: 'Header 6'
+					},
+					cut   : { visible : true },
+					copy  : { visible : true },
+					paste : { visible : true },
+					html  : { visible: true },
+					increaseFontSize : { visible : true },
+					decreaseFontSize : { visible : true },
+					exam_html: {
+						exec: function() {
+							this.insertHtml('<abbr title="exam">Jam</abbr>');
+							return true;
+						},
+						visible: true
+					}
+				},
+				events: {
+					click: function(event) {
+						if ($("#click-inform:checked").length > 0) {
+							event.preventDefault();
+							alert("You have clicked jWysiwyg content!");
+						}
+					}
+				}
+			});
+		},
+		close: function(){
+			$('#confirmation_page_name').val('');
+			$('#confirmation_page_type').val('');
+			$('#confirmation_page_value').val('');
+			$('#confirmation_page_clickable').val('');
+			$('#confirmation_page_image').val('');
+			$('#uploaded-picture-confirmation').html('');
+			$('#confirmation_page_value').wysiwyg('destroy');
+			$(this).dialog('close');
+			$(this).dialog("destroy");
+		},
+		title: 'Edit Component for Confirmation Page',
+		modal: true,
+		draggable: false,
+		height: 550,
+		width: 670,
+		resizable: false,
+		position: 'center',
+		buttons: {
+			Close: function() {
+				$('#confirmation_page_name').val('');
+				$('#confirmation_page_type').val('');
+				$('#confirmation_page_value').val('');
+				$('#confirmation_page_clickable').val('');
+				$('#confirmation_page_image').val('');
+				$('#uploaded-picture-confirmation').html('');
+				$('#confirmation_page_value').wysiwyg('destroy');
+				$(this).dialog("destroy");
+			},
+			Edit: function() {
+				if($('#confirmation_page_name').val()==''){
+					$('#dialogBox').html('');
+					$('#dialog').html('<p align="center">Component Name cannot empty!</p>');
+					$('#dialog').dialog({
+						title: 'Dialog Box',
+						resizable: true,
+						show: 'fade',
+						hide: 'fade',
+						height:140,
+						modal: true
+					});
+					return false;
+				}
+				$('#confirmation_page_name_value_'+id).text($('#confirmation_page_name').val());
+				$('#confirmation_page_type_value_'+id).text($('#confirmation_page_type').val());
+				$('#confirmation_page_value_value_'+id).html($('#confirmation_page_value').val());
+				$('#confirmation_page_clickable_value_'+id).text($('#confirmation_page_clickable').val());
+				$('#confirmation_page_image_value_'+id).text($('#confirmation_page_image').val());
+				if($('#confirmation_page_type').val()=='image'){
+					$('#img_content_confirmation_prev_'+id).attr('src','{/literal}{$base_url}{literal}upload/tmp_pic/confirmation_'+$('#confirmation_page_image').val());
+				}else if($('#confirmation_page_type').val()=='text'){
+					$('#txt_content_confirmation_prev_'+id).html($('#confirmation_page_value').val());
+				}else if($('#confirmation_page_type').val()=='title'){
+					$('#ttl_content_confirmation_prev_'+id).html($('#confirmation_page_value').val());
+				}else if($('#confirmation_page_type').val()=='space'){
+					$('#spc_content_confirmation_prev_'+id).html('<br />');
+				}else if($('#confirmation_page_type').val()=='url'){
+					$('#url_content_confirmation_prev_'+id).html('<font color="blue"><u>'+$('#confirmation_page_value').val()+'</u></font');
+				}else if($('#confirmation_page_type').val()=='catalog-a'){
+					$('#div_content_confirmation_prev_'+counter_confirmation_page).html('<table><tr><td><img id="cata_content_confirmation_prev_'+counter_confirmation_page+'" src="{/literal}{$base_url}{literal}upload/tmp_pic/confirmation_'+$('#confirmation_page_image').val()+'"width="100" align="left" style="margin-right:5px;" /></td><td valign="top">'+$('#confirmation_page_value').val()+'</td></tr></table>');
+				}else if($('#confirmation_page_type').val()=='catalog-b'){
+					$('#div_content_confirmation_prev_'+counter_confirmation_page).html('<table><tr><td><img id="catb_content_confirmation_prev_'+counter_confirmation_page+'" src="{/literal}{$base_url}{literal}upload/tmp_pic/confirmation_'+$('#confirmation_page_image').val()+'"width="100" align="left" style="margin-right:5px;" /></td><td valign="top">'+$('#confirmation_page_value').val()+'<br><img id="catb_btn_content_confirmation_prev_'+counter_confirmation_page+'" src="'+cat_image+'"width="50" /></td></tr></table>');
+				}else if($('#confirmation_page_type').val()=='ivr'){
+					$('#ivr_content_confirmation_prev_'+id).html($('#confirmation_page_value').val());
+				}
+				$('#confirmation_page_name').val('');
+				$('#confirmation_page_type').val('');
+				$('#confirmation_page_value').val('');
+				$('#confirmation_page_clickable').val('');
+				$('#confirmation_page_image').val('');
+				$('#uploaded-picture-confirmation').html('');
+				$('#confirmation_page_value').wysiwyg('destroy');
+				$(this).dialog('close');
+				$(this).dialog('destroy');
+			}
+		}
+	});
+}
+function show_thankyou_page(){
+	if($('#sortable_thankyou li').length==0){
+		counter_thankyou_page = 0;
+	}else{
+		counter_thankyou_page    = $('#sortable_thankyou li').length;
+	}
+	$("#thankyou-page-form").dialog({
+		open: function(){
+			$('#thankyou_page_value').wysiwyg({
+				controls: {
+					colorpicker: {
+						groupIndex: 11,
+						visible: true,
+						css: {
+							"color": function (cssValue, Wysiwyg) {
+								var document = Wysiwyg.innerDocument(),
+									defaultTextareaColor = $(document.body).css("color");
+
+								if (cssValue !== defaultTextareaColor) {
+									return true;
+								}
+
+								return false;
+							}
+						},
+						exec: function() {
+							if ($.wysiwyg.controls.colorpicker) {
+								$.wysiwyg.controls.colorpicker.init(this);
+							}
+						},
+						tooltip: "Colorpicker"
+					},
+					bold          : { visible : true },
+					italic        : { visible : true },
+					underline     : { visible : true },
+					strikeThrough : { visible : true },
+					justifyLeft   : { visible : true },
+					justifyCenter : { visible : true },
+					justifyRight  : { visible : true },
+					justifyFull   : { visible : true },
+					indent  : { visible : true },
+					outdent : { visible : true },
+					subscript   : { visible : true },
+					superscript : { visible : true },
+					undo : { visible : true },
+					redo : { visible : true },
+					insertOrderedList    : { visible : true },
+					insertUnorderedList  : { visible : true },
+					insertHorizontalRule : { visible : true },
+					h4: {
+						visible: true,
+						className: 'h4',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h4>' : 'h4',
+						tags: ['h4'],
+						tooltip: 'Header 4'
+					},
+					h5: {
+						visible: true,
+						className: 'h5',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h5>' : 'h5',
+						tags: ['h5'],
+						tooltip: 'Header 5'
+					},
+					h6: {
+						visible: true,
+						className: 'h6',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h6>' : 'h6',
+						tags: ['h6'],
+						tooltip: 'Header 6'
+					},
+					cut   : { visible : true },
+					copy  : { visible : true },
+					paste : { visible : true },
+					html  : { visible: true },
+					increaseFontSize : { visible : true },
+					decreaseFontSize : { visible : true },
+					exam_html: {
+						exec: function() {
+							this.insertHtml('<abbr title="exam">Jam</abbr>');
+							return true;
+						},
+						visible: true
+					}
+				},
+				events: {
+					click: function(event) {
+						if ($("#click-inform:checked").length > 0) {
+							event.preventDefault();
+							alert("You have clicked jWysiwyg content!");
+						}
+					}
+				}
+			});
+		},
+		close: function(){
+			$('#thankyou_page_name').val('');
+			$('#thankyou_page_type').val('');
+			$('#thankyou_page_value').val('');
+			$('#thankyou_page_clickable').val('');
+			$('#thankyou_page_image').val('');
+			$('#uploaded-picture-thankyou').html('');
+			$('#thankyou_page_value').wysiwyg('destroy');
+			$(this).dialog("destroy");
+		},
+		title: 'Add New Component for Thankyou Page',
+		modal: true,
+		draggable: false,
+		height: 550,
+		width: 670,
+		resizable: false,
+		position: 'center',
+		buttons: {
+			Close: function() {
+				$('#thankyou_page_name').val('');
+				$('#thankyou_page_type').val('');
+				$('#thankyou_page_value').val('');
+				$('#thankyou_page_clickable').val('');
+				$('#thankyou_page_image').val('');
+				$('#uploaded-picture-thankyou').html('');
+				$('#thankyou_page_value').wysiwyg('destroy');
+				$(this).dialog("destroy");
+			},
+			Add: function() {
+				if($('#thankyou_page_name').val()==''){
+					$('#dialogBox').html('');
+					$('#dialog').html('<p align="center">Component Name cannot empty!</p>');
+					$('#dialog').dialog({
+						title: 'Dialog Box',
+						resizable: true,
+						show: 'fade',
+						hide: 'fade',
+						height:140,
+						modal: true
+					});
+					return false;
+				}
+				var value = $('#thankyou_page_name').val();
+				$('.thankyou_page_sortable').append('<li id="comp_thankyou_page_'+counter_thankyou_page+'" class="ui-state-default"><div style="width:90px; float:left"><a style="text-decoration:underline;" onclick="edit_thankyou_page('+counter_thankyou_page+');">Edit</a> | <a style="text-decoration:underline;" onclick="remove_component(\'comp_thankyou_page_'+counter_thankyou_page+'\');">Delete</a></div><div style="width:580px; float:left"><b style="color:#000;">Name</b> : '+(value.substring(0,60))+'<span id="thankyou_page_name_value_'+counter_thankyou_page+'" style="display:none">'+$('#thankyou_page_name').val()+'</span></div><div style="float:left"><b style="color:#000;">Type</b> : <span id="thankyou_page_type_value_'+counter_thankyou_page+'">'+$('#thankyou_page_type').val()+'</span><span id="thankyou_page_value_value_'+counter_thankyou_page+'" style="display:none;">'+$('#thankyou_page_value').val()+'</span><span id="thankyou_page_clickable_value_'+counter_thankyou_page+'" style="display:none;">'+$('#thankyou_page_clickable').val()+'</span><span id="thankyou_page_image_value_'+counter_thankyou_page+'" style="display:none;">'+$('#thankyou_page_image').val()+'</span></div></li>');
+				if($('#thankyou_page_type').val()=='image'){
+					$('#img_content_thankyou_prev_'+counter_thankyou_page).attr('src','{/literal}{$base_url}{literal}upload/tmp_pic/thankyou_'+$('#thankyou_page_image').val());
+				}else if($('#thankyou_page_type').val()=='text'){
+					$('#txt_content_thankyou_prev_'+counter_thankyou_page).html($('#thankyou_page_value').val());
+				}else if($('#thankyou_page_type').val()=='title'){
+					$('#ttl_content_thankyou_prev_'+counter_thankyou_page).html($('#thankyou_page_value').val());
+				}else if($('#thankyou_page_type').val()=='space'){
+					$('#spc_content_thankyou_prev_'+counter_thankyou_page).html('<br />');
+				}else if($('#thankyou_page_type').val()=='url'){
+					$('#url_content_thankyou_prev_'+counter_thankyou_page).html('<font color="blue"><u>'+$('#thankyou_page_value').val()+'</u></font');
+				}else if($('#thankyou_page_type').val()=='catalog-a'){
+					$('#div_content_thankyou_prev_'+counter_thankyou_page).html('<table><tr><td><img id="cata_content_thankyou_prev_'+counter_thankyou_page+'" src="{/literal}{$base_url}{literal}upload/tmp_pic/thankyou_'+$('#thankyou_page_image').val()+'"width="100" align="left" style="margin-right:5px;" /></td><td valign="top">'+$('#thankyou_page_value').val()+'</td></tr></table>');
+				}else if($('#thankyou_page_type').val()=='catalog-b'){
+					$('#div_content_thankyou_prev_'+counter_thankyou_page).html('<table><tr><td><img id="catb_content_thankyou_prev_'+counter_thankyou_page+'" src="{/literal}{$base_url}{literal}upload/tmp_pic/thankyou_'+$('#thankyou_page_image').val()+'"width="100" align="left" style="margin-right:5px;" /></td><td valign="top">'+$('#thankyou_page_value').val()+'<br><img id="catb_btn_content_thankyou_prev_'+counter_thankyou_page+'" src="'+cat_image+'"width="50" /></td></tr></table>');
+				}else if($('#thankyou_page_type').val()=='ivr'){
+					$('#ivr_content_thankyou_prev_'+counter_thankyou_page).html($('#thankyou_page_value').val());
+				}
+				$('#thankyou_page_name').val('');
+				$('#thankyou_page_type').val('');
+				$('#thankyou_page_value').val('');
+				$('#thankyou_page_clickable').val('');
+				$('#thankyou_page_image').val('');
+				$('#uploaded-picture-thankyou').html('');
+				$('#thankyou_page_value').wysiwyg('destroy');
+				$(this).dialog('close');
+				$(this).dialog('destroy');
+				counter_thankyou_page++;
+			}
+		}
+	});
+}
+function edit_thankyou_page(id){
+	var img = new Image();
+	$(img).load(function(){
+		$(this).hide();
+		$("#uploaded-picture-thankyou").html($(this));
+		$(this).fadeIn();
+	}).attr('src', '{/literal}{$base_url}{literal}upload/tmp_pic/thankyou_'+$("#thankyou_page_image_value_"+id).text()).error(function(){});
+	$('#thankyou_page_name').val($('#thankyou_page_name_value_'+id).text());
+    $("#thankyou_page_type option[value='"+$('#thankyou_page_type_value_'+id).text()+"']").attr('selected', 'selected');
+	$('#thankyou_page_value').val($('#thankyou_page_value_value_'+id).html());
+	$("#thankyou_page_clickable option[value='"+$('#thankyou_page_clickable_value_'+id).text()+"']").attr('selected', 'selected');
+	$('#thankyou_page_image').val($('#thankyou_page_value_image_'+id).text());
+	$('#thankyou-page-form').dialog({
+		open: function(){
+			$('#thankyou_page_value').wysiwyg({
+				controls: {
+					colorpicker: {
+						groupIndex: 11,
+						visible: true,
+						css: {
+							"color": function (cssValue, Wysiwyg) {
+								var document = Wysiwyg.innerDocument(),
+									defaultTextareaColor = $(document.body).css("color");
+
+								if (cssValue !== defaultTextareaColor) {
+									return true;
+								}
+
+								return false;
+							}
+						},
+						exec: function() {
+							if ($.wysiwyg.controls.colorpicker) {
+								$.wysiwyg.controls.colorpicker.init(this);
+							}
+						},
+						tooltip: "Colorpicker"
+					},
+					bold          : { visible : true },
+					italic        : { visible : true },
+					underline     : { visible : true },
+					strikeThrough : { visible : true },
+					justifyLeft   : { visible : true },
+					justifyCenter : { visible : true },
+					justifyRight  : { visible : true },
+					justifyFull   : { visible : true },
+					indent  : { visible : true },
+					outdent : { visible : true },
+					subscript   : { visible : true },
+					superscript : { visible : true },
+					undo : { visible : true },
+					redo : { visible : true },
+					insertOrderedList    : { visible : true },
+					insertUnorderedList  : { visible : true },
+					insertHorizontalRule : { visible : true },
+					h4: {
+						visible: true,
+						className: 'h4',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h4>' : 'h4',
+						tags: ['h4'],
+						tooltip: 'Header 4'
+					},
+					h5: {
+						visible: true,
+						className: 'h5',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h5>' : 'h5',
+						tags: ['h5'],
+						tooltip: 'Header 5'
+					},
+					h6: {
+						visible: true,
+						className: 'h6',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h6>' : 'h6',
+						tags: ['h6'],
+						tooltip: 'Header 6'
+					},
+					cut   : { visible : true },
+					copy  : { visible : true },
+					paste : { visible : true },
+					html  : { visible: true },
+					increaseFontSize : { visible : true },
+					decreaseFontSize : { visible : true },
+					exam_html: {
+						exec: function() {
+							this.insertHtml('<abbr title="exam">Jam</abbr>');
+							return true;
+						},
+						visible: true
+					}
+				},
+				events: {
+					click: function(event) {
+						if ($("#click-inform:checked").length > 0) {
+							event.preventDefault();
+							alert("You have clicked jWysiwyg content!");
+						}
+					}
+				}
+			});
+		},
+		close: function(){
+			$('#thankyou_page_name').val('');
+			$('#thankyou_page_type').val('');
+			$('#thankyou_page_value').val('');
+			$('#thankyou_page_clickable').val('');
+			$('#thankyou_page_image').val('');
+			$('#uploaded-picture-thankyou').html('');
+			$('#thankyou_page_value').wysiwyg('destroy');
+			$(this).dialog("destroy");
+		},
+		title: 'Edit Component for Thankyou Page',
+		modal: true,
+		draggable: false,
+		height: 550,
+		width: 670,
+		resizable: false,
+		position: 'center',
+		buttons: {
+			Close: function() {
+				$('#thankyou_page_name').val('');
+				$('#thankyou_page_type').val('');
+				$('#thankyou_page_value').val('');
+				$('#thankyou_page_clickable').val('');
+				$('#thankyou_page_image').val('');
+				$('#uploaded-picture-thankyou').html('');
+				$('#thankyou_page_value').wysiwyg('destroy');
+				$(this).dialog("destroy");
+			},
+			Edit: function() {
+				if($('#thankyou_page_name').val()==''){
+					$('#dialogBox').html('');
+					$('#dialog').html('<p align="center">Component Name cannot empty!</p>');
+					$('#dialog').dialog({
+						title: 'Dialog Box',
+						resizable: true,
+						show: 'fade',
+						hide: 'fade',
+						height:140,
+						modal: true
+					});
+					return false;
+				}
+				$('#thankyou_page_name_value_'+id).text($('#thankyou_page_name').val());
+				$('#thankyou_page_type_value_'+id).text($('#thankyou_page_type').val());
+				$('#thankyou_page_value_value_'+id).html($('#thankyou_page_value').val());
+				$('#thankyou_page_clickable_value_'+id).text($('#thankyou_page_clickable').val());
+				$('#thankyou_page_image_value_'+id).text($('#thankyou_page_image').val());
+				if($('#thankyou_page_type').val()=='image'){
+					$('#img_content_thankyou_prev_'+id).attr('src','{/literal}{$base_url}{literal}upload/tmp_pic/thankyou_'+$('#thankyou_page_image').val());
+				}else if($('#thankyou_page_type').val()=='text'){
+					$('#txt_content_thankyou_prev_'+id).html($('#thankyou_page_value').val());
+				}else if($('#thankyou_page_type').val()=='title'){
+					$('#ttl_content_thankyou_prev_'+id).html($('#thankyou_page_value').val());
+				}else if($('#thankyou_page_type').val()=='space'){
+					$('#spc_content_thankyou_prev_'+id).html('<br />');
+				}else if($('#thankyou_page_type').val()=='url'){
+					$('#url_content_thankyou_prev_'+id).html('<font color="blue"><u>'+$('#thankyou_page_value').val()+'</u></font');
+				}else if($('#thankyou_page_type').val()=='catalog-a'){
+					$('#div_content_thankyou_prev_'+counter_thankyou_page).html('<table><tr><td><img id="cata_content_thankyou_prev_'+counter_thankyou_page+'" src="{/literal}{$base_url}{literal}upload/tmp_pic/thankyou_'+$('#thankyou_page_image').val()+'"width="100" align="left" style="margin-right:5px;" /></td><td valign="top">'+$('#thankyou_page_value').val()+'</td></tr></table>');
+				}else if($('#thankyou_page_type').val()=='catalog-b'){
+					$('#div_content_thankyou_prev_'+counter_thankyou_page).html('<table><tr><td><img id="catb_content_thankyou_prev_'+counter_thankyou_page+'" src="{/literal}{$base_url}{literal}upload/tmp_pic/thankyou_'+$('#thankyou_page_image').val()+'"width="100" align="left" style="margin-right:5px;" /></td><td valign="top">'+$('#thankyou_page_value').val()+'<br><img id="catb_btn_content_thankyou_prev_'+counter_thankyou_page+'" src="'+cat_image+'"width="50" /></td></tr></table>');
+				}else if($('#thankyou_page_type').val()=='ivr'){
+					$('#ivr_content_thankyou_prev_'+id).html($('#thankyou_page_value').val());
+				}
+				$('#thankyou_page_name').val('');
+				$('#thankyou_page_type').val('');
+				$('#thankyou_page_value').val('');
+				$('#thankyou_page_clickable').val('');
+				$('#thankyou_page_image').val('');
+				$('#uploaded-picture-thankyou').html('');
+				$('#thankyou_page_value').wysiwyg('destroy');
+				$(this).dialog('close');
+				$(this).dialog('destroy');
+			}
+		}
+	});
+}
+function edit_thankyou_page_old(id){
+	var img = new Image();
+	$(img).load(function(){
+		$(this).hide();
+		$("#uploaded-picture-thankyou").html($(this));
+		$(this).fadeIn();
+	}).attr('src', '{/literal}{$url_image_wapsub}{literal}thankyou_'+$("#thankyou_page_image_value_old_"+id).text()).error(function(){});
+	$('#thankyou_page_name').val($('#thankyou_page_name_value_'+id).text());
+    $("#thankyou_page_type option[value='"+$('#thankyou_page_type_value_'+id).text()+"']").attr('selected', 'selected');
+	$('#thankyou_page_value').val($('#thankyou_page_value_value_'+id).html());
+	$("#thankyou_page_clickable option[value='"+$('#thankyou_page_clickable_value_'+id).text()+"']").attr('selected', 'selected');
+	$('#thankyou-page-form').dialog({
+		open: function(){
+			$('#thankyou_page_value').wysiwyg({
+				controls: {
+					colorpicker: {
+						groupIndex: 11,
+						visible: true,
+						css: {
+							"color": function (cssValue, Wysiwyg) {
+								var document = Wysiwyg.innerDocument(),
+									defaultTextareaColor = $(document.body).css("color");
+
+								if (cssValue !== defaultTextareaColor) {
+									return true;
+								}
+
+								return false;
+							}
+						},
+						exec: function() {
+							if ($.wysiwyg.controls.colorpicker) {
+								$.wysiwyg.controls.colorpicker.init(this);
+							}
+						},
+						tooltip: "Colorpicker"
+					},
+					bold          : { visible : true },
+					italic        : { visible : true },
+					underline     : { visible : true },
+					strikeThrough : { visible : true },
+					justifyLeft   : { visible : true },
+					justifyCenter : { visible : true },
+					justifyRight  : { visible : true },
+					justifyFull   : { visible : true },
+					indent  : { visible : true },
+					outdent : { visible : true },
+					subscript   : { visible : true },
+					superscript : { visible : true },
+					undo : { visible : true },
+					redo : { visible : true },
+					insertOrderedList    : { visible : true },
+					insertUnorderedList  : { visible : true },
+					insertHorizontalRule : { visible : true },
+					h4: {
+						visible: true,
+						className: 'h4',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h4>' : 'h4',
+						tags: ['h4'],
+						tooltip: 'Header 4'
+					},
+					h5: {
+						visible: true,
+						className: 'h5',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h5>' : 'h5',
+						tags: ['h5'],
+						tooltip: 'Header 5'
+					},
+					h6: {
+						visible: true,
+						className: 'h6',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h6>' : 'h6',
+						tags: ['h6'],
+						tooltip: 'Header 6'
+					},
+					cut   : { visible : true },
+					copy  : { visible : true },
+					paste : { visible : true },
+					html  : { visible: true },
+					increaseFontSize : { visible : true },
+					decreaseFontSize : { visible : true },
+					exam_html: {
+						exec: function() {
+							this.insertHtml('<abbr title="exam">Jam</abbr>');
+							return true;
+						},
+						visible: true
+					}
+				},
+				events: {
+					click: function(event) {
+						if ($("#click-inform:checked").length > 0) {
+							event.preventDefault();
+							alert("You have clicked jWysiwyg content!");
+						}
+					}
+				}
+			});
+		},
+		close: function(){
+			$('#thankyou_page_name').val('');
+			$('#thankyou_page_type').val('');
+			$('#thankyou_page_value').val('');
+			$('#thankyou_page_clickable').val('');
+			$('#thankyou_page_image').val('');
+			$('#uploaded-picture-thankyou').html('');
+			$('#thankyou_page_value').wysiwyg('destroy');
+			$(this).dialog('close');
+			$(this).dialog("destroy");
+		},
+		title: 'Edit Component for Thankyou Page',
+		modal: true,
+		draggable: false,
+		height: 550,
+		width: 670,
+		resizable: false,
+		position: 'center',
+		buttons: {
+			Close: function() {
+				$('#thankyou_page_name').val('');
+				$('#thankyou_page_type').val('');
+				$('#thankyou_page_value').val('');
+				$('#thankyou_page_clickable').val('');
+				$('#thankyou_page_image').val('');
+				$('#uploaded-picture-thankyou').html('');
+				$('#thankyou_page_value').wysiwyg('destroy');
+				$(this).dialog("destroy");
+			},
+			Edit: function() {
+				if($('#thankyou_page_name').val()==''){
+					$('#dialogBox').html('');
+					$('#dialog').html('<p align="center">Component Name cannot empty!</p>');
+					$('#dialog').dialog({
+						title: 'Dialog Box',
+						resizable: true,
+						show: 'fade',
+						hide: 'fade',
+						height:140,
+						modal: true
+					});
+					return false;
+				}
+				$('#thankyou_page_name_value_'+id).text($('#thankyou_page_name').val());
+				$('#thankyou_page_type_value_'+id).text($('#thankyou_page_type').val());
+				$('#thankyou_page_value_value_'+id).html($('#thankyou_page_value').val());
+				$('#thankyou_page_clickable_value_'+id).text($('#thankyou_page_clickable').val());
+				$('#thankyou_page_image_value_'+id).text($('#thankyou_page_image').val());
+				if($('#thankyou_page_type').val()=='image'){
+					$('#img_content_thankyou_prev_'+id).attr('src','{/literal}{$base_url}{literal}upload/tmp_pic/thankyou_'+$('#thankyou_page_image').val());
+				}else if($('#thankyou_page_type').val()=='text'){
+					$('#txt_content_thankyou_prev_'+id).html($('#thankyou_page_value').val());
+				}else if($('#thankyou_page_type').val()=='title'){
+					$('#ttl_content_thankyou_prev_'+id).html($('#thankyou_page_value').val());
+				}else if($('#thankyou_page_type').val()=='space'){
+					$('#spc_content_thankyou_prev_'+id).html('<br />');
+				}else if($('#thankyou_page_type').val()=='url'){
+					$('#url_content_thankyou_prev_'+id).html('<font color="blue"><u>'+$('#thankyou_page_value').val()+'</u></font');
+				}else if($('#thankyou_page_type').val()=='catalog-a'){
+					$('#div_content_thankyou_prev_'+counter_thankyou_page).html('<table><tr><td><img id="cata_content_thankyou_prev_'+counter_thankyou_page+'" src="{/literal}{$base_url}{literal}upload/tmp_pic/thankyou_'+$('#thankyou_page_image').val()+'"width="100" align="left" style="margin-right:5px;" /></td><td valign="top">'+$('#thankyou_page_value').val()+'</td></tr></table>');
+				}else if($('#thankyou_page_type').val()=='catalog-b'){
+					$('#div_content_thankyou_prev_'+counter_thankyou_page).html('<table><tr><td><img id="catb_content_thankyou_prev_'+counter_thankyou_page+'" src="{/literal}{$base_url}{literal}upload/tmp_pic/thankyou_'+$('#thankyou_page_image').val()+'"width="100" align="left" style="margin-right:5px;" /></td><td valign="top">'+$('#thankyou_page_value').val()+'<br><img id="catb_btn_content_thankyou_prev_'+counter_thankyou_page+'" src="'+cat_image+'"width="50" /></td></tr></table>');
+				}else if($('#thankyou_page_type').val()=='ivr'){
+					$('#ivr_content_thankyou_prev_'+id).html($('#thankyou_page_value').val());
+				}
+				$('#thankyou_page_name').val('');
+				$('#thankyou_page_type').val('');
+				$('#thankyou_page_value').val('');
+				$('#thankyou_page_clickable').val('');
+				$('#thankyou_page_image').val('');
+				$('#uploaded-picture-thankyou').html('');
+				$('#thankyou_page_value').wysiwyg('destroy');
+				$(this).dialog('close');
+				$(this).dialog('destroy');
+			}
+		}
+	});
+}
+
+function show_info_page(){
+	if($('#sortable_info li').length==0){
+		counter_info_page = 0;
+	}else{
+		counter_info_page    = $('#sortable_info li').length;
+	}
+	$("#info-page-form").dialog({
+		open: function(){
+			$('#info_page_value').wysiwyg({
+				controls: {
+					colorpicker: {
+						groupIndex: 11,
+						visible: true,
+						css: {
+							"color": function (cssValue, Wysiwyg) {
+								var document = Wysiwyg.innerDocument(),
+									defaultTextareaColor = $(document.body).css("color");
+
+								if (cssValue !== defaultTextareaColor) {
+									return true;
+								}
+
+								return false;
+							}
+						},
+						exec: function() {
+							if ($.wysiwyg.controls.colorpicker) {
+								$.wysiwyg.controls.colorpicker.init(this);
+							}
+						},
+						tooltip: "Colorpicker"
+					},
+					bold          : { visible : true },
+					italic        : { visible : true },
+					underline     : { visible : true },
+					strikeThrough : { visible : true },
+					justifyLeft   : { visible : true },
+					justifyCenter : { visible : true },
+					justifyRight  : { visible : true },
+					justifyFull   : { visible : true },
+					indent  : { visible : true },
+					outdent : { visible : true },
+					subscript   : { visible : true },
+					superscript : { visible : true },
+					undo : { visible : true },
+					redo : { visible : true },
+					insertOrderedList    : { visible : true },
+					insertUnorderedList  : { visible : true },
+					insertHorizontalRule : { visible : true },
+					h4: {
+						visible: true,
+						className: 'h4',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h4>' : 'h4',
+						tags: ['h4'],
+						tooltip: 'Header 4'
+					},
+					h5: {
+						visible: true,
+						className: 'h5',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h5>' : 'h5',
+						tags: ['h5'],
+						tooltip: 'Header 5'
+					},
+					h6: {
+						visible: true,
+						className: 'h6',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h6>' : 'h6',
+						tags: ['h6'],
+						tooltip: 'Header 6'
+					},
+					cut   : { visible : true },
+					copy  : { visible : true },
+					paste : { visible : true },
+					html  : { visible: true },
+					increaseFontSize : { visible : true },
+					decreaseFontSize : { visible : true },
+					exam_html: {
+						exec: function() {
+							this.insertHtml('<abbr title="exam">Jam</abbr>');
+							return true;
+						},
+						visible: true
+					}
+				},
+				events: {
+					click: function(event) {
+						if ($("#click-inform:checked").length > 0) {
+							event.preventDefault();
+							alert("You have clicked jWysiwyg content!");
+						}
+					}
+				}
+			});
+		},
+		close: function(){
+			$('#info_page_name').val('');
+			$('#info_page_type').val('');
+			$('#info_page_value').val('');
+			$('#info_page_clickable').val('');
+			$('#info_page_image').val('');
+			$('#uploaded-picture-info').html('');
+			$('#info_page_value').wysiwyg('destroy');
+			$(this).dialog("destroy");
+		},
+		title: 'Add New Component for Info Page',
+		modal: true,
+		draggable: false,
+		height: 550,
+		width: 670,
+		resizable: false,
+		position: 'center',
+		buttons: {
+			Close: function() {
+				$('#info_page_name').val('');
+				$('#info_page_type').val('');
+				$('#info_page_value').val('');
+				$('#info_page_clickable').val('');
+				$('#info_page_image').val('');
+				$('#uploaded-picture-info').html('');
+				$('#info_page_value').wysiwyg('destroy');
+				$(this).dialog("destroy");
+			},
+			Add: function() {
+				if($('#info_page_name').val()==''){
+					$('#dialogBox').html('');
+					$('#dialog').html('<p align="center">Component Name cannot empty!</p>');
+					$('#dialog').dialog({
+						title: 'Dialog Box',
+						resizable: true,
+						show: 'fade',
+						hide: 'fade',
+						height:140,
+						modal: true
+					});
+					return false;
+				}
+				var value = $('#info_page_name').val();
+				$('.info_page_sortable').append('<li id="comp_info_page_'+counter_info_page+'" class="ui-state-default"><div style="width:90px; float:left"><a style="text-decoration:underline;" onclick="edit_info_page('+counter_info_page+');">Edit</a> | <a style="text-decoration:underline;" onclick="remove_component(\'comp_info_page_'+counter_info_page+'\');">Delete</a></div><div style="width:580px; float:left"><b style="color:#000;">Name</b> : '+(value.substring(0,60))+'<span id="info_page_name_value_'+counter_info_page+'" style="display:none">'+$('#info_page_name').val()+'</span></div><div style="float:left"><b style="color:#000;">Type</b> : <span id="info_page_type_value_'+counter_info_page+'">'+$('#info_page_type').val()+'</span><span id="info_page_value_value_'+counter_info_page+'" style="display:none;">'+$('#info_page_value').val()+'</span><span id="info_page_clickable_value_'+counter_info_page+'" style="display:none;">'+$('#info_page_clickable').val()+'</span><span id="info_page_image_value_'+counter_info_page+'" style="display:none;">'+$('#info_page_image').val()+'</span></div></li>');
+				if($('#info_page_type').val()=='image'){
+					$('#img_content_info_prev_'+counter_info_page).attr('src','{/literal}{$base_url}{literal}upload/tmp_pic/info_'+$('#info_page_image').val());
+				}else if($('#info_page_type').val()=='text'){
+					$('#txt_content_info_prev_'+counter_info_page).html($('#info_page_value').val());
+				}else if($('#info_page_type').val()=='title'){
+					$('#ttl_content_info_prev_'+counter_info_page).html($('#info_page_value').val());
+				}else if($('#info_page_type').val()=='space'){
+					$('#spc_content_info_prev_'+counter_info_page).html('<br />');
+				}else if($('#info_page_type').val()=='url'){
+					$('#url_content_info_prev_'+counter_info_page).html('<font color="blue"><u>'+$('#info_page_value').val()+'</u></font');
+				}else if($('#info_page_type').val()=='catalog-a'){
+					$('#div_content_info_prev_'+counter_info_page).html('<table><tr><td><img id="cata_content_info_prev_'+counter_info_page+'" src="{/literal}{$base_url}{literal}upload/tmp_pic/info_'+$('#info_page_image').val()+'"width="100" align="left" style="margin-right:5px;" /></td><td valign="top">'+$('#info_page_value').val()+'</td></tr></table>');
+				}else if($('#info_page_type').val()=='catalog-b'){
+					$('#div_content_info_prev_'+counter_info_page).html('<table><tr><td><img id="catb_content_info_prev_'+counter_info_page+'" src="{/literal}{$base_url}{literal}upload/tmp_pic/info_'+$('#info_page_image').val()+'"width="100" align="left" style="margin-right:5px;" /></td><td valign="top">'+$('#info_page_value').val()+'<br><img id="catb_btn_content_info_prev_'+counter_info_page+'" src="'+cat_image+'"width="50" /></td></tr></table>');
+				}else if($('#info_page_type').val()=='ivr'){
+					$('#ivr_content_info_prev_'+counter_info_page).html($('#info_page_value').val());
+				}
+				$('#info_page_name').val('');
+				$('#info_page_type').val('');
+				$('#info_page_value').val('');
+				$('#info_page_clickable').val('');
+				$('#info_page_image').val('');
+				$('#uploaded-picture-info').html('');
+				$('#info_page_value').wysiwyg('destroy');
+				$(this).dialog('close');
+				$(this).dialog('destroy');
+				counter_info_page++;
+			}
+		}
+	});
+}
+function edit_info_page(id){
+	var img = new Image();
+	$(img).load(function(){
+		$(this).hide();
+		$("#uploaded-picture-info").html($(this));
+		$(this).fadeIn();
+	}).attr('src', '{/literal}{$base_url}{literal}upload/tmp_pic/info_'+$("#info_page_image_value_"+id).text()).error(function(){});
+	$('#info_page_name').val($('#info_page_name_value_'+id).text());
+    $("#info_page_type option[value='"+$('#info_page_type_value_'+id).text()+"']").attr('selected', 'selected');
+	$('#info_page_value').val($('#info_page_value_value_'+id).html());
+	$("#info_page_clickable option[value='"+$('#info_page_clickable_value_'+id).text()+"']").attr('selected', 'selected');
+	$('#info_page_image').val($('#info_page_value_image_'+id).text());
+	$('#info-page-form').dialog({
+		open: function(){
+			$('#info_page_value').wysiwyg({
+				controls: {
+					colorpicker: {
+						groupIndex: 11,
+						visible: true,
+						css: {
+							"color": function (cssValue, Wysiwyg) {
+								var document = Wysiwyg.innerDocument(),
+									defaultTextareaColor = $(document.body).css("color");
+
+								if (cssValue !== defaultTextareaColor) {
+									return true;
+								}
+
+								return false;
+							}
+						},
+						exec: function() {
+							if ($.wysiwyg.controls.colorpicker) {
+								$.wysiwyg.controls.colorpicker.init(this);
+							}
+						},
+						tooltip: "Colorpicker"
+					},
+					bold          : { visible : true },
+					italic        : { visible : true },
+					underline     : { visible : true },
+					strikeThrough : { visible : true },
+					justifyLeft   : { visible : true },
+					justifyCenter : { visible : true },
+					justifyRight  : { visible : true },
+					justifyFull   : { visible : true },
+					indent  : { visible : true },
+					outdent : { visible : true },
+					subscript   : { visible : true },
+					superscript : { visible : true },
+					undo : { visible : true },
+					redo : { visible : true },
+					insertOrderedList    : { visible : true },
+					insertUnorderedList  : { visible : true },
+					insertHorizontalRule : { visible : true },
+					h4: {
+						visible: true,
+						className: 'h4',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h4>' : 'h4',
+						tags: ['h4'],
+						tooltip: 'Header 4'
+					},
+					h5: {
+						visible: true,
+						className: 'h5',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h5>' : 'h5',
+						tags: ['h5'],
+						tooltip: 'Header 5'
+					},
+					h6: {
+						visible: true,
+						className: 'h6',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h6>' : 'h6',
+						tags: ['h6'],
+						tooltip: 'Header 6'
+					},
+					cut   : { visible : true },
+					copy  : { visible : true },
+					paste : { visible : true },
+					html  : { visible: true },
+					increaseFontSize : { visible : true },
+					decreaseFontSize : { visible : true },
+					exam_html: {
+						exec: function() {
+							this.insertHtml('<abbr title="exam">Jam</abbr>');
+							return true;
+						},
+						visible: true
+					}
+				},
+				events: {
+					click: function(event) {
+						if ($("#click-inform:checked").length > 0) {
+							event.preventDefault();
+							alert("You have clicked jWysiwyg content!");
+						}
+					}
+				}
+			});
+		},
+		close: function(){
+			$('#info_page_name').val('');
+			$('#info_page_type').val('');
+			$('#info_page_value').val('');
+			$('#info_page_clickable').val('');
+			$('#info_page_image').val('');
+			$('#uploaded-picture-info').html('');
+			$('#info_page_value').wysiwyg('destroy');
+			$(this).dialog("destroy");
+		},
+		title: 'Edit Component for Info Page',
+		modal: true,
+		draggable: false,
+		height: 550,
+		width: 670,
+		resizable: false,
+		position: 'center',
+		buttons: {
+			Close: function() {
+				$('#info_page_name').val('');
+				$('#info_page_type').val('');
+				$('#info_page_value').val('');
+				$('#info_page_clickable').val('');
+				$('#info_page_image').val('');
+				$('#uploaded-picture-info').html('');
+				$('#info_page_value').wysiwyg('destroy');
+				$(this).dialog("destroy");
+			},
+			Edit: function() {
+				if($('#info_page_name').val()==''){
+					$('#dialogBox').html('');
+					$('#dialog').html('<p align="center">Component Name cannot empty!</p>');
+					$('#dialog').dialog({
+						title: 'Dialog Box',
+						resizable: true,
+						show: 'fade',
+						hide: 'fade',
+						height:140,
+						modal: true
+					});
+					return false;
+				}
+				$('#info_page_name_value_'+id).text($('#info_page_name').val());
+				$('#info_page_type_value_'+id).text($('#info_page_type').val());
+				$('#info_page_value_value_'+id).html($('#info_page_value').val());
+				$('#info_page_clickable_value_'+id).text($('#info_page_clickable').val());
+				$('#info_page_image_value_'+id).text($('#info_page_image').val());
+				if($('#info_page_type').val()=='image'){
+					$('#img_content_info_prev_'+id).attr('src','{/literal}{$base_url}{literal}upload/tmp_pic/info_'+$('#info_page_image').val());
+				}else if($('#info_page_type').val()=='text'){
+					$('#txt_content_info_prev_'+id).html($('#info_page_value').val());
+				}else if($('#info_page_type').val()=='title'){
+					$('#ttl_content_info_prev_'+id).html($('#info_page_value').val());
+				}else if($('#info_page_type').val()=='space'){
+					$('#spc_content_info_prev_'+id).html('<br />');
+				}else if($('#info_page_type').val()=='url'){
+					$('#url_content_info_prev_'+id).html('<font color="blue"><u>'+$('#info_page_value').val()+'</u></font');
+				}else if($('#info_page_type').val()=='catalog-a'){
+					$('#div_content_info_prev_'+counter_info_page).html('<table><tr><td><img id="cata_content_info_prev_'+counter_info_page+'" src="{/literal}{$base_url}{literal}upload/tmp_pic/info_'+$('#info_page_image').val()+'"width="100" align="left" style="margin-right:5px;" /></td><td valign="top">'+$('#info_page_value').val()+'</td></tr></table>');
+				}else if($('#info_page_type').val()=='catalog-b'){
+					$('#div_content_info_prev_'+counter_info_page).html('<table><tr><td><img id="catb_content_info_prev_'+counter_info_page+'" src="{/literal}{$base_url}{literal}upload/tmp_pic/info_'+$('#info_page_image').val()+'"width="100" align="left" style="margin-right:5px;" /></td><td valign="top">'+$('#info_page_value').val()+'<br><img id="catb_btn_content_info_prev_'+counter_info_page+'" src="'+cat_image+'"width="50" /></td></tr></table>');
+				}else if($('#info_page_type').val()=='ivr'){
+					$('#ivr_content_info_prev_'+id).html($('#info_page_value').val());
+				}
+				$('#info_page_name').val('');
+				$('#info_page_type').val('');
+				$('#info_page_value').val('');
+				$('#info_page_clickable').val('');
+				$('#info_page_image').val('');
+				$('#uploaded-picture-info').html('');
+				$('#info_page_value').wysiwyg('destroy');
+				$(this).dialog('close');
+				$(this).dialog('destroy');
+			}
+		}
+	});
+}
+function edit_info_page_old(id){
+	var img = new Image();
+	$(img).load(function(){
+		$(this).hide();
+		$("#uploaded-picture-info").html($(this));
+		$(this).fadeIn();
+	}).attr('src', '{/literal}{$url_image_wapsub}{literal}info_'+$("#info_page_image_value_old_"+id).text()).error(function(){});
+	$('#info_page_name').val($('#info_page_name_value_'+id).text());
+    $("#info_page_type option[value='"+$('#info_page_type_value_'+id).text()+"']").attr('selected', 'selected');
+	$('#info_page_value').val($('#info_page_value_value_'+id).html());
+	$("#info_page_clickable option[value='"+$('#info_page_clickable_value_'+id).text()+"']").attr('selected', 'selected');
+	$('#info-page-form').dialog({
+		open: function(){
+			$('#info_page_value').wysiwyg({
+				controls: {
+					colorpicker: {
+						groupIndex: 11,
+						visible: true,
+						css: {
+							"color": function (cssValue, Wysiwyg) {
+								var document = Wysiwyg.innerDocument(),
+									defaultTextareaColor = $(document.body).css("color");
+
+								if (cssValue !== defaultTextareaColor) {
+									return true;
+								}
+
+								return false;
+							}
+						},
+						exec: function() {
+							if ($.wysiwyg.controls.colorpicker) {
+								$.wysiwyg.controls.colorpicker.init(this);
+							}
+						},
+						tooltip: "Colorpicker"
+					},
+					bold          : { visible : true },
+					italic        : { visible : true },
+					underline     : { visible : true },
+					strikeThrough : { visible : true },
+					justifyLeft   : { visible : true },
+					justifyCenter : { visible : true },
+					justifyRight  : { visible : true },
+					justifyFull   : { visible : true },
+					indent  : { visible : true },
+					outdent : { visible : true },
+					subscript   : { visible : true },
+					superscript : { visible : true },
+					undo : { visible : true },
+					redo : { visible : true },
+					insertOrderedList    : { visible : true },
+					insertUnorderedList  : { visible : true },
+					insertHorizontalRule : { visible : true },
+					h4: {
+						visible: true,
+						className: 'h4',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h4>' : 'h4',
+						tags: ['h4'],
+						tooltip: 'Header 4'
+					},
+					h5: {
+						visible: true,
+						className: 'h5',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h5>' : 'h5',
+						tags: ['h5'],
+						tooltip: 'Header 5'
+					},
+					h6: {
+						visible: true,
+						className: 'h6',
+						command: ($.browser.msie || $.browser.safari) ? 'formatBlock' : 'heading',
+						arguments: ($.browser.msie || $.browser.safari) ? '<h6>' : 'h6',
+						tags: ['h6'],
+						tooltip: 'Header 6'
+					},
+					cut   : { visible : true },
+					copy  : { visible : true },
+					paste : { visible : true },
+					html  : { visible: true },
+					increaseFontSize : { visible : true },
+					decreaseFontSize : { visible : true },
+					exam_html: {
+						exec: function() {
+							this.insertHtml('<abbr title="exam">Jam</abbr>');
+							return true;
+						},
+						visible: true
+					}
+				},
+				events: {
+					click: function(event) {
+						if ($("#click-inform:checked").length > 0) {
+							event.preventDefault();
+							alert("You have clicked jWysiwyg content!");
+						}
+					}
+				}
+			});
+		},
+		close: function(){
+			$('#info_page_name').val('');
+			$('#info_page_type').val('');
+			$('#info_page_value').val('');
+			$('#info_page_clickable').val('');
+			$('#info_page_image').val('');
+			$('#uploaded-picture-info').html('');
+			$('#info_page_value').wysiwyg('destroy');
+			$(this).dialog("destroy");
+		},
+		title: 'Edit Component for Info Page',
+		modal: true,
+		draggable: false,
+		height: 550,
+		width: 670,
+		resizable: false,
+		position: 'center',
+		buttons: {
+			Close: function() {
+				$('#info_page_name').val('');
+				$('#info_page_type').val('');
+				$('#info_page_value').val('');
+				$('#info_page_clickable').val('');
+				$('#info_page_image').val('');
+				$('#uploaded-picture-info').html('');
+				$('#info_page_value').wysiwyg('destroy');
+				$(this).dialog("destroy");
+			},
+			Edit: function() {
+				if($('#info_page_name').val()==''){
+					$('#dialogBox').html('');
+					$('#dialog').html('<p align="center">Component Name cannot empty!</p>');
+					$('#dialog').dialog({
+						title: 'Dialog Box',
+						resizable: true,
+						show: 'fade',
+						hide: 'fade',
+						height:140,
+						modal: true
+					});
+					return false;
+				}
+				$('#info_page_name_value_'+id).text($('#info_page_name').val());
+				$('#info_page_type_value_'+id).text($('#info_page_type').val());
+				$('#info_page_value_value_'+id).html($('#info_page_value').val());
+				$('#info_page_clickable_value_'+id).text($('#info_page_clickable').val());
+				$('#info_page_image_value_'+id).text($('#info_page_image').val());
+				if($('#info_page_type').val()=='image'){
+					$('#img_content_info_prev_'+id).attr('src','{/literal}{$base_url}{literal}upload/tmp_pic/info_'+$('#info_page_image').val());
+				}else if($('#info_page_type').val()=='text'){
+					$('#txt_content_info_prev_'+id).html($('#info_page_value').val());
+				}else if($('#info_page_type').val()=='title'){
+					$('#ttl_content_info_prev_'+id).html($('#info_page_value').val());
+				}else if($('#info_page_type').val()=='space'){
+					$('#spc_content_info_prev_'+id).html('<br />');
+				}else if($('#info_page_type').val()=='url'){
+					$('#url_content_info_prev_'+id).html('<font color="blue"><u>'+$('#info_page_value').val()+'</u></font');
+				}else if($('#info_page_type').val()=='catalog-a'){
+					$('#div_content_info_prev_'+counter_info_page).html('<table><tr><td><img id="cata_content_info_prev_'+counter_info_page+'" src="{/literal}{$base_url}{literal}upload/tmp_pic/info_'+$('#info_page_image').val()+'"width="100" align="left" style="margin-right:5px;" /></td><td valign="top">'+$('#info_page_value').val()+'</td></tr></table>');
+				}else if($('#info_page_type').val()=='catalog-b'){
+					$('#div_content_info_prev_'+counter_info_page).html('<table><tr><td><img id="catb_content_info_prev_'+counter_info_page+'" src="{/literal}{$base_url}{literal}upload/tmp_pic/info_'+$('#info_page_image').val()+'"width="100" align="left" style="margin-right:5px;" /></td><td valign="top">'+$('#info_page_value').val()+'<br><img id="catb_btn_content_info_prev_'+counter_info_page+'" src="'+cat_image+'"width="50" /></td></tr></table>');
+				}else if($('#info_page_type').val()=='ivr'){
+					$('#ivr_content_info_prev_'+id).html($('#info_page_value').val());
+				}
+				$('#info_page_name').val('');
+				$('#info_page_type').val('');
+				$('#info_page_value').val('');
+				$('#info_page_clickable').val('');
+				$('#info_page_image').val('');
+				$('#uploaded-picture-info').html('');
+				$('#info_page_value').wysiwyg('destroy');
+				$(this).dialog('close');
+				$(this).dialog('destroy');
+			}
+		}
+	});
+}
+setTimeout(function(){$('#dialog').dialog("close")},3000);
+function save(){
+	if( $('#wap_name').val() == "" || $('#service').val() == "" || $('#wap_title').val() == "" ){
+		$('#dialogBox').html('');
+		$('#dialog').html('<p align="center">Wapname cannot empty or Wap Title cannot empty or Service cannot empty!</p>');
+		$('#dialog').dialog({
+          	title: 'Dialog Box',
+			resizable: true,
+			show: 'fade',
+			hide: 'fade',
+			height:140,
+			modal: true
+        });
+		return false;
+	}
+	var wap_name				= $('#wap_name').val();
+	var service 				= $('#service').val();
+	var wap_title				= $('#wap_title').val();
+	var ak_schedule				= $('#ak_schedule').val();
+	var ak_timer				= $('#ak_timer').val();
+	var always_enable			= $('#always_enable').val();
+	var catalogb_image			= $('#upload_catalogb_image').val();
+	var header_image			= $('#upload_header_image').val();
+	var header_background       = $('#header_background_upload').val();
+	var footer_image			= $('#upload_footer_image').val();
+	var footer_background       = $('#footer_background_upload').val();
+	var clickable_header        = $('#clickable_header').val();
+	var clickable_header_text   = $('#clickable_header_text').val();
+	var clickable_footer        = $('#clickable_footer').val();
+	var clickable_footer_text   = $('#clickable_footer_text').val();
+	var bg_picture				= $('#upload_bg_picture').val();
+	var bg_color				= $('#bg_color').val();
+	var arr_landing_page_name 		= new Array();
+	var arr_landing_page_type 		= new Array();
+	var arr_landing_page_value 		= new Array();
+    var arr_landing_page_msgtext	= new Array();
+	var arr_landing_page_clickable  = new Array();
+	var arr_landing_page_image		= new Array();
+	var arr_landing_page_image_old  = new Array();
+	var arr_landing_page_id			= new Array();
+	var cnt_landing_page 			= 0;
+	if($('#sortable_landing li').length==0){
+		counter_landing_page = 0;
+	}else{
+		counter_landing_page    = $('#sortable_landing li').length;
+	}
+	for(i=0;i<=counter_landing_page;i++){          
+		if($("#comp_landing_page_"+i).length > 0){
+			arr_landing_page_name[cnt_landing_page]=$('#landing_page_name_value_'+i).text();
+			arr_landing_page_type[cnt_landing_page]=$('#landing_page_type_value_'+i).text();
+			arr_landing_page_value[cnt_landing_page]=$('#landing_page_value_value_'+i).html();
+			arr_landing_page_msgtext[cnt_landing_page]=$('#landing_page_msgtext_value_'+i).text();
+			arr_landing_page_clickable[cnt_landing_page]=$('#landing_page_clickable_value_'+i).text();
+			arr_landing_page_image[cnt_landing_page]=$('#landing_page_image_value_'+i).text();
+            arr_landing_page_image_old[cnt_landing_page]=$('#landing_page_image_value_old_'+i).text();
+			arr_landing_page_id[cnt_landing_page]=i;
+			cnt_landing_page++;
+		}
+	}
+	var arr_confirmation_page_name 		= new Array();
+	var arr_confirmation_page_type 		= new Array();
+	var arr_confirmation_page_value 	= new Array();
+	var arr_confirmation_page_clickable	= new Array();
+	var arr_confirmation_page_image		= new Array();
+	var arr_confirmation_page_image_old	= new Array();
+	var arr_confirmation_page_id		= new Array();
+	var cnt_confirmation_page 			= 0;
+	if($('#sortable_confirmation li').length==0){
+		counter_confirmation_page = 0;
+	}else{
+		counter_confirmation_page    = $('#sortable_confirmation li').length;
+	}
+	for(i=0;i<=counter_confirmation_page;i++){
+		if($("#comp_confirmation_page_"+i).length > 0){
+			arr_confirmation_page_name[cnt_confirmation_page]=$('#confirmation_page_name_value_'+i).text();
+			arr_confirmation_page_type[cnt_confirmation_page]=$('#confirmation_page_type_value_'+i).text();
+			arr_confirmation_page_value[cnt_confirmation_page]=$('#confirmation_page_value_value_'+i).html();
+			arr_confirmation_page_clickable[cnt_confirmation_page]=$('#confirmation_page_clickable_value_'+i).text();
+			arr_confirmation_page_image[cnt_confirmation_page]=$('#confirmation_page_image_value_'+i).text();
+			if($("#landing_page_image_value_old_"+i).length > 0){
+				arr_confirmation_page_image_old[cnt_confirmation_page]=$('#confirmation_page_image_value_old_'+i).text();
+			}
+			arr_confirmation_page_id[cnt_confirmation_page]=i;
+			cnt_confirmation_page++;
+		}
+	}
+	var arr_thankyou_page_name 		= new Array();
+	var arr_thankyou_page_type 		= new Array();
+	var arr_thankyou_page_value 	= new Array();
+	var arr_thankyou_page_clickable	= new Array();
+	var arr_thankyou_page_image		= new Array();
+	var arr_thankyou_page_image_old	= new Array();
+	var arr_thankyou_page_id		= new Array();
+	var cnt_thankyou_page 			= 0;
+	if($('#sortable_thankyou li').length==0){
+            counter_thankyou_page = 0;
+	}else{
+		counter_thankyou_page    = $('#sortable_thankyou li').length;
+	}
+	for(i=0;i<=counter_thankyou_page;i++){
+		if($("#comp_thankyou_page_"+i).length > 0){
+			arr_thankyou_page_name[cnt_thankyou_page]=$('#thankyou_page_name_value_'+i).text();
+			arr_thankyou_page_type[cnt_thankyou_page]=$('#thankyou_page_type_value_'+i).text();
+			arr_thankyou_page_value[cnt_thankyou_page]=$('#thankyou_page_value_value_'+i).html();
+			arr_thankyou_page_clickable[cnt_thankyou_page]=$('#thankyou_page_clickable_value_'+i).text();
+			arr_thankyou_page_image[cnt_thankyou_page]=$('#thankyou_page_image_value_'+i).text();
+			if($("#landing_page_image_value_old_"+i).length > 0){
+				arr_thankyou_page_image_old[cnt_thankyou_page]=$('#thankyou_page_image_value_old_'+i).text();
+			}
+			arr_thankyou_page_id[cnt_thankyou_page]=i;
+			cnt_thankyou_page++;
+		}
+	}
+	var arr_info_page_name 		= new Array();
+	var arr_info_page_type 		= new Array();
+	var arr_info_page_value 	= new Array();
+	var arr_info_page_clickable	= new Array();
+	var arr_info_page_image		= new Array();
+	var arr_info_page_image_old	= new Array();
+	var arr_info_page_id		= new Array();
+	var cnt_info_page 			= 0;
+	if($('#sortable_info li').length==0){
+		counter_info_page = 0;
+	}else{
+		counter_info_page    = $('#sortable_info li').length;
+	}
+	for(i=0;i<=counter_info_page;i++){
+		if($("#comp_info_page_"+i).length > 0){
+			arr_info_page_name[cnt_info_page]=$('#info_page_name_value_'+i).text();
+			arr_info_page_type[cnt_info_page]=$('#info_page_type_value_'+i).text();
+			arr_info_page_value[cnt_info_page]=$('#info_page_value_value_'+i).html();
+			arr_info_page_clickable[cnt_info_page]=$('#info_page_clickable_value_'+i).text();
+			arr_info_page_image[cnt_info_page]=$('#info_page_image_value_'+i).text();
+			if($("#landing_page_image_value_old_"+i).length > 0){
+				arr_info_page_image_old[cnt_info_page]=$('#info_page_image_value_old_'+i).text();
+			}
+			arr_info_page_id[cnt_info_page]=i;
+			cnt_info_page++;
+		}
+	}
+	if($('#confirmation_page_enable').is(':checked')) confirmation_page_enable = 'y'; else confirmation_page_enable = 'n';
+	if($('#wap_setting_msisdn').is(':checked')) wap_setting_msisdn = 'y'; else wap_setting_msisdn = 'n';
+	if($('#wap_setting_javaapps').is(':checked')) wap_setting_javaapps = 'y'; else wap_setting_javaapps = 'n';
+	var thankyou_page_auto_redirect = $('#thankyou_page_auto_redirect').val();
+	var thankyou_page_time 			= $('#thankyou_page_time').val();
+	var thankyou_page_url			= $('#thankyou_page_url').val();
+	var landing_serialize			= $('.landing_page_sortable').sortable('serialize');
+	var confirmation_serialize		= $('.confirmation_page_sortable').sortable('serialize');
+	var thankyou_serialize			= $('.thankyou_page_sortable').sortable('serialize');
+	var info_serialize				= $('.info_page_sortable').sortable('serialize');
+	var data = {
+		id:'{/literal}{$id}{literal}',
+		wap_name: wap_name,
+		wap_name_old: '{/literal}{$data_wapreg.0.wap_name}{literal}',
+		service: service,
+		service_old: '{/literal}{$data_wapreg.0.service}{literal}',
+		wap_title: wap_title,
+		ak_schedule: ak_schedule,
+		ak_timer: ak_timer,
+		always_enable: always_enable,
+		catalogb_image: catalogb_image,
+		catalogb_ext: '{/literal}{$extCatalogb}{literal}',
+		header_image: header_image,
+		header_ext: '{/literal}{$extHeader}{literal}',
+		header_background:header_background,
+		header_background_ext: '{/literal}{$extHeaderBackground}{literal}',
+		footer_image: footer_image,
+		footer_ext: '{/literal}{$extFooter}{literal}',
+		footer_background: footer_background,
+		footer_background_ext: '{/literal}{$extFooterBackground}{literal}',
+		clickable_header: clickable_header,
+		clickable_header_text: clickable_header_text,
+		clickable_footer: clickable_footer,
+		clickable_footer_text: clickable_footer_text,
+		thankyou_page_auto_redirect: thankyou_page_auto_redirect,
+		thankyou_page_time: thankyou_page_time,
+		thankyou_page_url: thankyou_page_url,
+		confirmation_page_enable: confirmation_page_enable,
+		wap_setting_msisdn: wap_setting_msisdn,
+		wap_setting_javaapps: wap_setting_javaapps,
+		bg_picture: bg_picture,
+		bg_color: bg_color,
+		landing_page_name: arr_landing_page_name,
+		landing_page_type: arr_landing_page_type,
+		landing_page_value: arr_landing_page_value,
+		landing_page_msgtext: arr_landing_page_msgtext,
+		landing_page_clickable: arr_landing_page_clickable,
+		landing_page_image: arr_landing_page_image,
+		landing_page_image_old: arr_landing_page_image_old,
+		landing_page_id: arr_landing_page_id,
+		confirmation_page_name: arr_confirmation_page_name,
+		confirmation_page_type: arr_confirmation_page_type,
+		confirmation_page_value: arr_confirmation_page_value,
+		confirmation_page_clickable: arr_confirmation_page_clickable,
+		confirmation_page_image: arr_confirmation_page_image,
+		confirmation_page_image_old: arr_confirmation_page_image_old,
+		confirmation_page_id: arr_confirmation_page_id,
+		thankyou_page_name: arr_thankyou_page_name,
+		thankyou_page_type: arr_thankyou_page_type,
+		thankyou_page_value: arr_thankyou_page_value,
+		thankyou_page_clickable: arr_thankyou_page_clickable,
+		thankyou_page_image: arr_thankyou_page_image,
+		thankyou_page_image_old: arr_thankyou_page_image_old,
+		thankyou_page_id: arr_thankyou_page_id,
+		info_page_name: arr_info_page_name,
+		info_page_type: arr_info_page_type,
+		info_page_value: arr_info_page_value,
+		info_page_clickable: arr_info_page_clickable,
+		info_page_image: arr_info_page_image,
+		info_page_image_old: arr_info_page_image_old,
+		info_page_id: arr_info_page_id,
+		landing_serialize: landing_serialize,
+		confirmation_serialize: confirmation_serialize,
+		thankyou_serialize: thankyou_serialize,
+		info_serialize: info_serialize
+	};
+	$.post("{/literal}{$base_url}{literal}wap/subscription/saveEditSubscription/",data,function(data){
+		$('#dialogBox').html('');
+		$('#dialog').html('<p align="center">Success Edit Wap Subscription</p>');
+		$('#dialog').dialog({
+          	title: 'Dialog Box',
+			resizable: true,
+			show: 'fade',
+			hide: 'fade',
+			height:140,
+			modal: true
+        });
+		location.href='{/literal}{$base_url}{literal}wap/subscription/';
+	});
+}
+{/literal}
+</script>
+<div id="dialog" title="Dialog Box"></div>
+<div id="content" class="clearfix">
+    <div id="maincontent">
+        <div class="pageTitle">
+            <span>Wap Edit Subscription</span>
+        </div>
+        <div class="actionbar">
+            <div class="cb"></div>
+            <div class="loadContainer">
+                <div id="accordion">
+                    <h3><a href="#">Wap Profile</a></h3>
+                    <div>
+                        <table cellpadding="5" cellspacing="5" width="600px">
+                            <tr>
+                                <td valign="top">
+                                    <table cellpadding="5" cellspacing="5" width="400px" style="line-height:20pt;">
+                                        <tr><td>Wap Name: </td><td><input type="text" id="wap_name" value="{$data_wapreg.0.wap_name}" /></td></tr>
+                                        <tr><td>Service: </td><td><input type="text" id="service" value="{$data_wapreg.0.service}" /></td></tr>
+                                        <tr><td>WAP Title: </td><td><input type="text" id="wap_title" value="{$data_wapreg.0.wap_title}" /></td></tr>
+                                    </table>
+                                </td>
+                                <td valign="top" width="200px" style="padding-top:10px;">
+                                    <p style="font-weight:bold;">Wap Setting:</p>
+                                    <div style="line-height:20pt;">
+                                    <input type="checkbox" id="wap_setting_msisdn" value="y" {if $data_wapreg.0.wap_setting_msisdn eq 'y'}checked{/if} />&nbsp;MSISDN<br />
+                                    <input type="checkbox" id="wap_setting_javaapps" value="y" {if $data_wapreg.0.wap_setting_javaapps eq 'y'}checked{/if} />&nbsp;JavaApps
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <h3><a href="#">Scheduling</a></h3>
+                    <div>
+                        <table cellpadding="5" cellspacing="5" style="line-height:20pt;">
+                        	<tr><td>AK Schedule: </td><td>
+                            	<select id="ak_schedule">
+                                    {foreach from=$ak item=ak_item}
+                                    <option value="{$ak_item.id}"{if $data_wapreg.0.ak_id eq $ak_item.id} selected="selected"{/if}>{$ak_item.name}</option>
+                                    {/foreach}
+                                </select>
+                            </td></tr>
+                            <tr><td>AK Timer: </td><td>
+                            	<input type="text" id="ak_timer" size="4" value="{$data_wapreg.0.ak_time}" />
+                            </td></tr>
+                            <tr><td>Always Enable: </td><td>
+                            	<select id="always_enable">
+                                	<option value="y" {if $data_wapreg.0.always_enable eq 'y'}selected="selected"{/if}>On</option>
+                                    <option value="n" {if $data_wapreg.0.always_enable eq 'n'}selected="selected"{/if}>Off</option>
+                                </select>
+                            </td></tr>
+                        </table>
+                    </div>
+                    <h3><a href="#">Wap Layout</a></h3>
+                    <div>
+                        <div id="tabs">
+                            <ul>
+                                <li><a href="#tabs-1">Wap Layout</a></li>
+                                <li><a href="#tabs-2">Landing Page</a></li>
+                                <li><a href="#tabs-3">Confirmation Page</a></li>
+                                <li><a href="#tabs-4">Thank You Page</a></li>
+                                <li><a href="#tabs-5">Info Page</a></li>
+                            </ul>
+                            <div id="tabs-1">
+                            	<iframe name="upload-frame" id="upload-frame" style="display:none;"></iframe>
+                                <script type="text/javascript">
+								{literal}
+								var pesan = '';
+								var cat_image = '';
+								function startUpload(el){
+								  $("#uploaded-picture-"+el).html("loading...");
+								}
+								function displayPicture(pictureUrl,el,w,h){
+									if(el=='header' || el=='footer' || el=='catalogb' || el=='bg_picture'){
+										var img = new Image();
+										$(img).load(function(){
+											$(this).hide();
+											$("#uploaded-picture-"+el).html($(this));
+											$(this).fadeIn();
+										}).attr('src', '{/literal}{$base_url}{literal}upload/'+pictureUrl).error(function(){
+											alert("Upload Failed "+pesan);
+										});									
+										$(img).attr('width',w);
+										$(img).attr('height',h);
+										$(img).css('margin-left',35);
+										$(img).css('margin-top',30);
+										$("#"+el+"-landing-preview").attr('src','{/literal}{$base_url}{literal}upload/'+pictureUrl);
+										$("#"+el+"-confirmation-preview").attr('src','{/literal}{$base_url}{literal}upload/'+pictureUrl);
+										$("#"+el+"-thankyou-preview").attr('src','{/literal}{$base_url}{literal}upload/'+pictureUrl);
+										$("#"+el+"-info-preview").attr('src','{/literal}{$base_url}{literal}upload/'+pictureUrl);
+									}else if(el=='header-background' || el=='footer-background'){
+										$("#uploaded-picture-"+el).css('background-image','url({/literal}{$base_url}{literal}upload/'+pictureUrl+')');
+										$("#uploaded-picture-"+el).css('background-position','top');
+										$("#uploaded-picture-"+el).css('background-repeat','repeat');
+										$("#"+el+"-landing-preview").css('background-image','url({/literal}{$base_url}{literal}upload/'+pictureUrl+')');
+										$("#"+el+"-landing-preview").css('background-position','top');
+										$("#"+el+"-landing-preview").css('background-repeat','repeat');
+										$("#"+el+"-confirmation-preview").css('background-image','url({/literal}{$base_url}{literal}upload/'+pictureUrl+')');
+										$("#"+el+"-confirmation-preview").css('background-position','top');
+										$("#"+el+"-confirmation-preview").css('background-repeat','repeat');
+										$("#"+el+"-thankyou-preview").css('background-image','url({/literal}{$base_url}{literal}upload/'+pictureUrl+')');
+										$("#"+el+"-thankyou-preview").css('background-position','top');
+										$("#"+el+"-thankyou-preview").css('background-repeat','repeat');
+										$("#"+el+"-info-preview").css('background-image','url({/literal}{$base_url}{literal}upload/'+pictureUrl+')');
+										$("#"+el+"-info-preview").css('background-position','top');
+										$("#"+el+"-info-preview").css('background-repeat','repeat');
+									}else if(el=='landing' || el=='confirmation' || el=='thankyou' || el=='info'){
+										var img = new Image();
+										$(img).load(function(){
+											$(this).hide();
+											$("#uploaded-picture-"+el).html($(this));
+											$(this).fadeIn();
+										}).attr('src', '{/literal}{$base_url}{literal}upload/'+pictureUrl).error(function(){
+											//alert("Upload Failed");
+										});
+									}
+								}
+								function displayPictureEdit(pictureUrl,el,w,h){
+									if(el=='header' || el=='footer' || el=='catalogb'){
+										var img = new Image();
+										$(img).load(function(){
+											$(this).hide();
+											$("#uploaded-picture-"+el).html($(this));
+											$(this).fadeIn();
+										}).attr('src', '{/literal}{$url_image_wapsub}{literal}'+pictureUrl).error(function(){
+											//alert("Upload Failed");
+										});
+										$(img).attr('width',w);
+										$(img).attr('height',h);
+										$(img).css('margin-left',35);
+										$(img).css('margin-top',30);
+										$("#"+el+"-landing-preview").attr('src','{/literal}{$base_url}{literal}upload/'+pictureUrl);
+										$("#"+el+"-confirmation-preview").attr('src','{/literal}{$base_url}{literal}upload/'+pictureUrl);
+										$("#"+el+"-thankyou-preview").attr('src','{/literal}{$base_url}{literal}upload/'+pictureUrl);
+										$("#"+el+"-info-preview").attr('src','{/literal}{$base_url}{literal}upload/'+pictureUrl);
+									}else if(el=='header-background' || el=='footer-background'){
+										$("#uploaded-picture-"+el).css('background-image','url({/literal}{$url_image_wapsub}{literal}'+pictureUrl+')');
+										$("#uploaded-picture-"+el).css('background-position','top');
+										$("#uploaded-picture-"+el).css('background-repeat','repeat');
+										$("#"+el+"-landing-preview").css('background-image','url({/literal}{$base_url}{literal}upload/'+pictureUrl+')');
+										$("#"+el+"-landing-preview").css('background-position','top');
+										$("#"+el+"-landing-preview").css('background-repeat','repeat');
+										$("#"+el+"-confirmation-preview").css('background-image','url({/literal}{$base_url}{literal}upload/'+pictureUrl+')');
+										$("#"+el+"-confirmation-preview").css('background-position','top');
+										$("#"+el+"-confirmation-preview").css('background-repeat','repeat');
+										$("#"+el+"-thankyou-preview").css('background-image','url({/literal}{$base_url}{literal}upload/'+pictureUrl+')');
+										$("#"+el+"-thankyou-preview").css('background-position','top');
+										$("#"+el+"-thankyou-preview").css('background-repeat','repeat');
+										$("#"+el+"-info-preview").css('background-image','url({/literal}{$base_url}{literal}upload/'+pictureUrl+')');
+										$("#"+el+"-info-preview").css('background-position','top');
+										$("#"+el+"-info-preview").css('background-repeat','repeat');
+									}else if(el=='landing' || el=='confirmation' || el=='thankyou' || el=='info'){
+										var img = new Image();
+										$(img).load(function(){
+											$(this).hide();
+											$("#uploaded-picture-"+el).html($(this));
+											$(this).fadeIn();
+										}).attr('src', '{/literal}{$url_image_wapsub}{literal}'+pictureUrl).error(function(){
+											//alert("Upload Failed");
+										});
+									}
+								}
+								{/literal}
+								</script>
+                            	<table width="100%">
+                                	<tr>
+                                    	<td width="75%">
+                                            <table cellpadding="5" cellspacing="5" style="line-height:20pt; width:100%;" border="0">
+                                                <tr>
+                                                    <td valign="top">Header Image:&nbsp;</td>
+                                                    <td valign="top">
+                                                        <form name="formupload_header" method="post" enctype="multipart/form-data" action="{$base_url}upload/upload.php?frame=header" target="upload-frame" onsubmit="startUpload('header');">
+                                                    		<input type="file" name="picture" id="upload_header_image" onchange="formupload_header.submit();"  />
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                	<td valign="top"><input type="checkbox" id="clickable_header" value="y" onclick="toogle_clickable('clickable_header_text');" {if $data_wapreg.0.clickable_header eq 'y'}checked{/if} />&nbspClickable Header&nbsp;[URL]: </td>
+                                                    <td valign="top"><input id="clickable_header_text" type="text" {if $data_wapreg.0.clickable_header neq 'y'}disabled="disabled"{/if} value="{$data_wapreg.0.clickable_header_text}" /></td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="top">Header Background:&nbsp;</td>
+                                                    <td valign="top">
+                                                    	<form name="formupload_header_background" method="post" enctype="multipart/form-data" action="{$base_url}upload/upload.php?frame=header-background" target="upload-frame" onsubmit="startUpload('header-background');">
+	                                                        <input type="file" name="picture" id="header_background_upload" onchange="formupload_header_background.submit();"  />
+                                                        </form>
+													</td>
+                                                </tr>
+                                                <tr><td colspan="2" valign="middle"><hr /></td></tr>
+                                                <tr>
+                                                    <td valign="top">Footer Image:&nbsp;</td>
+                                                    <td valign="top">
+                                                    	<form name="formupload_footer" method="post" enctype="multipart/form-data" action="{$base_url}upload/upload.php?frame=footer" target="upload-frame" onsubmit="startUpload('footer');">
+                                                    		<input type="file" name="picture" id="upload_footer_image" onchange="formupload_footer.submit();"  />
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="top"><input type="checkbox" id="clickable_footer" value="y" onclick="toogle_clickable('clickable_footer_text');" {if $data_wapreg.0.clickable_footer eq 'y'}checked{/if} />&nbsp;Clickable Footer&nbsp;[URL]: </td>
+                                                    <td valign="top"><input id="clickable_footer_text" type="text" {if $data_wapreg.0.clickable_header neq 'y'}disabled="disabled"{/if} value="{$data_wapreg.0.clickable_footer_text}" /></td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="top">Footer Background:&nbsp;
+                                                    <td valign="top">
+                                                        <form name="formupload_footer_background" method="post" enctype="multipart/form-data" action="{$base_url}upload/upload.php?frame=footer-background" target="upload-frame" onsubmit="startUpload('footer-background');">
+	                                                        <input type="file" name="picture" id="footer_background_upload" onchange="formupload_footer_background.submit();"  />
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                                <tr><td colspan="2"valign="middle"><hr /></td></tr>
+                                                <tr>
+                                                    <td valign="top"><input onclick="toogle_rd('bg');" type="radio" id="rd_bg_color" name="rd_bg_color[]" />&nbsp;Background Color:&nbsp;</td>
+                                                    <td valign="top">
+														<input type="text" id="bg_color" size="7" disabled="disabled" value="{$data_wapreg.0.bg_color}" />
+                                                        <script language="javascript">
+														{literal}
+														$('#bg_color').ColorPicker({
+															onSubmit: function(hsb, hex, rgb, el) {
+																$(el).val(hex);
+																$(el).ColorPickerHide();
+															},
+															onBeforeShow: function () {
+																$(this).ColorPickerSetColor(this.value);
+															}
+														})
+														.bind('keyup', function(){
+															$(this).ColorPickerSetColor(this.value);
+														});
+														function toogle_rd(el){
+															if(el=='bg'){
+																$("#upload_bg_picture").val('');
+																$("#upload_bg_picture").attr("disabled","disabled");
+																$("#bg_color").removeAttr("disabled");
+															}else{
+																$("#bg_color").val('');
+																$("#bg_color").attr("disabled","disabled");
+																$("#upload_bg_picture").removeAttr("disabled");
+															}
+														}
+														{/literal}
+														</script>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="top"><input onclick="toogle_rd('img');" type="radio" id="rd_bg_picture" name="rd_bg_color[]" />&nbsp;Background Picture:&nbsp;</td>
+                                                    <td valign="top">
+                                                        <form name="formupload_bg_picture"method="post"enctype="multipart/form-data"action="{$base_url}upload/upload.php?frame=bg_picture"target="upload-frame"onsubmit="startUpload('bg_picture');">
+	                                                        <input disabled="disabled" type="file"name="picture"id="upload_bg_picture"onchange="formupload_bg_picture.submit();"/>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                                <tr><td colspan="2" valign="middle"><hr /></td></tr>
+                                                <tr>
+                                                    <td valign="top">Catalog-B Button Image:&nbsp;</td>
+                                                    <td valign="top">
+                                                    	<form name="formupload_catalogb" method="post" enctype="multipart/form-data" action="{$base_url}upload/upload.php?frame=catalogb" target="upload-frame" onsubmit="startUpload('catalogb');">
+                                                    		<input type="file" name="picture" id="upload_catalogb_image" onchange="formupload_catalogb.submit();"  />
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td width="25%" align="center" valign="middle">
+                                        	<table border="0">
+                                            	<tr><td>
+                                                	<div id="uploaded-picture-header-background" style="width:250px; height:100px; margin-top:-30px;">
+	                                                	<div id="uploaded-picture-header" style="width:200px; height:80px;"></div>
+                                                    </div>
+                                                </td></tr>
+                                                <tr><td>
+                                                	<div id="uploaded-picture-footer-background" style="width:250px; height:100px;">
+	                                                	<div id="uploaded-picture-footer" style="width:200px; height:80px;"></div>
+                                                    </div>
+                                                </td></tr>
+                                                <tr><td>
+	                                                	<div id="uploaded-picture-bg_picture"style="width:200px; height:100px;"></div>
+                                                </td></tr>
+                                                <tr><td>
+	                                                	<div id="uploaded-picture-catalogb"style="width:200px; height:80px;"></div>
+                                                </td></tr>
+                                            </table>
+                                            <script language="javascript">
+                                                displayPictureEdit('header_{$data_wapreg.0.wap_name}_{$data_wapreg.0.service}.{$extHeader}','header',180,60);
+                                                displayPictureEdit('header_background_{$data_wapreg.0.wap_name}_{$data_wapreg.0.service}.{$extHeaderBackground}','header-background',180,60);
+                                                displayPictureEdit('footer_{$data_wapreg.0.wap_name}_{$data_wapreg.0.service}.{$extFooter}','footer',180,60);
+                                                displayPictureEdit('footer_background_{$data_wapreg.0.wap_name}_{$data_wapreg.0.service}.{$extFooterBackground}','footer-background',180,60);
+                                                displayPictureEdit('catalogb_{$data_wapreg.0.wap_name}_{$data_wapreg.0.service}.{$extCatalogb}','catalogb',180,60);
+                                            </script>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div id="tabs-2">
+                            	<button class="btn-ui" style="margin-bottom:20px; margin-top:10px; font-family:Verdana, Geneva, sans-serif;font-size:8pt;" onclick="show_landing_page();">Add New Component</button>
+                                <div id="landing-page-form" style="display:none;">
+                                	<table cellspacing="10">
+                                    	<tr><td valign="top">Component Name</td><td><input type="text" id="landing_page_name" size="50" /></td></tr>
+                                        <tr>
+                                            <td valign="top">Type</td>
+                                            <td>
+                                                <select id="landing_page_type" >
+                                                {foreach from=$type_component item=item_component}
+                                                    <option value="{$item_component}" {if $type eq $item_component}selected="selected"{/if}>{$item_component|upper}</option>
+                                                {/foreach}
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr><td valign="top">Value</td><td><textarea id="landing_page_value" rows="5" cols="47" name="landing_page_value"></textarea></td></tr>
+                                        <tr>
+                                            <td valign="top">Clickable</td>
+                                            <td>
+                                                <select id="landing_page_clickable">
+                                                {foreach from=$type_link item=item_link}
+                                                    <option value="{$item_link}" {if $is_link eq $type__key}selected="selected"{/if}>{$item_link}</option>
+                                                {/foreach}
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr><td valign="top">Message Text</td><td><input type="text" id="landing_page_msgtext" name="landing_page_msgtext" /></td></tr>
+                                        <tr>
+                                            <td valign="top">Image</td>
+                                            <td>
+                                                <form name="formupload_landing" method="post" enctype="multipart/form-data" action="{$base_url}upload/upload.php?frame=landing" target="upload-frame" onsubmit="startUpload('landing');">
+                                                <input type="file" name="picture" id="landing_page_image" onchange="formupload_landing.submit();"  />
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        <tr><td colspan="2" align="center"><center><div id="uploaded-picture-landing"></div></center></td></tr>
+                                    </table>
+                                </div>
+                                <ul id="sortable_landing" class="landing_page_sortable">
+                                	{foreach from=$data_component.landing_page item=item}
+                                    	<li id="comp_landing_page_{$item.sort}" class="ui-state-default">
+                                        	<div style="width:90px; float:left">
+                                            	<a style="text-decoration:underline;" onclick="edit_landing_page_old('{$item.sort}');">Edit</a> | 
+                                                <a style="text-decoration:underline;" onclick="remove_component('comp_landing_page_{$item.sort}', '{$item.id}');">Delete</a>
+                                            </div>
+                                            <div style="width:580px; float:left">
+                                            	<b style="color:#000;">Name</b> : {$item.name|substr:0:50}
+                                                <span id="landing_page_name_value_{$item.sort}" style="display:none;">{$item.name}</span>
+                                            </div>
+                                            <div style="float:left">
+                                            	<b style="color:#000;">Type</b> : 
+                                                <span id="landing_page_type_value_{$item.sort}">{$item.type}</span>
+                                            	<span id="landing_page_value_value_{$item.sort}" style="display:none;">{$item.value}</span>
+                                                <span id="landing_page_msgtext_value_{$item.sort}" style="display:none;">{$item.msg_text}</span>
+                                                <span id="landing_page_clickable_value_{$item.sort}" style="display:none;">{$item.is_link}</span>
+                                                <span id="landing_page_image_value_{$item.sort}" style="display:none;"></span>
+                                                <span id="landing_page_image_value_old_{$item.sort}" style="display:none;">{$item.image}</span>
+                                            </div>
+                                        </li>
+                                    {/foreach}
+                                </ul>
+                            </div>
+                            <div id="tabs-3">
+                                <div><input type="checkbox" value="yes" id="confirmation_page_enable" {if $data_wapreg.0.confirmation_page_enable eq 'y'}checked{/if} />&nbsp;Enable Confirmation Page</div>
+                                <button class="btn-ui" style="margin-bottom:20px; margin-top:10px; font-family:Verdana, Geneva, sans-serif;font-size:8pt;" onclick="show_confirmation_page();">Add New Component</button>
+                                <div id="confirmation-page-form" style="display:none;">
+                                	<table cellspacing="10">
+                                    	<tr><td valign="top">Component Name</td><td><input type="text" id="confirmation_page_name" size="50" /></td></tr>
+                                        <tr>
+                                        	<td valign="top">Type</td>
+                                        	<td>
+                                            	<select id="confirmation_page_type">
+                                                    {foreach from=$type_component item=item_component}
+                                                    <option value="{$item_component}" {if $type eq $item_component}selected="selected"{/if}>{$item_component|upper}</option>
+                                                    {/foreach}
+                                                </select>
+
+											</td>
+										</tr>
+                                        <tr><td valign="top">Value</td><td><textarea id="confirmation_page_value" rows="5" cols="47" name="confirmation_page_value"></textarea></td></tr>
+                                        <tr>
+                                        	<td valign="top">Clickable</td>
+                                            <td>
+                                        		<select id="confirmation_page_clickable">
+                                                    {foreach from=$type_link item=item_link}
+                                                    <option value="{$item_link}" {if $is_link eq $type__key}selected="selected"{/if}>{$item_link}</option>
+                                                    {/foreach}
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr><td valign="top">Image</td><td>
+                                        	<form name="formupload_confirmation" method="post" enctype="multipart/form-data" action="{$base_url}upload/upload.php?frame=confirmation" target="upload-frame" onsubmit="startUpload('confirmation');">
+                                                <input type="file" name="picture" id="confirmation_page_image" onchange="formupload_confirmation.submit();"  />
+                                            </form>
+                                        </td></tr>
+                                        <tr><td colspan="2" align="center"><center><div id="uploaded-picture-confirmation"></div></center></td></tr>
+                                    </table>
+                                </div>
+                                <ul id="sortable_confirmation" class="confirmation_page_sortable">
+                                	{foreach from=$data_component.confirmation_page item=item}
+                                    	<li id="comp_confirmation_page_{$item.sort}" class="ui-state-default">
+                                        	<div style="width:90px; float:left">
+                                            	<a style="text-decoration:underline;" onclick="edit_confirmation_page_old('{$item.sort}');">Edit</a> | 
+                                                <a style="text-decoration:underline;" onclick="remove_component('comp_confirmation_page_{$item.sort}', '{$item.id}');">Delete</a>
+                                            </div>
+                                            <div style="width:580px; float:left">
+                                            	<b style="color:#000;">Name</b> : {$item.name|substr:0:50}
+                                                <span id="confirmation_page_name_value_{$item.sort}" style="display:none;">{$item.name}</span>
+                                            </div>
+                                            <div style="float:left">
+                                            	<b style="color:#000;">Type</b> : 
+                                                <span id="confirmation_page_type_value_{$item.sort}">{$item.type}</span>
+                                            	<span id="confirmation_page_value_value_{$item.sort}" style="display:none;">{$item.value}</span>
+                                                <span id="confirmation_page_clickable_value_{$item.sort}" style="display:none;">{$item.is_link}</span>
+                                                <span id="confirmation_page_image_value_{$item.sort}" style="display:none;"></span>
+                                                <span id="confirmation_page_image_value_old_{$item.sort}" style="display:none;">{$item.image}</span>
+                                            </div>
+                                        </li>
+                                    {/foreach}
+                                </ul>
+                            </div>
+                            <div id="tabs-4">
+                                <button class="btn-ui" style="margin-bottom:20px; margin-top:10px; font-family:Verdana, Geneva, sans-serif;font-size:8pt;" onclick="show_thankyou_page();">Add New Component</button>
+                                <div id="thankyou-page-form" style="display:none;">
+                                	<table cellspacing="10">
+                                    	<tr><td valign="top">Component Name</td><td><input type="text" id="thankyou_page_name" size="50" /></td></tr>
+                                        <tr>
+                                        	<td valign="top">Type</td>
+                                        	<td>
+                                            	<select id="thankyou_page_type">
+                                                    {foreach from=$type_component item=item_component}
+                                                    <option value="{$item_component}" {if $type eq $item_component}selected="selected"{/if}>{$item_component|upper}</option>
+                                                    {/foreach}
+                                                </select>
+											</td>
+										</tr>
+                                        <tr><td valign="top">Value</td><td><textarea id="thankyou_page_value" rows="5" cols="47" name="thankyou_page_value"></textarea></td></tr>
+                                        <tr>
+                                        	<td valign="top">Clickable</td>
+                                            <td>
+                                        		<select id="thankyou_page_clickable">
+                                                    {foreach from=$type_link item=item_link}
+                                                    <option value="{$item_link}" {if $is_link eq $type__key}selected="selected"{/if}>{$item_link}</option>
+                                                    {/foreach}
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr><td valign="top">Image</td><td>
+                                        	<form name="formupload_thankyou" method="post" enctype="multipart/form-data" action="{$base_url}upload/upload.php?frame=thankyou" target="upload-frame" onsubmit="startUpload('thankyou');">
+                                                <input type="file" name="picture" id="thankyou_page_image" onchange="formupload_thankyou.submit();"  />
+                                            </form>
+                                        </td></tr>
+                                        <tr><td colspan="2" align="center"><center><div id="uploaded-picture-thankyou"></div></center></td></tr>
+                                    </table>
+                                </div>
+                                <ul id="sortable_thankyou" class="thankyou_page_sortable">
+                                	{foreach from=$data_component.thanks_page item=item}
+                                    	<li id="comp_thankyou_page_{$item.sort}" class="ui-state-default">
+                                        	<div style="width:90px; float:left">
+                                            	<a style="text-decoration:underline;" onclick="edit_thankyou_page('{$item.sort}');">Edit</a> | 
+                                                <a style="text-decoration:underline;" onclick="remove_component('comp_thankyou_page_{$item.sort}', '{$item.id}');">Delete</a>
+                                            </div>
+                                            <div style="width:580px; float:left">
+                                            	<b style="color:#000;">Name</b> : {$item.name|substr:0:50}
+                                                <span id="thankyou_page_name_value_{$item.sort}" style="display:none;">{$item.name}</span>
+                                            </div>
+                                            <div style="float:left">
+                                            	<b style="color:#000;">Type</b> : 
+                                                <span id="thankyou_page_type_value_{$item.sort}">{$item.type}</span>
+                                            	<span id="thankyou_page_value_value_{$item.sort}" style="display:none;">{$item.value}</span>
+                                                <span id="thankyou_page_clickable_value_{$item.sort}" style="display:none;">{$item.is_link}</span>
+                                                <span id="thankyou_page_image_value_{$item.sort}" style="display:none;"></span>
+                                                <span id="thankyou_page_image_value_old_{$item.sort}" style="display:none;">{$item.image }</span>
+                                            </div>
+                                        </li>
+                                    {/foreach}
+                                </ul>
+                                <div>
+                                	<table cellspacing="10">
+                                    	<tr><td>Status: </td><td>
+                                            <select id="thankyou_page_auto_redirect">
+                                                <option value="y" {if $data_wapreg.0.status_auto_redirect eq 'y'}selected="selected"{/if}>Yes</option>
+                                                <option value="n" {if $data_wapreg.0.status_auto_redirect eq 'n'}selected="selected"{/if}>No</option>
+                                            </select>
+                                        </td></tr>
+                                        <tr><td>Time: </td><td><input type="text" id="thankyou_page_time" value="{$data_wapreg.0.time_auto_redirect}" size="4" /></td></tr>
+                                        <tr><td>URL: </td><td><input type="text" id="thankyou_page_url" value="{$data_wapreg.0.url_auto_redirect}" /></td></tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div id="tabs-5">
+                                <button class="btn-ui" style="margin-bottom:20px; margin-top:10px; font-family:Verdana, Geneva, sans-serif;font-size:8pt;" onclick="show_info_page();">Add New Component</button>
+                                <div id="info-page-form" style="display:none;">
+                                	<table cellspacing="10">
+                                    	<tr><td valign="top">Component Name</td><td><input type="text" id="info_page_name" size="50" /></td></tr>
+                                        <tr>
+                                        	<td valign="top">Type</td>
+                                        	<td>
+                                            	<select id="info_page_type">
+                                                    {foreach from=$type_component item=item_component}
+                                                    <option value="{$item_component}" {if $type eq $item_component}selected="selected"{/if}>{$item_component|upper}</option>
+                                                    {/foreach}
+                                                </select>
+											</td>
+										</tr>
+                                        <tr><td valign="top">Value</td><td><textarea id="info_page_value" rows="5" cols="47" name="info_page_value"></textarea></td></tr>
+                                        <tr>
+                                        	<td valign="top">Clickable</td>
+                                            <td>
+                                        		<select id="info_page_clickable">
+                                                    {foreach from=$type_link item=item_link}
+                                                    <option value="{$item_link}" {if $is_link eq $type__key}selected="selected"{/if}>{$item_link}</option>
+                                                    {/foreach}
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr><td valign="top">Image</td><td>
+                                        	<form name="formupload_info" method="post" enctype="multipart/form-data" action="{$base_url}upload/upload.php?frame=info" target="upload-frame" onsubmit="startUpload('info');">
+                                                <input type="file" name="picture" id="info_page_image" onchange="formupload_info.submit();"  />
+                                            </form>
+                                        </td></tr>
+                                        <tr><td colspan="2" align="center"><center><div id="uploaded-picture-info"></div></center></td></tr>
+                                    </table>
+                                </div>
+                                <ul id="sortable_info" class="info_page_sortable">
+                                	{foreach from=$data_component.info_page item=item}
+                                    	<li id="comp_info_page_{$item.sort}" class="ui-state-default">
+                                        	<div style="width:90px; float:left">
+                                            	<a style="text-decoration:underline;" onclick="edit_info_page_old('{$item.sort}');">Edit</a> | 
+                                                <a style="text-decoration:underline;" onclick="remove_component('comp_info_page_{$item.sort}', '{$item.id}');">Delete</a>
+                                            </div>
+                                            <div style="width:580px; float:left">
+                                            	<b style="color:#000;">Name</b> : {$item.name|substr:0:50}
+                                                <span id="info_page_name_value_{$item.sort}" style="display:none;">{$item.name}</span>
+                                            </div>
+                                            <div style="float:left">
+                                            	<b style="color:#000;">Type</b> : 
+                                                <span id="info_page_type_value_{$item.sort}">{$item.type}</span>
+                                            	<span id="info_page_value_value_{$item.sort}" style="display:none;">{$item.value}</span>
+                                                <span id="info_page_clickable_value_{$item.sort}" style="display:none;">{$item.is_link}</span>
+                                                <span id="info_page_image_value_{$item.sort}" style="display:none;"></span>
+                                                <span id="info_page_image_value_old_{$item.sort}" style="display:none;">{$item.image}</span>
+                                            </div>
+                                        </li>
+                                    {/foreach}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <h3><a href="#">Wap Pages Preview</a></h3>
+                    <div>
+                        <div id="tabs-preview">
+                            <ul>
+                                <li><a href="#tabs-preview-1">Landing Page Preview</a></li>
+                                <li><a href="#tabs-preview-2">Confirmation Page Preview</a></li>
+                                <li><a href="#tabs-preview-3">Thankyou Page Preview</a></li>
+                                <li><a href="#tabs-preview-4">Info Page Preview</a></li>
+                            </ul>
+							<div id="tabs-preview-1">
+                            	<div id="landing-page-preview"style="margin-top:30px;">
+	                            	<div id="header-background-landing-preview"style="width:250px; height:100px; margin-top:-30px; margin-bottom:10px;">
+    	                                <div style="width:200px; height:80px; margin-left:20px;"><img id="header-landing-preview"width="200"height="80"/></div>
+        	                        </div>
+                                    <div id="content-landing"></div>
+                                    <div id="footer-background-landing-preview"style="width:250px; height:100px;">
+                                        <div style="width:200px; height:80px; margin-left:20px;"><img id="footer-landing-preview"width="200"height="80"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="tabs-preview-2">
+                            	<div id="confirmation-page-preview"style="margin-top:30px;">
+	                            	<div id="header-background-confirmation-preview"style="width:250px; height:100px; margin-top:-30px;">
+    	                                <div style="width:200px; height:80px; margin-left:20px;"><img id="header-confirmation-preview"width="200"height="80"/></div>
+        	                        </div>
+                                    <div id="content-confirmation"></div>
+                                    <div id="footer-background-confirmation-preview"style="width:250px; height:100px;">
+                                        <div style="width:200px; height:80px; margin-left:20px;"><img id="footer-confirmation-preview"width="200"height="80"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="tabs-preview-3">
+                            	<div id="thankyou-page-preview"style="margin-top:30px;">
+	                            	<div id="header-background-thankyou-preview"style="width:250px; height:100px; margin-top:-30px;">
+    	                                <div style="width:200px; height:80px; margin-left:20px;"><img id="header-thankyou-preview"width="200"height="80"/></div>
+        	                        </div>
+                                    <div id="content-thankyou"></div>
+                                    <div id="footer-background-thankyou-preview"style="width:250px; height:100px;">
+                                        <div style="width:200px; height:80px; margin-left:20px;"><img id="footer-thankyou-preview"width="200"height="80"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="tabs-preview-4">
+                            	<div id="info-page-preview"style="margin-top:30px;">
+	                            	<div id="header-background-info-preview"style="width:250px; height:100px; margin-top:-30px;">
+    	                                <div style="width:200px; height:80px; margin-left:20px;"><img id="header-info-preview"width="200"height="80"/></div>
+        	                        </div>
+                                    <div id="content-info"></div>
+                                    <div id="footer-background-info-preview"style="width:250px; height:100px;">
+                                        <div style="width:200px; height:80px; margin-left:20px;"><img id="footer-info-preview"width="200"height="80"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-ui" style="margin-bottom:20px; margin-top:10px; font-family:Verdana, Geneva, sans-serif;font-size:8pt;" id="btn_save" onclick="save();">Save New Wap</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file='common/tpl_footer.html'}

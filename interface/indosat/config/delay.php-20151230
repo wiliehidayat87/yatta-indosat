@@ -1,0 +1,68 @@
+<?php
+// Harys Adjust
+class config_database {
+
+    public $profile = array(
+        'connDatabase1' =>
+        array(
+            'username' => 'xmp',
+            'password' => 'pu5k0mxdj.',
+            'host' => '10.99.11.3',
+            'database' => 'xmp',
+            'driver' => 'mysql'
+        ),
+         'connDatabase2' =>
+        array(
+            'username' => 'root',
+            'password' => '',
+            'host' => '10.99.11.3',
+            'database' => 'xmp_bak',
+            'driver' => 'mysql'
+        ),
+        'connBroadcast' =>
+        array(
+            'username' => 'dbpush',
+            'password' => 'pu5k0mxdj.',
+            'host' => '10.99.11.3',
+            'database' => 'dbpush',
+            'driver' => 'mysql'
+        ),
+        'reports' =>
+        array(
+            'username' => 'reports',
+            'password' => 'pu5k0mxdj.',
+            'host' => '10.99.11.3',
+            'database' => 'reports',
+            'driver' => 'mysql'
+        ),
+        'connWap' =>
+        array(
+            'username' => 'wap',
+            'password' => 'pu5k0mxdj.',
+            'host' => '10.99.11.3',
+            'database' => 'wap',
+            'driver' => 'mysql'
+        ),
+		 'connDr' =>
+        array(
+            'username' => 'cdr',
+            'password' => 'pu5k0mxdj.',
+            'host' => '10.99.11.3',
+            'database' => 'cdr',
+            'driver' => 'mysql'
+        ),
+        'connHadoop' =>
+        array(
+            'driver' => 'hadoop'
+        ),
+        'cmp' =>
+        array(
+            'username' => 'cmp',
+            'password' => 'c123p',
+            'host' => '10.99.11.3',
+            'database' => 'cmp',
+            'driver' => 'mysql'
+        ),
+    );
+
+}

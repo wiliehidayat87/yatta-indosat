@@ -1,0 +1,116 @@
+<?php
+error_reporting(1);
+/*
+ * http://localhost:20002/mo/?msisdn=628558047226&sms=kt+test2&trx_time=20140317180545&transid=12345678&substype=30
+ *
+ */
+
+require_once '/app/xmp2012/interface/indosat/xmp.php';
+
+//var_dump($_REQUEST);
+
+if ($_REQUEST) {
+    $moProcessor = new manager_mo_processor ( );
+        $_REQUEST['sms'] = str_replace('++','',$_REQUEST['sms']);
+    $_REQUEST['sms'] = str_replace('  ','',$_REQUEST['sms']);
+    $response = $moProcessor->saveToFile($_REQUEST);
+    printResponse($_GET['transid']);
+    //sendToCmp($_REQUEST);
+
+        $sms = $_REQUEST['sms'];
+
+        if(substr(strtolower($sms), 0, 3) == "reg")
+        {
+                sendToCmpStorage($_REQUEST);
+        }
+
+} else {
+    printResponse(3, $_GET['transid']);
+}
+
+function printResponse($trx_id, $status=0) {
+
+        $response_str = array(
+                0 => 'Message processed successfully',
+           -1 => 'Parameter incomplete',
+                3 => 'System error',
+
+        );
+
+
+        $response = '<?xml version="1.0" ?><MO><STATUS>'.$status.'</STATUS><TRANSID>'.$trx_id.'</TRANSID><MSG>'.$response_str[$status].'</MSG></MO>';
+
+        header('Content-type: text/xml');
+        echo $response;
+}
+
+
+// trx_time=20150519144014&
+// msisdn=6285711683714&
+// sc=99879&
+// transid=25388599515&
+// sms=reg+DG+hIDAD150519000150000102828003467b030MAN2e3000939PZ05163&
+// substype=20&
+// sdmsubsid=178135734
+
+// trx_time=20150519000441&
+// msisdn=6285624329637&
+// sc=99879&
+// transid=14687093927&
+// sms=reg+DG+hIDAD150518000150000103234003467b030TPCf730019040802032&
+// substype=20&
+// sdmsubsid=178053467
+
+function sendToCmp($GET) {
+    list($serv,$servicename) = explode(" ", trim($GET['sms']));
+
+    $data = array(
+         "msisdn"       => $GET['msisdn']
+        ,"service"      => $servicename
+        ,"operator"     => "indosat"
+    );
+
+    ob_start();
+    print_r($data);
+    $log = ob_get_clean();
+
+    error_log("/mo/index.php " . date("Y-m-d H:i:s") . " " . $log . PHP_EOL, 3, "/app/xmp2012/logs/indosat/cpa/cpa-" . date("Y-m-d"));
+
+    $sPixel = new indosat_cmp_manager_keyword();
+    $sPixel->process_pixel($data);
+}
+
+function sendToCmpStorage($GET) {
+  if(strpos(strtolower($GET['sms']), "unreg") === false || strpos(strtolower($GET['sms']), "confirm") === false){
+    $datasms = explode(" ", trim($GET['sms']));
+    if(count($datasms) > 2)
+    {
+                list($trigger,$servicename,$identifierP) = explode(" ", trim($GET['sms']));
+
+                $identifierP = trim($identifierP);
+
+                if($identifierP != "EA"){
+                        $data = array(
+                                 "msisdn"       => $GET['msisdn']
+                                ,"service"      => strtolower($servicename)
+                                ,"operator"     => "indosat"
+                                ,"pixelStorageID" => substr($identifierP, 1, strlen($identifierP))
+                        );
+
+                        $_GET['sms'] = implode(" ", array($trigger, $servicename));
+
+                        /*
+                        ob_start();
+                        print_r($data);
+                        $log = ob_get_clean();
+                        */
+
+                        error_log("/mo/index.php " ."\t" . date("Y-m-d H:i:s") . "\t Start CMP : \t".serialize($data)."\r\n", 3, "/app/xmp2012/logs/indosat/cpa/cpa-" . date("Y-m-d"));
+
+                        $sPixel = new indosat_cmp_manager_keyword();
+                        $sPixel->process_pixel_2($data);
+                }
+        }
+  }
+}
+

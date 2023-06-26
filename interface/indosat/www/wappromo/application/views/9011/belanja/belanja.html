@@ -1,0 +1,42 @@
+<html>
+  <head>
+    {include file='tpl_head.html'}
+  </head>
+  <body>
+    {include file='tpl_navigation.html'}
+    <div id="wrapper">
+      <div id="content_1000">
+      	<div id="module">:: Belanja Menu ::</div>
+      	<br /><br />
+      	<form action="{$base_url}9011/belanja/Belanja_9011_Main/" method="post">
+      			<p>Select Periode: <input type='text' id='periode' name='periode' size=10 readonly onClick="displayDatePicker('periode', false, 'ymd','-');">&nbsp;&nbsp;<input type="submit" name="submit" value="Search"></p>      			
+      		</form>
+      	<hr />
+      	<br /><b>User list for the day</b><br /><br />
+      	{if count($users) gt 0}
+      	<div class="width_700">
+        <div class="rows">
+        	<div class="width_100 float_left border align_center padding head_color">Msisdn</div>
+        	<div class="width_100 float_left border align_center padding head_color">Pin</div>
+          <div class="width_100 float_left border align_center padding head_color">Service</div>
+          <div class="width_200 float_left border align_center padding head_color">Periode</div>
+          <div class="width_100 float_left border align_center padding head_color">Status</div>
+        </div>
+        {foreach from=$users item=item name=user}
+        <div class="rows">
+        	<div class="width_100 float_left border align_center padding">{$item.msisdn}</div>
+        	<div class="width_100 float_left border align_center padding">{$item.pin}</div>
+        	<div class="width_100 float_left border align_center padding">{$item.service}</div>
+          <div class="width_200 float_left border align_center padding">{$item.date}</div>
+          <div class="width_100 float_left border align_center padding">{if $item.status eq 0}Active{else}Un-Active{/if}</div>
+        </div>
+        {/foreach}
+        </div><br /><br />
+      	{else}
+      	No User For This Periode
+      	{/if}
+      	<br/><br/>
+    	</div>
+    </div>
+  </body>
+</html>

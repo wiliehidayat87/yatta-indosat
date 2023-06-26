@@ -1,0 +1,58 @@
+{include file='common/tpl_header.html'}
+
+<script src="{$base_url}assets/js/module/acl/menu.js" type="text/javascript"></script>
+
+<div id="content" class="clearfix">
+    <div id="maincontent">
+        <div class="pageTitle">
+            <span>Menu list</span>
+        </div>
+
+        <div class="actionbar">
+            <div class="clearfix fl">
+                <span><a id="btnOpenPanel" class="btnAdd"><span>Create New Service&nbsp;</span></a></span>&nbsp;&nbsp;
+            </div>
+            <div class="search-area">
+                <form name="search-form" id="search-form">
+                    <input type="text" name="search-field" id="search-field" class="search-field" />
+                    <input type="submit" name="search-button" id="search-button" class="search-button" value="&nbsp;" />
+                </form>
+            </div>
+
+            <div id="loadContainer" class="closePanel">
+                <!-- -->
+            </div>
+        </div>
+
+        <table id="menu-list-table" class="datagrid2" width="100%">
+            <thead>
+	      		<tr>
+		      		<th width="150">Menu</th>
+		      		<th width="100">Parent</th>
+		            <th width="100">Link</th>
+		            <th width="80">Sort</th>
+		            <th width="80">Status</th>
+		            <th width="120">Action</th>
+		      	</tr>
+            </thead>
+
+            <tbody></tbody>
+                
+            <tfoot>
+                <tr>
+                    <td colspan="6">
+                        <div id="pagination" class="fl">
+                            Page: <span id="paging"></span>
+                        </div>
+                        <div id="pagination-info" class="fr">
+                            <span id="from" class="fwb">0</span> - <span id="to" class="fwb">0</span> from <span id="total" class="fwb">0</span>
+                        </div>
+                        <div class="cb"></div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+{include file='common/tpl_footer.html'}

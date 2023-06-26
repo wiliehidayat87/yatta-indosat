@@ -1,0 +1,86 @@
+<?php 
+/*
+ * http://localhost:20002/mo/?msisdn=628558047226&sms=kt+test2&trx_time=20140317180545&transid=12345678&substype=30
+ *
+ */ 
+
+$POST = file_get_contents('php://input');
+
+if(isset($POST)){
+    error_log(date('Y-m-d H:i:s').' '.print_r($POST,1).PHP_EOL,3,"/tmp/momoco_".date('Ymd').".log");
+}
+
+/*
+require_once '/app/xmp2012/interface/indosat/xmp.php'; 
+
+if ($_REQUEST) {
+    $moProcessor = new manager_mo_processor ( );
+    $response = $moProcessor->saveToFile($_REQUEST);
+    printResponse($_GET['transid']);
+    sendToCmp($_GET);
+} else {
+    printResponse(3, $_GET['transid']);
+}
+*/
+
+function printResponse($trx_id, $status=0) {
+	
+	$response_str = array(
+	    0 => 'Message processed successfully',
+	   -1 => 'Parameter incomplete',
+	    3 => 'System error',		
+	);
+	
+	
+	$response = '<?xml version="1.0" ?><MO><STATUS>'.$status.'</STATUS><TRANSID>'.$trx_id.'</TRANSID><MSG>'.$response_str[$status].'</MSG></MO>';
+	
+	header('Content-type: text/xml');
+	echo $response;
+}
+
+function sendToCmp($GET) {
+	$log = manager_logging::getInstance();
+	$pixel = loader_model::getInstance()->load('pixel', 'cmp');
+	$operator = "MOCO";
+	$arrmbid = explode(' ',$GET['sms']);
+	$sms = $GET['sms'];
+	if((count($arrmbid)==3)&&(strtolower($arrmbid[2])!=='menu')){
+	if(substr(strtolower($sms), 0, 3) == "reg" && (strpos(strtolower($GET['sms']),'reg dangdut')!==FALSE ||
+		strpos(strtolower($GET['sms']),'reg dg')!==FALSE ||
+		strpos(strtolower($GET['sms']),'reg puasa')!==FALSE ||
+		strpos(strtolower($GET['sms']),'reg game')!==FALSE)){
+		$publisher = array(1=>'mobusi',2=>'kimia',3=>'kissads',4=>'adsterdam',5=>'cd',6=>'mobipium');
+		$partner = isset($arrmbid[2])?$publisher[$arrmbid[2]]:'none';
+		
+		$val_pixel = $pixel->getPixel($operator,$partner);
+		if(substr($val_pixel, 0, 3) == "ADT") {
+			$data['partner']='adsterdam';
+			$val_pixel = str_replace('ADT','',$val_pixel);
+		}else{
+			if(strlen($val_pixel) == 30) {
+				$data['partner']='kissads';
+			}else if(strlen($val_pixel) == 55) {
+				$data['partner']='kimia';
+			}else if(strlen($val_pixel) == 41){
+				$data['partner']='mobipium';
+			}else {
+				if(preg_match('/^cd/',strtolower($val_pixel))) {
+					$data['partner']='cd';
+					$val_pixel = str_replace('cd','',$val_pixel);
+				} else {
+					$data['partner']='mobusi';
+				}
+			}
+		}
+		$data['id']=$val_pixel;
+		$data['msisdn'] = $GET['msisdn'];
+		$data['instid']=$GET['msisdn'];
+		$config_cmp = loader_config::getInstance()->getConfig('cmp');
+		if(isset($config_cmp->partner[$data['partner']]) && $config_cmp->partner[$data['partner']]==1) {
+				$cmp_manager = new manager_cmp_processor();
+				$data['service']=$arrmbid[1];
+				$data['adn']=$GET['to'];
+				$cmp_manager->saveToBuffer($data);
+		}
+	}}
+}

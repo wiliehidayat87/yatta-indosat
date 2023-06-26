@@ -1,0 +1,50 @@
+<html>
+    <head>{include file='tpl_head.html'}</head>
+
+    <body>
+        {include file='tpl_navigation.html'}
+        <div id="wrapper">
+            <div id="content_1000">
+            	<div style="font-family:Verdana, Geneva, sans-serif; font-size:10pt; margin-bottom:20px; font-weight:bold;">
+	            	<a style="color:#06F; text-decoration:underline;" href="{$service_url}">Langsung Harian</a> | 
+    	            <a style="color:#06F; text-decoration:underline;" href="{$service_url}grand_prize">Langsung Grand Prize</a>
+                </div>
+                <hr style="border:5px dashed #C6C6C6; margin-bottom:20px;">
+                <div style="font-weight: bold;font-size:10pt; color:#858585;">Langsung Grand Prize</div>
+                
+                <div class="error">{if $error}{$error}{/if}</div>
+                <div style="margin-top:5px; margin-bottom:10px;">
+                	<a style="color:#06F; text-decoration:underline; font-family:Verdana, Geneva, sans-serif; font-size:10pt;" href="{$service_url}add_grand_prize">- Add New -</a>
+                </div>
+                
+                <table width="100%" class="list" cellpadding="5" cellspacing="1">
+                <tr style="background-color:#6699CC;">
+                	<th width="10%">Code</th>
+                	<th width="50%">Content</th>
+                	<th width="10%">Date</th>
+                	<th width="5%">Type</th>
+                    <th width="10%">Is Delivered</th>
+                    <th width="10%">Tools</th>
+                </tr>
+				{foreach from=$result item=i key=j}
+                	{if $j%2 == 0}<tr>
+                    {else} <tr bgcolor="#E5E5E5">
+                    {/if}
+                    <td>{$i.code}</td>
+                    <td>{$i.content}</td>
+                    <td align="center" valign="top">{$i.date}</td>
+                    <td align="center" valign="top">{$i.type}</td>
+                    <td align="center" valign="top">{if $i.is_delivered=='No'}<a href='{$service_url}is_delivered/{$i->id}'>Yes / No</a>{else} Yes {/if}</td>
+                    <td align="center" valign="top">
+                    	<a href='{$service_url}edit_grandprize/id/{$i.id}'>Edit</a>
+                        {if $i.is_delivered=='No'}
+						&nbsp;&nbsp;|&nbsp;&nbsp;
+                        <a href='{$service_url}delete_grandprize/id/{$i.id}' onClick="return confirm('Are you sure to delete this content?');">Delete</a>
+                        {/if}
+                    </td>
+                    </tr>
+                {/foreach}
+            </div>
+        </div>
+    </body>
+</html>

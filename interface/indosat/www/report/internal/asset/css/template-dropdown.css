@@ -1,0 +1,317 @@
+body{
+font:12px/18px Arial, Helvetica, sans-serif;
+color:#343434;
+}
+
+.clearfix:after{
+content:'.';
+height:0;
+font:0/0;
+visibility:hidden;
+display:block;
+clear:both;
+}
+
+/*template*/
+
+#header{
+border-bottom:#d6d6d6 solid 1px;
+color:white;
+}
+
+#head-top{
+height:37px;
+padding:15px 20px 0 20px;
+background:url(../image/bghead-top.png) repeat-x left top;
+}
+
+#logo-map{
+float:left;
+}
+
+#logo-map a:link, #logo-map a:visited{
+color:white;
+text-decoration:none;
+}
+
+#logo-extra{
+float:right;
+}
+
+#head-bottom{
+height:20px;
+background:url(../image/bgpattern.png) repeat left top;
+padding:0 20px;
+}
+
+#breadcrumbs{
+margin:0;
+}
+
+#breadcrumbs li{
+float:left;
+list-style:none;
+}
+
+#breadcrumbs a{
+padding:0 15px 0 3px;
+}
+
+#breadcrumbs a:link, #breadcrumbs a:visited{
+color:white;
+background:url(../image/breadtrails.png) no-repeat right 3px;
+}
+
+#content{
+padding:20px;
+background:#ffffff url(../image/bgfaux-sidecontent.png) repeat-y 1px top;
+min-height: 350px;
+*height: 350px;
+}
+
+#maincontent{
+margin:0px;
+}
+
+#header #head-bottom{
+height:20px;
+border-bottom:#676767 solid 1px;
+}
+
+#header #navigation{
+padding-top:14px;
+margin:0;
+}
+
+#header #navigation li{
+float:left;
+margin-right:10px;
+background:none;
+list-style:none;
+}
+
+#header #navigation li a{
+padding:10px 10px;
+font-size:11px;
+}
+
+#header #navigation .current a{
+background:#878787;
+-moz-border-radius:2px;
+-webkit-border-radius:2px;
+border-radius:2px;
+}
+
+#header #navigation a:hover,
+#navigation li:hover{
+background:#efefef;
+-moz-border-radius:2px;
+-webkit-border-radius:2px;
+border-radius:none;
+}
+
+#navigation a:link, #navigation a:visited{
+color:white;
+text-decoration:none;
+}
+
+/*subnavigation*/
+
+#navigation li{
+position:relative;
+}
+
+#header #navigation li li a:hover{
+-moz-border-radius:2px;
+-webkit-border-radius:2px;
+border-radius:2px;
+}
+
+
+#header #navigation ul{
+position:absolute;
+z-index:999;
+background:white;
+border:#cccccc solid 1px;
+margin:0 0 0 0px;
+width:150px;
+display:none;
+-moz-border-radius:2px;
+-webkit-border-radius:2px;
+border-radius:2px;
+}
+
+#header #navigation li li{
+float:left;
+}
+
+#header #navigation li li a{
+padding:3px 10px;
+width:130px;
+display:block;
+float:left;
+}
+
+#navigation li li a:link, #navigation li li a:visited{
+color:#343434;
+}
+
+#header #navigation li:hover ul{
+display:block;
+}
+
+#header #navigation li:hover li ul,
+#header #navigation li li ul{
+display:none;
+}
+
+#header #navigation li li ul,
+#header #navigation li li:hover ul{
+position: absolute;
+left: 151px;
+}
+#header #navigation li li:hover ul{
+display: block;
+}
+
+/*breadcrumbs*/
+
+#head-extra{
+height:20px;
+padding:0 20px;
+}
+
+#breadcrumbs{
+margin:0;
+float:right;
+}
+
+#breadcrumbs li{
+float:left;
+list-style:none;
+color:#343434;
+font-size:11px;
+}
+
+#breadcrumbs a{
+padding:0 15px 0 3px;
+}
+
+#breadcrumbs a:link, #breadcrumbs a:visited{
+color:#343434;
+text-decoration:none;
+background:url(../image/trails.png) no-repeat right -15px;
+}
+
+#breadcrumbs a:hover, #subnavigation a:hover{
+text-decoration:underline;
+}
+
+#left_td{
+text-align: left;
+}
+
+.cp_link{
+margin-left:20px;
+display:inline;
+}
+
+.cp_link_red{
+color: red;
+}
+
+/*tab*/
+.tabcontrol{
+overflow:hidden;
+*height:1%;
+margin:0;
+}
+
+.tabcontrol li{
+float:left;
+list-style:none;
+padding-right:15px;
+}
+
+.tabcontrol .current{
+background:url(../image/bgtabcontrol.png) no-repeat right -40px;
+}
+
+.tabcontrol a{
+display:block;
+float:left;
+padding:6px 0 6px 15px;
+}
+
+.tabcontrol .current a{
+background:url(../image/bgtabcontrol.png) no-repeat left top;
+}
+
+.tabwrapper .tabcontent{
+background:#f3eff0;
+padding:20px;
+border:#cccccc solid 1px;
+margin-top:-1px;
+}
+
+/*form element*/
+
+form td{
+padding:5px;
+}
+
+input.textfield, textarea, select{
+padding:2px;
+border:#a9a9a9 solid 1px;
+background:#ffffff url(../image/bgform-element.gif) repeat-x left top;
+-moz-border-radius:3px;
+}
+
+.searchfield{
+border:#a9a9a9 solid 1px;
+background:#ffffff url(../image/bgform-element.gif) repeat-x left top;
+-moz-border-radius:3px;
+display:block;
+float:right;
+}
+
+.searchfield input.textfield{
+padding:2px 2px 2px 24px;
+border:none;
+background:url(../image/bgsearchfield.gif) no-repeat 3px 3px;
+}
+
+input.button, button{
+background:#ffffff url(../image/bgbutton.png) repeat-x left bottom;
+border:#bccddf solid 1px;
+cursor: pointer;
+margin-right:10px;
+-moz-border-radius:4px;
+padding:2px 5px;
+}
+
+label.lblCheckbox, label.lblRadio{
+padding:2px 10px 2px 2px;
+display:block;
+float:left;
+}
+
+/*jquery element*/
+.tooltips{
+cursor:default;
+}
+
+#tooltip {
+	background: url(../image/search.png) no-repeat 5px 50%;
+	border: 1px solid #BFBFBF;
+	float: left;
+	font-size: 12px;
+	max-width: 160px;
+	padding: 1em 1em 1em 3em;
+	position: absolute;
+}
+
+#dateRange{
+float:left;
+}
+

@@ -1,0 +1,93 @@
+html, body { height: 100%; } 
+#container { min-height: 100%; } 
+
+html{
+background:url(../img/login/bgrepeat-login.png) repeat left top;
+}
+
+body {
+margin:0;
+padding:0;
+background:url(../img/login/white70.png) no-repeat center top;	
+font:12px/18px Arial, Helvetica, sans-serif;
+padding:20px 0 0 0;
+}
+
+#container {
+width:488px;
+margin:0 auto;
+}
+
+#panel-login {
+background:url(../img/login/bgloginpanel.png) no-repeat -489px bottom;
+padding:20px 0;
+}
+
+#panel-login .wrapper{
+width:448px;
+overflow:hidden;
+min-height:220px;
+_height:220px;
+padding:20px 20px 0;
+background:url(../img/login/bgloginpanel.png) no-repeat left top;
+}
+
+#panel-login .formwrapper {
+float:right;
+width:180px;
+}
+
+#footer{
+text-align:center;
+background:url(../img/login/bgmirror.png) no-repeat center top;
+padding:20px 0 0 0;
+height:135px;
+}
+
+#icon-username, #icon-password{
+background:url(../img/login/icon-user-pass.png) no-repeat -12px -12px;
+display:inline-block;
+height:21px;
+padding-left:20px;
+margin-bottom:0.5em;
+}
+
+#icon-password{
+background-position:-12px -68px;	
+}
+
+#btn-login, #btn-sent{
+background:url(../img/login/btn-login.png) no-repeat left top;
+width:68px;
+height:23px;
+border:none;
+text-indent:-100px;
+overflow:hidden;
+cursor:pointer;
+}
+
+#btn-sent{
+background:url(../img/login/btn-sent.png) no-repeat left top;
+}
+
+#forgot-password{
+display:none;	
+}
+
+.errormsg{
+background:#FAE8E8;	
+border:1px solid #CD3301;
+padding:5px;
+text-align:center;
+}
+
+.successmsg{
+background:#eafcb5;
+border:1px solid #98CB00;
+padding:5px;
+text-align:center;
+}
+
+.textfield{
+width: 175px;
+}

@@ -1,0 +1,446 @@
+<?php
+
+class model_user extends model_base {
+
+    public function populateUser($broadcast_data) {
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "Start : " . serialize($broadcast_data)));
+
+        $sql = sprintf("SELECT * 
+				FROM subscription 
+				WHERE service = '%s' 
+				AND adn = '%s' 
+				AND operator = '%s' 
+				AND active = '1'
+        		AND subscribed_from <= NOW() 
+				AND subscribed_until >= NOW() 
+        		", mysql_real_escape_string($broadcast_data->service), mysql_real_escape_string($broadcast_data->adn), mysql_real_escape_string($broadcast_data->operator));
+        $data = $this->databaseObj->fetch($sql);
+        if (count($data) > 0) {
+            return $data;
+        } else {
+            return false;
+        }
+    }
+
+    public function get($user_data) {
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "Start : " . serialize($user_data)));
+
+        $sql = "SELECT * FROM subscription WHERE ";
+        if (!empty($user_data->service))
+            $sql .= " service = '" . mysql_real_escape_string($user_data->service) . "' AND";
+
+        if (!empty($user_data->adn))
+            $sql .= " adn = '" . mysql_real_escape_string($user_data->adn) . "' AND";
+
+        if (!empty($user_data->operator))
+            $sql .= " operator = '" . mysql_real_escape_string($user_data->operator) . "' AND";
+
+        if (!empty($user_data->active))
+            $sql .= " active = '" . mysql_real_escape_string($user_data->active) . "' AND";
+
+        if (!empty($user_data->msisdn))
+            $sql .= " msisdn = '" . mysql_real_escape_string($user_data->msisdn) . "' AND";
+
+        $sql = rtrim($sql, 'AND');
+        $sql .= " ORDER BY ID DESC LIMIT 1";
+
+        $result = $this->databaseObj->fetch($sql);
+        if (count($result) > 0) {
+            return $result [0];
+        } else {
+            return false;
+        }
+    }
+
+    public function getException($user_data) {
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "Start : " . serialize($user_data)));
+
+        $active = (!empty($user_data->active)) ? $user_data->active : '0';
+        $sql = "SELECT * FROM subscription WHERE `active` <> " . mysql_real_escape_string($active);
+
+        if (!empty($user_data->service))
+            $sql .= " AND service = '" . mysql_real_escape_string($user_data->service) . "'";
+
+        if (!empty($user_data->adn))
+            $sql .= " AND adn = '" . mysql_real_escape_string($user_data->adn) . "'";
+
+        if (!empty($user_data->operator))
+            $sql .= " AND operator = '" . mysql_real_escape_string($user_data->operator) . "'";
+
+        if (!empty($user_data->msisdn))
+            $sql .= " AND msisdn = '" . mysql_real_escape_string($user_data->msisdn) . "'";
+
+        $sql .= " ORDER BY ID DESC LIMIT 1";
+
+        $result = $this->databaseObj->fetch($sql);
+        if (count($result) > 0) {
+            return $result [0];
+        } else {
+            return false;
+        }
+    }
+
+    public function add($user_data) {
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "Start : " . serialize($user_data)));
+
+        $subscribed_from = "";
+        $transaction_id_subscribe = "";
+        if ($user_data->active == '1') {
+            $subscribed_from = date('Y-m-d H:i:s');
+            $transaction_id_subscribe = $user_data->transaction_id_subscribe;
+        }
+        if (empty($user_data->channel_subscribe))
+            $channel_subscribe = 'sms';
+        else
+            $channel_subscribe = $user_data->channel_subscribe;
+        $sql = sprintf("INSERT INTO subscription (transaction_id_subscribe, msisdn, service, adn, operator, channel_subscribe, subscribed_from, subscribed_until, partner, active, time_created
+						) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s',NOW());", mysql_real_escape_string($transaction_id_subscribe), mysql_real_escape_string($user_data->msisdn), mysql_real_escape_string($user_data->service), mysql_real_escape_string($user_data->adn), mysql_real_escape_string($user_data->operator), mysql_real_escape_string($channel_subscribe), mysql_real_escape_string($subscribed_from), '9999-12-31 00:00:00', mysql_real_escape_string($user_data->partner), mysql_real_escape_string($user_data->active));
+        $this->databaseObj->query($sql);
+        return $this->databaseObj->last_insert_id();
+    }
+
+    public function update(user_data $user_data) {
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "Start : " . serialize($user_data)));
+
+        $sql = sprintf("UPDATE subscription SET active = '%s', time_updated = NOW()", mysql_real_escape_string($user_data->active));
+        if (empty($user_data->channel_subscribe))
+            $sql .= sprintf(", channel_subscribe = 'sms'");
+        else
+            $sql .= sprintf(", channel_subscribe = '%s'", mysql_real_escape_string($user_data->channel_subscribe));
+        if (empty($user_data->channel_unsubscribe))
+            $sql .= sprintf(", channel_unsubscribe = 'sms'");
+        else
+            $sql .= sprintf(", channel_unsubscribe = '%s'", mysql_real_escape_string($user_data->channel_unsubscribe));
+        if ($user_data->active == '1')
+            $sql .= sprintf(", subscribed_from = '%s', transaction_id_subscribe = '%s'", date('Y-m-d H:i:s'), mysql_real_escape_string($user_data->transaction_id_subscribe));
+        if ($user_data->active != '1')
+            $sql .= sprintf(", subscribed_until = '%s', transaction_id_unsubscribe = '%s'", date('Y-m-d H:i:s'), mysql_real_escape_string($user_data->transaction_id_unsubscribe));
+
+        $sql .= sprintf(" WHERE id = '%s';", mysql_real_escape_string($user_data->id));
+        $this->databaseObj->query($sql);
+        return true;
+    }
+
+    public function getSpringUser($user_data) {
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "Start : " . serialize($user_data)));
+
+        $sql = "
+				SELECT
+					u.id AS id,
+					u.adn AS adn,
+					s.id AS package_id,
+					u.service AS package_name,
+					p.protocol AS protocol_number,
+					u.active AS status,
+					u.subscribed_from AS datetime_subscription,
+					u.subscribed_until AS datetime_last_cancel,
+					u.channel_subscribe AS channel
+				FROM
+					subscription AS u
+				INNER JOIN
+					service AS s ON u.service = s.name AND u.adn = s.adn
+				INNER JOIN
+					spring_protocol AS p ON p.subscription_id = u.id
+				WHERE
+					u.msisdn = '" . mysql_real_escape_string($user_data->msisdn) . "'";
+
+        if (!empty($user_data->adn))
+            $sql .= " AND u.adn = '" . mysql_real_escape_string($user_data->adn) . "'";
+
+        if (!empty($user_data->protocolType))
+            $sql .= " AND p.protocol_type = '" . mysql_real_escape_string($user_data->protocolType) . "'";
+
+        $sql .= " ORDER BY u.id DESC ";
+
+        if (!empty($user_data->limit))
+            $sql .= " LIMIT " . mysql_real_escape_string($user_data->limit);
+
+        $result = $this->databaseObj->fetch($sql);
+        if (count($result) > 0) {
+            return $result;
+        } else {
+            return false;
+        }
+    }
+
+    public function getSpringUserHistory($user_data) {
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "Start : " . serialize($user_data)));
+
+        $wapDB = loader_config::getInstance()->getConfig('database')->profile ['connWap'] ['database'];
+
+        $sql = "
+                       SELECT          
+                                u.id,   
+                                u.subscribed_from,
+                                u.subscribed_until,
+                                u.adn,  
+                                s.id AS package_id,
+                                s.name AS package_name,
+                                p.protocol,
+                                dl.price tariff,
+                                u.channel_subscribe, 
+                                u.channel_unsubscribe,
+                                u.active
+                        FROM    
+                                subscription u
+                        INNER JOIN
+                                service s ON u.adn = s.adn AND u.service = s.name
+                        INNER JOIN
+                                spring_protocol p ON p.subscription_id = u.id
+                        LEFT JOIN
+                            (SELECT wd.price, ws.DateCreated,ws.Msisdn, ws.Operator, ws.Service FROM " . mysql_real_escape_string($wapDB) . ".wap_session ws
+                        INNER JOIN
+                            " . mysql_real_escape_string($wapDB) . ".wap_download_log wd ON wd.SessionID = ws.ID WHERE ws.msisdn = '" . mysql_real_escape_string($user_data->msisdn) . "') dl ON dl.Msisdn = u.msisdn AND dl.Operator = u.operator AND dl.Service = u.service AND dl.DateCreated between u.subscribed_from and u.subscribed_until
+                        WHERE
+                                u.msisdn = '" . mysql_real_escape_string($user_data->msisdn) . "'
+                        ";
+        if (!empty($user_data->subscribed_from))
+            $sql .= " AND date(u.subscribed_from) >= '" . mysql_real_escape_string($user_data->subscribed_from) . "'";
+
+        if (!empty($user_data->subscribed_until))
+            $sql .= " AND date(u.subscribed_until) <= '" . mysql_real_escape_string($user_data->subscribed_until) . "'";
+
+        if (!empty($user_data->service))
+            $sql .= " AND u.service = '" . mysql_real_escape_string($user_data->service) . "' ";
+
+        if (!empty($user_data->adn))
+            $sql .= " AND u.adn = '" . mysql_real_escape_string($user_data->adn) . "' ";
+
+        $sql .= ' ORDER BY 
+					u.id DESC';
+
+        if (!empty($user_data->limit))
+            $sql .= " LIMIT " . mysql_real_escape_string($user_data->limit);
+
+        $result = $this->databaseObj->fetch($sql);
+        if (count($result) > 0) {
+            return $result;
+        } else {
+            return false;
+        }
+    }
+
+    public function getSpringUserProtocol($user_data) {
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "Start : " . serialize($user_data)));
+
+        $sql = "SELECT p.id, u.transaction_id_subscribe, u.transaction_id_unsubscribe, u.adn AS large_account, s.id AS package_id, u.service AS package_name, p.protocol AS protocol_number, u.msisdn, p.protocol_type AS type_id, u.active, u.subscribed_from, u.subscribed_until, p.mt_time AS datetime_mt, p.mo_time AS datetime_mo, p.msg_data AS message_mo, wd.Price AS tariff_value, p.protocol_type AS tariff_type_id, u.channel_subscribe AS activation_channel, u.channel_unsubscribe AS cancelation_channel, wd.DateCreated AS datetime_purchase 
+                FROM spring_protocol AS p
+                INNER JOIN subscription AS u ON p.subscription_id = u.id 
+                INNER JOIN service AS s ON u.adn = s.adn AND u.service = s.name 
+                LEFT JOIN wap.wap_download_log AS wd ON p.id = wd.ProtocolID 
+                WHERE p.protocol = '" . mysql_real_escape_string($user_data->protocol) . "'";
+
+        if (!empty($user_data->adn))
+            $sql .= " AND u.adn = '" . mysql_real_escape_string($user_data->adn) . "'";
+
+        $sql .= ' LIMIT 1';
+        $result = $this->databaseObj->fetch($sql);
+        if (count($result) > 0) {
+            return $result [0];
+        } else {
+            return false;
+        }
+    }
+
+    public function getSummary(summarizer_data $summarizer) {
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "Start : " . serialize($summarizer)));
+
+        $sql = sprintf("select DATE(subscribed_from) as date_subscribed, operator, adn, service, channel_subscribe as channel, count(*) as total 
+					from %s 
+					where date(subscribed_from) = '%s' group by adn, service, channel_subscribe, operator", mysql_real_escape_string($summarizer->tableFrom), mysql_real_escape_string($summarizer->date));
+        $result = $this->databaseObj->fetch($sql);
+        if (count($result) > 0) {
+            return $result;
+        } else {
+            return false;
+        }
+    }
+
+    public function getSpringDownloadHistory($user_data) {
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "Start : " . serialize($user_data)));
+
+        $wapDB = loader_config::getInstance()->getConfig('database')->profile ['connWap'] ['database'];
+
+        $sql = "
+			SELECT
+                            wd.id,
+                            us.adn,
+                            p.protocol, 
+                            p.mo_time, 
+                            p.mt_time, 
+                            p.msg_data,
+                            wd.price tariff,
+                            us.channel_subscribe,
+                            us.channel_unsubscribe,
+                            wd.status_charging,
+                            wc.ID contentId,
+                            wc.Title contentName,
+                            wc.Code,
+                            wd.DateCreated purchase_time,
+                            p.protocol_type tariffId
+                        FROM
+                            " . mysql_real_escape_string($wapDB) . ".wap_session ws
+                        INNER JOIN
+                            " . mysql_real_escape_string($wapDB) . ".wap_download_log wd ON wd.SessionID = ws.ID
+                        INNER JOIN
+                            " . mysql_real_escape_string($wapDB) . ".wap_content wc ON wc.Code = wd.ContentCode
+                        LEFT JOIN
+                            spring_protocol p ON p.id = wd.ProtocolID
+                        INNER JOIN
+                            (select * from subscription where msisdn = '" . mysql_real_escape_string($user_data->msisdn) . "' order by id desc limit 1)us
+                             ON ws.Msisdn = us.msisdn AND ws.Operator = us.operator AND ws.Service = us.service
+                        WHERE
+                            ws.msisdn = '" . mysql_real_escape_string($user_data->msisdn) . "' AND ws.Status = '1'";
+
+        if (!empty($user_data->subscribed_from))
+            $sql .= " AND date(wd.DateCreated) >= '" . mysql_real_escape_string($user_data->subscribed_from) . "'";
+
+        if (!empty($user_data->subscribed_until))
+            $sql .= " AND date(wd.DateCreated) <= '" . mysql_real_escape_string($user_data->subscribed_until) . "'";
+
+        if (!empty($user_data->service))
+            $sql .= " AND us.service = '" . mysql_real_escape_string($user_data->service) . "' ";
+
+        if (!empty($user_data->adn))
+            $sql .= " AND us.adn = '" . mysql_real_escape_string($user_data->adn) . "' ";
+
+        $sql .= ' ORDER BY wd.id DESC';
+
+        if (!empty($user_data->limit))
+            $sql .= " LIMIT " . mysql_real_escape_string($user_data->limit);
+
+        $result = $this->databaseObj->fetch($sql);
+        if (count($result) > 0) {
+            return $result;
+        } else {
+            return false;
+        }
+    }
+
+    public function getSpringRetry($user_data) {
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "Start : " . serialize($user_data)));
+
+        $sql = "
+            SELECT * 
+            FROM subscription
+            WHERE msisdn = '" . mysql_real_escape_string($user_data->msisdn) . "'";
+
+        if (!empty($user_data->adn))
+            $sql .= " AND adn = '" . mysql_real_escape_string($user_data->adn) . "'";
+
+        if (!empty($user_data->active))
+            $sql .= " AND active = '" . mysql_real_escape_string($user_data->active) . "'";
+
+        $sql .= ' ORDER BY id DESC LIMIT 1';
+
+        $result = $this->databaseObj->fetch($sql);
+        if (count($result) > 0) {
+            return $result[0];
+        } else {
+            return false;
+        }
+    }
+
+    public function execUser($broadcast_data) {
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "Start : " . serialize($broadcast_data)));
+	/*
+	if($broadcast_data->service == 'game'){
+	   if(date('G')<=12){
+	   	$sql = sprintf("SELECT msisdn FROM subscription WHERE service = '%s' AND adn = '%s' AND operator = '%s' AND active = '1' ORDER BY id ASC LIMIT 200000", mysql_escape_string($broadcast_data->service), mysql_escape_string($broadcast_data->adn), mysql_escape_string($broadcast_data->operator));
+	   }else{
+		$sql = sprintf("SELECT msisdn FROM subscription WHERE service = '%s' AND adn = '%s' AND operator = '%s' AND active = '1' ORDER BY id ASC LIMIT 200000, 400000", mysql_escape_string($broadcast_data->service), mysql_escape_string($broadcast_data->adn), mysql_escape_string($broadcast_data->operator));
+	   }
+	}else{
+	*/
+           $sql = sprintf("SELECT DISTINCT msisdn FROM subscription WHERE service = '%s' AND adn = '%s' AND operator = '%s' AND active = '1' ORDER BY partner DESC", mysql_escape_string($broadcast_data->service), mysql_escape_string($broadcast_data->adn), mysql_escape_string($broadcast_data->operator));
+	//}
+        $data = $this->databaseObj->fetch($sql);
+        if (count($data) > 0) {
+            return $data;
+        } else {
+            return false;
+        }
+    }
+
+    public function getSpringexecUser($broadcast_data, $afterDay) {
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "Start : " . serialize($broadcast_data)));
+
+        $sql = sprintf("SELECT * FROM subscription WHERE service = '%s' AND adn = '%s' AND operator = '%s' AND active = '1' AND DATEDIFF(DATE(NOW()),DATE(subscribed_from)) = '%s' AND DATE(subscribed_from) <> DATE(NOW())", mysql_escape_string($broadcast_data->service), mysql_escape_string($broadcast_data->adn), mysql_escape_string($broadcast_data->operator), mysql_escape_string($afterDay));
+        $data = $this->databaseObj->fetch($sql);
+        if (count($data) > 0) {
+            return $data;
+        } else {
+            return false;
+        }
+    }
+
+    public function updateSubscription($transactionId, $msisdn) {
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "Start Transaction Id : " . $transactionId . ". msisdn : " . $msisdn));
+
+        $sql = sprintf("UPDATE subscription SET transaction_id_subscribe = '%s'", mysql_real_escape_string($transactionId));
+        $sql .= sprintf(" WHERE msisdn = '%s';", mysql_real_escape_string($msisdn));
+        $this->databaseObj->query($sql);
+        return true;
+    }
+
+    public function checkBlacklist($msisdn) {
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "is msisdn " . $msisdn . " blacklist ?"));
+		
+        $sql = "SELECT * FROM blacklist WHERE msisdn = " . mysql_real_escape_string($msisdn);
+        $sql .= " ORDER BY msisdn DESC LIMIT 1";
+
+        $result = $this->databaseObj->fetch($sql);
+        if (count($result) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+	public function checkMsisdnSubject($msisdn) {
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "Start : " . $msisdn));
+
+        $sql = sprintf("SELECT subject, notif FROM msisdn_subject WHERE msisdn = %s LIMIT 1", mysql_real_escape_string($msisdn));
+        $data = $this->databaseObj->fetch($sql);
+        if (count($data) > 0) {
+            return $data;
+        } else {
+            return array();
+        }
+    }
+	
+	public function updateMsisdnSubject($msisdn, $subject = "NORMAL") {
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "Start msisdn : " . $msisdn));
+
+        $sql = sprintf("UPDATE msisdn_subject SET subject = '%s'", mysql_real_escape_string($subject));
+        $sql .= sprintf(" WHERE msisdn = '%s';", mysql_real_escape_string($msisdn));
+        $this->databaseObj->query($sql);
+        return true;
+    }
+	
+	public function insertMsisdnSubject($msisdn, $subject = "NORMAL") {
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "Start msisdn : " . $msisdn));
+
+        $sql = sprintf("INSERT INTO msisdn_subject (msisdn,subject) VALUE ('%s','%s')", mysql_real_escape_string($msisdn), mysql_real_escape_string($subject));
+        $this->databaseObj->query($sql);
+        return true;
+    }
+}

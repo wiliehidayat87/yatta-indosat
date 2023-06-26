@@ -1,0 +1,117 @@
+/* reset */
+
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td { 
+margin:0;
+padding:0;
+}
+td{
+	vertical-align: top; 
+}
+fieldset,img { 
+border:0;
+}
+
+address,caption,cite,code,dfn,em,strong,th,var {
+font-style:normal;
+font-weight:normal;
+}
+
+ol,ul {
+list-style:none;
+}
+
+caption,th {
+text-align:left;
+}
+
+h1,h2,h3,h4,h5,h6 {
+font-size:100%;
+font-weight:normal;
+}
+
+q:before,q:after {
+content:'';
+}
+
+abbr,acronym { border:0;
+}
+
+
+/* base */
+
+h6{
+font-size:0.8em;
+}
+
+h5{
+font-size:1em;
+}
+
+h4{
+font-size:1.2em;
+}
+
+h3{
+font-size:1.4em;
+}
+
+h2{
+font-size:1.6em;
+}
+
+h1{
+font-size:1.8em;
+}
+
+h1, h2, h3, h4, h5 , h6{
+font-weight:bold;
+margin-bottom:0.5em;
+}
+
+strong, b{
+font-weight:bold;
+}
+
+abbr,acronym {
+border-bottom:1px dotted #000;
+cursor:help;
+} 
+
+em {
+font-style:italic;
+}
+
+blockquote,ul,ol,dl {
+margin:0 1em;
+}
+
+ol,ul,dl {
+margin-left:2em;
+}
+
+ol li {
+list-style: decimal outside;	
+}
+
+ul li {
+list-style: none ;
+}
+
+dl dd {
+margin-left:1em;
+}
+
+th {
+font-weight:bold;
+text-align:center;
+}
+
+caption {
+margin-bottom:.5em;
+text-align:center;
+}
+
+p,fieldset {
+margin-bottom:1em;
+}
+li{	list-style:none;}

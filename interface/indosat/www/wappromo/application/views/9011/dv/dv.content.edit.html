@@ -1,0 +1,137 @@
+<html>
+  <head>
+    {include file='tpl_head.html'}
+    <script  type="text/javascript" src="{$base_url}lib/jquery/jquery.1.4.2.min.js"></script> 
+    <link href="{$base_url}css/jquery-ui-1.8.5.custom.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="{$base_url}lib/jquery-ui-1.8.5.custom.min.js"></script>
+  </head>
+  <body>
+    {include file='tpl_navigation.html'}
+    <div id="wrapper">
+      <div id="content_1000">
+      	<div id="module">:: DV Menu ::</div>
+      	<div id="module"><a href="{$base_url}9011/dv/DV_9011_Main/dv_content">Content</a> | <a href="{$base_url}9011/dv/DV_9011_Main/prizeInfo">Prize</a> | <a href="{$base_url}9011/dv/DV_9011_Main/undian">Pemenang</a></div>
+      	<br />
+        <script language="javascript">
+			var base_url  = "{$base_url}";
+			var id_edit   = "{$edit.0.id}";
+			var var_sort  = 'N';
+			var sort_edit = '{$edit.0.sort}';
+			{literal}
+
+			function check_form() {
+				if (document.getElementById('sort').value == '') {
+					alert("Sort cannot empty");
+					document.getElementById('sort').focus();
+				}
+                else if (isNaN(document.getElementById('sort').value)) {
+					alert("Sort must a number");
+					document.getElementById('sort').focus();
+				}
+                else if (document.getElementById('msg').value == '') {
+					alert("Message cannot empty");
+					/*$.post(
+                        base_url+"9011/dv/DV_9011_Main/dv_content_update", {
+                            id: id_edit,
+                            sort_num: document.getElementById('sort').value,
+                            msg: document.getElementById('msg').value
+                        },
+                        function(data) {
+                            location.href=base_url+'9011/dv/DV_9011_Main/dv_content';
+                        }
+                    );*/
+                    document.getElementById('msg').focus();
+				}
+                else {
+					if (sort_edit == document.getElementById('sort').value) {
+						var data_var  = 'id=' + id_edit;
+                            data_var += '&sort_num=';
+                            data_var += '&msg=' + $('#msg').val();
+
+                        $.ajax({
+                            type: 'POST',
+                            url: base_url + "9011/dv/DV_9011_Main/dv_content_update",
+                            data: data_var,
+                            dataType: 'json',
+                            success: function(datax) {
+                                if (datax.status == 'OK') {
+                                    alert("Data has been saved");
+                                    location.href = base_url + '9011/dv/DV_9011_Main/dv_content';
+                                }
+                                else {
+                                    alert('Update Data failed..!!');
+                                    return false;
+                                }
+                            }
+                        });
+					}
+                    else {
+						$.getJSON(
+                            base_url + "9011/dv/DV_9011_Main/check_sort_dv_content/id/" + document.getElementById('sort').value,
+                            function(json) {
+								if (json.rep == 'NO') {
+									alert("Sort number " + document.getElementById('sort').value + " already exists, choise another number");
+									document.getElementById('sort').focus();
+								}
+                                else {
+									//alert("Data has been saved");
+                                    var data_var  = 'id=' + id_edit;
+                                        data_var += '&sort_num=' + $('#sort').val();
+                                        data_var += '&msg=' + $('#msg').val();
+                                        
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: base_url + "9011/dv/DV_9011_Main/dv_content_update",
+                                        data: data_var,
+                                        dataType: 'json',
+                                        success: function(datax) {
+                                            if (datax.status == 'OK') {
+                                                alert("Data has been saved");
+                                                location.href = base_url + '9011/dv/DV_9011_Main/dv_content';
+                                            }
+                                            else {
+                                                alert('Update Data failed..!!');
+                                                return false;
+                                            }
+                                        }
+                                    });
+
+									/*$.post(
+                                        base_url + "9011/dv/DV_9011_Main/dv_content_update", {
+											id: id_edit,
+											sort_num: document.getElementById('sort').value, 
+											msg: document.getElementById('msg').value 
+										},
+										function(data) {
+                                            if (data.status == 'OK') {
+                                                location.href = base_url + '9011/dv/DV_9011_Main/dv_content';
+                                            }
+                                            else {
+                                                alert('Update Data failed..!!');
+                                                return false;
+                                            }
+										},
+                                        "json"
+									);*/
+								}
+							}
+						);
+					}
+				}
+			}
+			{/literal}
+		</script>
+      	<div style="font-weight: bold;">Content Add</div>
+        	<input type="hidden" name="id" value="{$edit.0.id}">
+	        <hr style="margin-top:20px; margin-bottom:20px; border:dashed 3px #CCC;">
+        	<table style="font-family:Verdana, Geneva, sans-serif; font-size:9pt;">
+            	<tr><td>Sort</td><td> : </td><td><input type="text" name="sort" id="sort" size="3" value="{$edit.0.sort}" maxlength="3"></td></tr>
+                <tr><td>Message</td><td> : </td><td><input type="text" name="msg" id="msg" value="{$edit.0.message}" maxlength="160" size="160"></td></tr>
+            </table>
+            <hr style="margin-top:20px; margin-bottom:20px; border:dashed 3px #CCC;">
+            <input type="button" value="Submit" width="100px" onClick="check_form();">
+      	<div>     	
+      </div>
+    </div>
+  </body>
+</html>

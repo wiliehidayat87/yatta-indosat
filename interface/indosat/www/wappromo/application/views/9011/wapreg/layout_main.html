@@ -1,0 +1,73 @@
+<html>
+  <head>
+    {include file='tpl_head.html'}
+    <script type="text/javascript" src="{$base_url}lib/jquery-1.3.2.min.js"></script>
+    <script type="text/javascript" src="{$base_url}lib/jquery-ui-1.7.2.custom.min.js"></script>
+  </head>
+  <body>
+    {include file='tpl_navigation.html'}
+    <div id="wrapper">
+      <div id="content_1000">
+      	<div id="module">:: Home Layout Menu ::</div><br />
+      	<div style="font-weight: bold;">Wap Component</div>
+      	<div style="border-bottom:1px solid #666;" class="cititation">Show home layout</div>
+      	<br /><a href="{$base_url}{$activeShortcode}/wapreg/wapreg_layout/add/{$id}">Add new</a>
+      	{if count($result) gt 0 && $result.0.id != ''}
+      	<div class="width_1100">
+        <div class="rows">
+        	<div class="width_50 float_left border align_center padding head_color">&nbsp;</div>
+        	<div class="width_50 float_left border align_center padding head_color">Sort</div>
+          <div class="width_100 float_left border align_center padding head_color">Name</div>
+          <div class="width_200 float_left border align_center padding head_color">Type</div>
+          <div class="width_300 float_left border align_center padding head_color">Value</div>
+          <div class="width_200 float_left border align_center padding head_color">&nbsp;</div>
+        </div>
+        {foreach from=$result item=item}
+        <div class="rows">
+        	<div class="width_50 float_left border align_center padding">
+        		{if $item.sort neq $max_sort}<a href="{$base_url}{$activeShortcode}/wapreg/wapreg_layout/sort/{$id}/{$item.sort}/{math equation="x + y" x=$item.sort y=1}"> + </a>{else}&nbsp;&nbsp;&nbsp;{/if}&nbsp;
+        		{if $item.sort neq '1'}<a href="{$base_url}{$activeShortcode}/wapreg/wapreg_layout/sort/{$id}/{$item.sort}/{math equation="x - y" x=$item.sort y=1}"> - </a>{else}&nbsp;{/if}
+        	</div>
+        	<div class="width_50 float_left border align_center padding">{$item.sort}</div>
+        	<div class="width_100 float_left border align_center padding">{$item.name}</div>
+          <div class="width_200 float_left border align_center padding">{$item.type}</div>
+          <div class="width_300 float_left border align_center padding">{$item.value}</div>
+          <div class="width_200 float_left border align_center padding">
+          	<a href="{$base_url}{$activeShortcode}/wapreg/wapreg_layout/edit/{$id}/{$item.id}">Edit</a> | 
+          	<a href="{$base_url}{$activeShortcode}/wapreg/wapreg_layout/delete/{$id}/{$item.id}">Delete</a>
+          </div>
+        </div>
+        {/foreach}
+      	{else}
+      		<br /><br />No data yet
+      	{/if}
+      </div>
+      {if $homepage_size neq '0'}
+      <div id="content_1000"><br /><br /><br />
+      Landing Page size (as previewed with Nokia 6120 User Agent): {$homepage_size} kb<br /><br />
+      {if count($download_speed) neq '0'}
+      <div class="width_900">
+      	<div class="rows">
+        	<div class="width_100 float_left border align_center padding head_color">System</div>
+        	<div class="width_100 float_left border align_center padding head_color">Speed</div>
+          <div class="width_100 float_left border align_center padding head_color">Download Time</div>
+        </div>
+        {foreach from=$download_speed item=download_item}
+        <div class="rows">
+        	<div class="width_100 float_left border align_center padding">{$download_item.arch}</div>
+        	<div class="width_100 float_left border align_center padding">{$download_item.speed} kbps</div>
+          <div class="width_100 float_left border align_center padding">{$download_item.download_speed} s</div>
+        </div>
+        {/foreach}
+      </div>
+      {/if}
+      {if $homepage_html neq ''}
+      <br /><br /><br/>
+      Preview Page<hr /><br /><br />
+       	{$homepage_html}
+      {/if}
+      </div>
+      {/if}
+    </div>
+  </body>
+</html>

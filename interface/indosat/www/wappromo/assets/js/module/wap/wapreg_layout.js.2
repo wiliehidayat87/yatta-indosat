@@ -1,0 +1,330 @@
+var gbl_id = 0, gbl_wap_service = '', gbl_wap_name = '', gbl_adn = '', gbl_mechanism = '', method = '', path = '';
+
+$(document)
+		.ready(
+				function() {
+					// getSubscriptionList('');
+
+					$("#search-form").submit(function() {
+						getSubscriptionList('');
+
+						return false;
+					});
+
+					$("#service-list-table tfoot #paging a").live("click",
+							function() {
+								// window.location.hash = $(this).attr("href");
+								getSubscriptionList($(this).attr("href"));
+
+								return false;
+							});
+					// -open form--//
+					$("#btnOpenPanel").click(function() {
+						resetForm("wap-service-form");
+						$("#submit").val("Save");
+						$("#loadContainer").slideDown();
+						$("#txt-wap-name").focus();
+					});
+
+					// -close form--//
+					$("#btnClosePanel").click(function() {
+						$("#loadContainer").slideUp();
+						resetForm("wap-service-form");
+					});
+
+					// - create new service -//
+					$("#wapreg-components-form")
+							.submit(
+									function() {
+										disabledForm("wap-components-form");
+										showFormLoader();
+
+										var datapost = "fld-name="
+												+ $("#fld-name").val();
+										datapost += "&fld-type="
+												+ $("#fld-type").val();
+										datapost += "&fld-value="
+												+ $("#fld-value").val();
+										datapost += "&fld-is_link="
+											+ $("#fld-is_link").val();
+										datapost += "&fld-image-1="
+											+ $("#fld-image-1").val();
+										datapost += "&fld-image-2="
+											+ $("#fld-image-2").val();
+										datapost += "&fld-image-3="
+											+ $("#fld-image-3").val();
+										datapost += "&fld-wapsite-id="
+											+ $("#fld-wapsite-id").val();
+										datapost += "&fld-component-id="
+											+ $("#fld-component-id").val();
+										datapost += "&wap-name-compare="
+												+ gbl_wap_name;
+
+										//alert(datapost);
+										var url = "";
+
+										if ($("#submit").val() == "Save")
+											url = base_url
+													+ "wap/wapreg_layout/ajaxAddNewComponent";
+										else
+											url = base_url
+													+ "wap/wapreg_layout/ajaxUpdateComponent";
+
+										$
+												.ajax( {
+													async : "false",
+													data : datapost,
+													dataType : "json",
+													url : url,
+													type : 'POST',
+													success : function(data) {
+														//alert(data.result);
+														hideFormLoader();
+														/*
+														if (data.status == true) {
+															resetForm("wap-components-form");
+															$("#submit").val(
+																	"Save");
+														} else {
+															if (data.status_wap_service == false) {
+																$(
+																		"#fld-name")
+																		.addClass(
+																				"error-field");
+																$(
+																		"#inf-fld-name")
+																		.addClass(
+																				"error-font")
+																		.html(
+																				data.msg_wap_service);
+																$(
+																		"#fld-name")
+																		.focus();
+															} else {
+																$(
+																		"#txt-wap-service")
+																		.removeClass(
+																				"error-field");
+																$(
+																		"#inf-wap-service")
+																		.removeClass(
+																				"error-font")
+																		.html(
+																				"");
+															}
+															if (data.status_wap_name == false) {
+																$(
+																		"#txt-wap-name")
+																		.addClass(
+																				"error-field");
+																$(
+																		"#inf-wap-name")
+																		.addClass(
+																				"error-font")
+																		.html(
+																				data.msg_wap_name);
+																$(
+																		"#txt-wap-name")
+																		.focus();
+															} else {
+																$(
+																		"#txt-wap-name")
+																		.removeClass(
+																				"error-field");
+																$(
+																		"#inf-wap-name")
+																		.removeClass(
+																				"error-font")
+																		.html(
+																				"");
+															}
+															if (data.status_adn == false) {
+																$("#txt-adn")
+																		.addClass(
+																				"error-field");
+																$("#inf-adn")
+																		.addClass(
+																				"error-font")
+																		.html(
+																				data.msg_adn);
+																$("#txt-adn")
+																		.focus();
+															} else {
+																$("#txt-adn")
+																		.removeClass(
+																				"error-field");
+																$("#inf-adn")
+																		.removeClass(
+																				"error-font")
+																		.html(
+																				"");
+															}
+															if (data.status_mechanism == false) {
+																$(
+																		"#txt-mechanism")
+																		.addClass(
+																				"error-field");
+																$(
+																		"#inf-mechanism")
+																		.addClass(
+																				"error-font")
+																		.html(
+																				data.msg_mechanism);
+																$(
+																		"#txt-mechanism")
+																		.focus();
+															} else {
+																$(
+																		"#txt-mechanism")
+																		.removeClass(
+																				"error-field");
+																$(
+																		"#inf-mechanism")
+																		.removeClass(
+																				"error-font")
+																		.html(
+																				"");
+															}
+														}
+														*/
+														hideFormLoader();
+														enabledForm("wap-components-form");
+
+														return false;
+													}
+												});
+
+										return false;
+									});
+
+				});
+
+function readWapregComponentsById(id) {
+	showLoader();
+
+	var url = base_url + "wap/wapreg_layout/ajaxReadWapregComponentsById";
+
+	$.ajax( {
+		async : "false",
+		data : "id=" + id,
+		dataType : "json",
+		url : url,
+		type : 'POST',
+		success : function(data) {
+			//alert(data);
+            if(parseInt(data.status) == 0){
+                $("#download-speed").html('No component found.');
+                
+            }else{
+                $("#subscription-list-table tbody").html(data.result);
+                
+                var i =0 ;
+                var res = '';
+                $("#download-speed").html('');
+                // generate
+                for(i=1; i<4; i++){
+                    //alert(data.result_download.properties.homepage_size[i]);
+                    if(data.result_download.properties.homepage_size[i] > 0){
+                        //alert(data.result_download.properties.load_time_count[i]);
+                        res +=  $("#download-speed").html(); 
+                        res +=  '<b>';
+                        res += 	data.result_download.title[i];
+                        res += 	data.result_download.properties.homepage_size[i] + ' Kb';
+                        res +=  '</b>';
+                        res += 	data.result_download.header;
+                        res += 	data.result_download.body[i];
+                        res += 	data.result_download.footer;
+                        
+                        
+                        res += 	data.result_download.properties.preview_header[i];
+                        res += 	data.result_download.properties.homepage_html[i];
+                        res += 	data.result_download.properties.preview_footer[i];
+                    }
+                }
+                $("#download-speed").html(res);
+            }
+			hideLoader();
+
+			return false;
+		}
+	});
+}
+
+function readComponentById(param_id) {
+
+	showFormLoader();
+	
+	url = base_url + "wap/wapreg_layout/ajaxReadComponentById";
+
+	$.ajax( {
+		async : "false",
+		data : "param=" + param_id,
+		dataType : "json",
+		url : url,
+		type : 'POST',
+		success : function(data) {
+			var key;
+			var val;
+			for ( var key in data.result) {
+				//alert(key + '-' +data.result[key]);
+				$("#fld-" + key).val(data.result[key]);
+			}
+			//gbl_wap_name = data.wap_name;
+
+			hideFormLoader();
+			//$("#fld-value").val(data.result["value"]);
+
+			return false;
+		}
+	});
+}
+
+function deleteComponent(wapsite_id, param_id) {
+	var answer = confirm("Are you sure?");
+
+	url = base_url + "wap/wapreg_layout/ajaxDelete";
+
+	if (answer) {
+		showLoader();
+
+		$.ajax( {
+			async : "false",
+			data : "wapsite=" + wapsite_id + "&param=" + param_id,
+			dataType : "json",
+			url : url,
+			type : 'POST',
+			success : function(data) {
+				hideLoader();
+				if (data.status == true) {
+					readWapregComponentsById(wapsite_id);
+				} else {
+					alert(data.message);
+				}
+			}
+		});
+
+	}
+}
+
+function moveComponent(url, move, wapsite_id) {
+	showLoader();
+
+	$.ajax( {
+		async : "false",
+		// data : "id=" + id,
+		dataType : "json",
+		url : url,
+		type : 'POST',
+		success : function(data) {
+			readWapregComponentsById(wapsite_id);
+		}
+	});
+}
+
+/*
+function editComponentRedirect(wapsite_id, param_id){
+	//alert(wapsite_id+'-'+param_id);
+	window.location = 'wap/wapreg_layout/add/1';//+wapsite_id+'/'+param_id ;
+}
+*/
+

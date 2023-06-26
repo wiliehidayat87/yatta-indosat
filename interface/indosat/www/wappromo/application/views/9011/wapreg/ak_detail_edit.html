@@ -1,0 +1,66 @@
+<html>
+  <head>
+    {include file='tpl_head.html'}
+  </head>
+  <body>
+    {include file='tpl_navigation.html'}
+    <div id="wrapper">
+      <div id="content_800">
+        <div id="container"><div id="form">
+        <form action="{$base_url}{$activeShortcode}/wapreg/wapreg_ak_detail/edit/{$ak_id}/{$id}" method="post" name="edit">
+          <h3>Edit AK Schedule</h3>
+          <h6>{$error}</h6><br />
+          <div>
+						<input type="submit" name="submit" value="Submit"><input type="reset" value="Reset">
+					</div><br /><hr /><br />
+          	<p>
+          		Day
+          		 <select name="day">
+          			<option value="">----</option>
+          			{foreach from=$day item=day_item key=day_key}
+          			<option value="{$day_key}"{if $day_key eq $day_input} selected="selected"{/if}>{$day_item}</option>
+          			{/foreach}
+          		</select>
+          		From 
+          			<select name="from_hour">
+          				<option value="">----</option>
+          				{section name=from_hour start=0 loop=24 step=1}
+  								<option value="{$smarty.section.from_hour.index}"{if $smarty.section.from_hour.index eq $from_hour} selected="selected"{/if}>
+  									{$smarty.section.from_hour.index}
+  								</option>
+									{/section}
+          			</select>
+          			<select name="from_minute">
+          				<option value="">----</option>
+          				{section name=from_minute start=0 loop=60 step=15}
+  								<option value="{$smarty.section.from_minute.index}"{if $smarty.section.from_minute.index eq $from_min} selected="selected"{/if}>
+  									{$smarty.section.from_minute.index}
+  								</option>
+									{/section}
+          			</select>
+          		To
+          			<select name="to_hour">
+          				<option value="">----</option>
+          				{section name=to_hour start=0 loop=24 step=1}
+  								<option value="{$smarty.section.to_hour.index}"{if $smarty.section.to_hour.index eq $to_hour} selected="selected"{/if}>
+  									{$smarty.section.to_hour.index}
+  								</option>
+									{/section}
+          			</select>
+          			<select name="to_minute">
+          				<option value="">----</option>
+          				{section name=to_minute start=0 loop=60 step=15}
+  								<option value="{$smarty.section.to_minute.index}"{if $smarty.section.to_minute.index eq $to_min} selected="selected"{/if}>
+  									{$smarty.section.to_minute.index}
+  								</option>
+									{/section}
+          			</select>
+          	</p>
+        </form>
+        </div></div><hr /><br />
+        <b>NOTE:</b><br />
+        - All fields must be filled<br />
+      </div>
+    </div>
+  </body>
+</html>

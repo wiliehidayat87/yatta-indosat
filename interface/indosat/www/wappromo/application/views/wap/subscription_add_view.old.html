@@ -1,0 +1,197 @@
+{include file='common/tpl_header.html'}
+
+<script src="{$base_url}assets/js/module/wap/subscription.js" type="text/javascript"></script>
+<script type="text/javascript" src="{$base_url}assets/js/tiny_mce/jquery.tinymce.js"></script>
+<!--<script type="text/javascript" src="{$base_url}assets/js/ajaxfileupload.js"></script>-->
+<!--<script type="text/javascript" src="{$base_url}assets/js/jquery.uploadprogress.0.3.js"></script>-->
+<script type="text/javascript">
+        {literal}
+        $(document).ready(function() {
+                $('textarea.tinymce').tinymce({
+                        script_url : '{/literal}{$base_url}{literal}assets/js/tiny_mce/tiny_mce.js',
+                        theme : "advanced",
+                        plugins : "pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,advlist",
+
+                        // Theme options
+                        theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,formatselect,fontselect,fontsizeselect,forecolor",
+                        theme_advanced_buttons2 : "",
+                        theme_advanced_buttons3 : "",
+                        theme_advanced_buttons4 : "",
+                        theme_advanced_toolbar_location : "top",
+                        theme_advanced_toolbar_align : "left",
+                        theme_advanced_statusbar_location : "bottom",
+                        theme_advanced_resizing : false,
+
+                        // Example content CSS (should be your site CSS)
+                        content_css : "{/literal}{$base_url}{literal}assets/css/content.css",
+
+                        // Drop lists for link/image/media/template dialogs
+                        // template_external_list_url : "lists/template_list.js",
+                        // external_link_list_url : "lists/link_list.js",
+                        // external_image_list_url : "lists/image_list.js",
+                        // media_external_list_url : "lists/media_list.js",
+
+                        // Replace values for the template plugin
+                        template_replace_values : {
+                                username : "Some User",
+                                staffid : "991234"
+                        }
+                });
+        });
+
+function showDiv(val){
+document.getElementById(val).style.display = 'block';
+}
+
+function hideDiv(val){
+document.getElementById(val).style.display = 'none';
+}
+
+
+        {/literal}
+</script>
+
+<div id="content" class="clearfix">
+    <div id="maincontent">
+        <div class="pageTitle">
+            <span>Wap Add Subscription</span>
+        </div>
+        <div class="actionbar">
+            <div class="cb"></div>
+            <div class="loadContainer">
+                <div class="form-loader">Please wait...</div>
+                <h6 style="color:red;font-weight:bold;font-size:10px;">{$error}</h6>
+                <form name="wap-subscription-form" id="wap-subscription-form" action="{$base_url}wap/subscription/AddNewSubscription/{$id}" enctype="multipart/form-data" method="post">
+                    <div class="verticalContainer">
+                        <p><label for="txt-wap-name">Wap Name *</label>
+                            <input type="text" name="txt-wap-name" id="txt-wap-name" value="{$wap_name}" maxlength="30" />
+                            <span id="inf-wap-name"></span>
+                        </p>   
+                        <p><label for="txt-wap-service">Wap Service *</label>
+                            <input type="text" name="txt-wap-service" id="txt-wap-service" value="{$wap_service}" maxlength="160" />
+                            <span id="inf-wap-service"></span>
+                        </p>                   
+                        <p><label for="txt-wap-title">Wap Title *</label>
+                            <input type="text" name="txt-wap-title" id="txt-wap-title" value="{$wap_title}" maxlength="30" />
+                            <span id="inf-wap-title"></span>
+                        </p>
+                        <p><label for="txt-auto-reg">AK Time</label>
+                            <input type="text" name="txt-auto-reg" id="txt-auto-reg" value="{$auto_reg}" maxlength="30" />
+                            <span id="inf-auto-reg"></span>
+                        </p>
+                        <p><label for="txt-ak-schedule">AK Schedule </label>
+                            <select name="txt-ak-schedule" id="txt-ak-schedule">
+                                    <option value="">-----</option>
+                                    {foreach from=$ak item=ak_item}
+                                    <option value="{$ak_item.id}"{if $ak_id eq $ak_item.id} selected="selected"{/if}>{$ak_item.name}</option>
+                                    {/foreach}
+                            </select>
+                            <span id="inf-ak-schedule"></span>
+                        </p>
+                        <p style="display:none"><label for="txt-homepage">Homepage </label>
+                            <select name="txt-homepage" id="txt-homepage">
+                                    <option value=" ">-----</option>
+                                    {foreach from=$type_array item=item key=type_key}
+                                    <option value="{$type_key}"{if $homepage eq $type_key} selected="selected"{/if}>{$item}</option>
+                                    {/foreach}
+                            </select>
+                            <span id="inf-homepage"></span>
+                        </p>
+                        <p style="display:none"><label for="txt-conf-page">Conf. Page </label>
+                            <select name="txt-conf-page" id="txt-conf-page">
+                                    <option value=" ">-----</option>
+                                    {foreach from=$type_array item=item key=type_key}
+                                    <option value="{$type_key}" {if $confirmation_page eq $type_key}selected="selected"{/if}>{$item}</option>
+                                    {/foreach}
+                            </select>
+                            <span id="inf-conf-page"></span>
+                        </p>
+                        <p style="display:none"><label for="txt-conf-text">Conf. Text </label>
+                            <textarea name="txt-conf-text" id="txt-conf-text" class="tinymce">{$conf_text}</textarea>
+                            <span id="inf-conf-text"></span>
+                        </p>
+                        <p style="display:none"><label for="txt-unavailable-text">Unavailable Text *</label>
+                            <textarea name="txt-unavailable-text" id="txt-unavailable-text" class="tinymce">{$unavailable_text}</textarea>
+                            <span id="inf-unavailable-text"></span>
+                        </p>
+                        <p style="display:none"><label for="txt-success-text">Success Text *</label>
+                            <textarea name="txt-success-text" id="txt-success-text" class="tinymce">{$success_text}</textarea>
+                            <span id="inf-success-text"></span>
+                        </p>
+                        <p style="display:none"><label for="txt-url-promo">URL Promo </label>
+                            <input type="text" name="txt-url-promo" id="txt-url-promo" value="{$url_promo}" maxlength="30" />
+                            <span id="inf-url-promo"></span>
+                        </p>
+                        <p style="display:none"><label for="txt-service-promo-text">Service Promo Text </label>
+                            <textarea name="txt-service-promo-text" id="txt-service-promo-text" class="tinymce">{$service_promo_text}</textarea>
+                            <span id="inf-service-promo-text"></span>
+                        </p>
+<!--
+                        <p><label for="txt-xts-token">XTS Token </label>
+                            <input type="text" name="xts_token" value="{$xts_token}">
+                            <span id="inf-xts-token"></span>
+                        </p>
+ -->                    <hr />
+                        <center>Max Size File Image: <b>20kb</b></center>
+                        <p><label for="txt-header-image-1">Header Image</label>
+                            <input type="file" name="header_image_1" id="header_image_1">
+                            <span id="inf-header-image-1"></span>
+                        </p>
+                        <p><label for="txt-header-image-2">Header Image Background</label>
+                            <input type="file" name="header_image_2" id="header_image_2">
+                            <span id="inf-header-image-2"></span>
+                        </p>
+                        <p style="display:none;"><label for="txt-header-image-3">Header Image 3 (Max 300x50)</label>
+                            <input type="file" name="header_image_3" id="header_image_3">
+                            <span id="inf-header-image-3"></span>
+                        </p>
+                        <hr><br />
+                        <p><label for="txt-footer-image-1">Footer Image</label>
+                            <input type="file" name="footer_image_1" id="footer_image_1">
+                            <span id="inf-footer-image-1"></span>
+                        </p>
+                        <p><label for="txt-footer-image-2">Footer Image Background</label>
+                            <input type="file" name="footer_image_2" id="footer_image_2">
+                            <span id="inf-footer-image-2"></span>
+                        </p>
+                        <p style="display:none;"><label for="txt-footer-image-3">Footer Image 3 (Max 300x50)</label>
+                            <input type="file" name="footer_image_3" id="footer_image_3">
+                            <span id="inf-footer-image-3"></span>
+                        </p>
+                        <p style="display:none"><label for="txt-promo-image-1">Promo Image 1 (Max 120x20)</label>
+                            <input type="file" name="promo_image_1" id="promo_image_1">
+                            <span id="inf-promo-image-1"></span>
+                        </p>
+                        <p style="display:none"><label for="txt-promo-image-2">Promo Image 2 (Max 216x36)</label>
+                            <input type="file" name="promo_image_2" id="promo_image_2">
+                            <span id="inf-promo-image-2"></span>
+                        </p>
+                        <p style="display:none"><label for="txt-promo-image-3">Promo Image 3 (Max 300x50)</label>
+                            <input type="file" name="promo_image_3" id="promo_image_3">
+                            <span id="inf-promo-image-3"></span>
+                        </p>
+                        <p style="display:none"><label for="txt-background-image-1">Background Image 1 (Max 120x20)</label>
+                            <input type="file" name="bg_image_1" id="bg_image_1">
+                            <span id="inf-background-image-1"></span>
+                        </p>
+                        <p style="display:none"><label for="txt-background-image-2">Background Image 2 (Max 216x36)</label>
+                            <input type="file" name="bg_image_2" id="bg_image_2">
+                            <span id="inf-background-image-2"></span>
+                        </p>
+                        <p style="display:none"><label for="txt-background-image-3">Background Image 3 (Max 300x50)</label>
+                            <input type="file" name="bg_image_3" id="bg_image_3">
+                            <span id="inf-background-image-3"></span>
+                        </p>
+                    </div>
+                    <div class="cb"></div>
+                    <p class="submit-area">
+                        <input type="submit" name="submit" id="submit" class="button" value="Add" />
+                        <input type="reset" name="reset" id="reset" class="button" value="Reset"  />
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{include file='common/tpl_footer.html'}

@@ -1,0 +1,23 @@
+<html>
+  <head>
+    {include file='tpl_head.html'}
+  </head>
+  <body>
+    {include file='tpl_navigation.html'}
+    <div id="wrapper">
+      <div id="content_800">
+        <div id="container"><div id="form">
+        <form action="{$base_url}{$activeShortcode}/wapreg/wapreg_ak/add/" method="post" name="add">
+          <h3>Insert New AK Schedule</h3>
+          <h6>{$error}</h6><br />
+          <p><label for="name">Name *</label><input type="text" name="name" value="{$name}"></p>
+          <p><label for="description">Description</label><textarea name="description">{$description}</textarea></p> 
+					<p><input type="submit" name="submit" value="Submit"><input type="reset" value="Reset"></p>
+        </form>
+        </div></div><hr /><br />
+        <b>NOTE:</b><br />
+        - Field with asterix (*) must be filled<br />
+      </div>
+    </div>
+  </body>
+</html>

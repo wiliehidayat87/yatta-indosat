@@ -1,0 +1,30 @@
+<html>
+  <head>
+    {include file='tpl_head.html'}
+  </head>
+  <body>
+    {include file='tpl_navigation.html'}
+    <div id="wrapper">
+      <div id="content_1000">
+      	<div id="module">:: Obral Menu ::</div>
+      	<div id="module"><a href="{$base_url}9011/belanja/Belanja_9011_Main/content">Content</a> | <a href="{$base_url}9011/belanja/Belanja_9011_Main/prize">Prize</a> | <a href="{$base_url}9011/belanja/Belanja_9011_Main/claim">Claim List</a></div>
+      	<br />
+      	<div style="font-weight: bold;">Content List / Add</div>
+      	<div style="border-bottom:1px solid #666;" class="cititation">Add content to content list.</div>
+      	      	      	
+      	<div style="margin-top:2px;">
+      	  {if isset($msg)}<div><font color="red">{$msg}</font></div>{/if}
+      	  <form method="post" action="{$base_url}9011/belanja/Belanja_9011_Main/content/formAdd/save" enctype="multipart/form-data">     	  
+      	  <div class="clear float-left" style="width:60px;margin:4px 4px 0 0;" align="right">Code :</div>
+      	  <div class="float-left" style="width:200px;margin:4px 4px 0 0;"><input type="text" name="code" value=""/></div>
+      	  <div class="clear float-left" style="width:60px;margin:4px 4px 0 0;" align="right">Point :</div>
+      	  <div class="float-left" style="width:200px;margin:4px 4px 0 0;"><input type="text" name="point" value=""/></div>   	  
+      	  <div class="clear float-left" style="width:60px;margin:4px 4px 0 0;" align="right">Preview :</div>
+          <div class="float-left" style="width:200px;margin:4px 4px 0 0;"><input type="file" name="preview" value=""/></div>
+      	  <div class="clear float-left" style="width:190px; margin:10px 4px 0 0;" align="right"><input type="button" name="back" value="Back" onclick="location='{$base_url}9011/belanja/Belanja_9011_Main/content'"/> <input type="submit" name="submit" value="Submit"/></div>
+      	  </form>	  		
+      	<div>     	
+      </div>
+    </div>
+  </body>
+</html>

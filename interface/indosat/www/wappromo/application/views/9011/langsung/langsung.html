@@ -1,0 +1,51 @@
+<html>
+    <head>{include file='tpl_head.html'}</head>
+
+    <body>
+        {include file='tpl_navigation.html'}
+        <div id="wrapper">
+            <div id="content_1000">
+            	<div style="font-family:Verdana, Geneva, sans-serif; font-size:10pt; margin-bottom:20px; font-weight:bold;">
+	            	<a style="color:#06F; text-decoration:underline;" href="{$service_url}">Langsung Harian</a> | 
+    	            <a style="color:#06F; text-decoration:underline;" href="{$service_url}grand_prize">Langsung Grand Prize</a>
+                </div>
+                <hr style="border:5px dashed #C6C6C6; margin-bottom:20px;">
+                <div style="font-weight: bold;font-size:10pt; color:#858585;">Langsung Harian</div>
+                
+                <div class="error">{if $error}{$error}{/if}</div>
+                <div style="margin-top:5px; margin-bottom:10px;">
+                	<a style="color:#06F; text-decoration:underline; font-family:Verdana, Geneva, sans-serif; font-size:10pt;" href="{$service_url}add">- Add New -</a>
+                </div>
+                
+                <table width="100%" class="list" cellpadding="5" cellspacing="1">
+                <tr style="background-color:#6699CC;">
+                	<th width="5%">Order</th>
+                	<th width="75%">Content</th>
+                	<th width="10%">Created Date</th>
+                	<th width="10%">&nbsp;</th>
+                </tr>
+                {if $data}
+                	{foreach from=$data item=i key=j}
+				{if $j%2 == 0}<tr>
+				{else} <tr bgcolor="#E5E5E5">
+				{/if}
+				<td>{$i->msgsort}</td>
+				<td>{$i->msgdesc}</td>
+				<td>{$i->date_created|date_format:"%e %b %Y"}</td>
+				<td align="center"><a href='{$service_url}edit/{$i->id}'>edit</a>
+					&nbsp;&nbsp;|&nbsp;&nbsp;
+					<a href='{$service_url}delete/{$i->id}' onClick="return confirm('Are you sure to delete this content?');">delete</a>
+				</td>
+				</tr>
+			{/foreach}
+                {else}
+                	<tr>
+                		<td colspan="5" align="center">No data</td>
+                	</tr>
+                {/if}
+                </table>
+
+            </div>
+        </div>
+    </body>
+</html>

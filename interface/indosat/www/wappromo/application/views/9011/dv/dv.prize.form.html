@@ -1,0 +1,49 @@
+<html>
+  <head>
+    {include file='tpl_head.html'}    
+  </head>
+  <body>
+    {include file='tpl_navigation.html'}
+    <div id="wrapper">
+      <div id="content_1000">
+      	<div id="module">:: DV Menu ::</div>
+      	<div id="module"><a href="{$base_url}9011/dv/DV_9011_Main/dv_content">Content</a> | <a href="{$base_url}9011/dv/DV_9011_Main/prizeInfo">Prize</a> | <a href="{$base_url}9011/dv/DV_9011_Main/undian">Pemenang</a></div>
+      	<br />
+      	<div style="font-weight: bold;">Prize / {if isset($isNew)}Add{else}Edit{/if}</div>
+      	<div style="border-bottom:1px solid #666;" class="cititation">{if isset($isNew)}Add new prize.{else}Edit prize{/if}</div>
+      	
+      	<div style="margin-top:2px;">
+          {if isset($msg)}<div><font color="red">{$msg}</font></div>{/if}
+          <form method="post" action="{if isset($isNew)}{$base_url}9011/dv/DV_9011_Main/formPrize/new/submit{else}{$base_url}9011/dv/DV_9011_Main/formPrize/edit/submit{/if}">         
+          <div class="clear float-left" style="width:50px;margin:4px 4px 0 0;" align="right">Type :</div>
+          <div class="float-left" style="width:200px;margin:4px 4px 0 0;">
+          	<select name="prizeType">
+            	<option value="Day" {if isset($isEdit) && $prizeList.prize_type=='Day'}selected{/if}> Per Day </option>
+                <option value="Week" {if isset($isEdit) && $prizeList.prize_type=='Week'}selected{/if}> Per Week </option>
+                <option value="Final" {if isset($isEdit) && $prizeList.prize_type=='Final'}selected{/if}> Final </option>
+            </select>
+          </div>
+          <div class="clear float-left" style="width:50px;margin:4px 4px 0 0;" align="right">Prize :</div>
+          {if isset($isEdit)}
+          	<input type="hidden" name="id" value="{$prizeList.id}">
+          {/if}
+          <div class="float-left" style="width:200px;margin:4px 4px 0 0;">
+          	<select name="prizeId">
+            {foreach from=$prizeData item=prize}
+                <option value="{$prize.id}" {if isset($isEdit) && $prize.id==$prizeList.prize_id}selected{/if}> {$prize.name} </option>
+            {/foreach}
+            </select>
+          </div>
+          <div class="clear float-left" style="width:50px;margin:4px 4px 0 0;" align="right">Point :</div>
+          <div class="float-left" style="width:200px;margin:4px 4px 0 0;"><input type="text" name="point" value="{if isset($prizeList.point)}{$prizeList.point}{/if}" size="10" maxlength="10" style="text-align: right;"/> point</div>       
+          
+          <div class="clear float-left" style="width:50px;margin:4px 4px 0 0;" align="right">Date :</div>
+          <div class="float-left" style="width:200px;margin:4px 4px 0 0;">{if isset($isEdit)}{html_select_date start_year=2009 end_year=2012 field_order=DMY time=$prizeList.date}{else}{html_select_date start_year=2009 end_year=2012 field_order=DMY}{/if}</div>
+          
+          <div class="clear float-left" style="width:190px; margin:10px 4px 0 0;" align="right"><input type="button" name="back" value="Back" onClick="location='{$base_url}9011/dv/DV_9011_Main/prize'"/> <input type="submit" name="submit" value="Submit"/></div>
+          </form>       
+        <div>  
+        
+    </div>
+  </body>
+</html>

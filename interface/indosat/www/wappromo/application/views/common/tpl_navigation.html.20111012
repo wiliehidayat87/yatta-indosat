@@ -1,0 +1,19 @@
+<div id="head-top" class="clearfix">
+	<div class="wrap">
+		<h1 id="logo-map"><a href="{$base_url}home">WAP - Waptool Creation</a></h1>
+		<img id="logo-extra" src="{$base_url}assets/images/logo-linkit.png" alt="logo" />
+	</div>
+</div>
+<div id="head-bottom" class="clearfix">
+	<div class="wrap">
+		<ul id="navigation" class="clearfix">
+			{$navigation}
+            <li><a href="#">User</a>
+				<ul>
+					<li><a href="{$base_url}password/changepass">Change Password</a></li>
+					<li><a href="{$base_url}login/logout">Logout</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+</div>

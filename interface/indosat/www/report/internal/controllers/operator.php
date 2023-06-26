@@ -1,0 +1,518 @@
+<?php
+
+if (!defined('BASEPATH'))
+    exit('No direct script access allowed');
+
+class Operator extends CI_Controller {
+
+    public function __construct() {
+        parent::__construct();
+
+        if (!$this->session->userdata('username'))
+            redirect(base_url() . 'login');
+
+        write_log('info', 'Controller ' . $this->router->class . ' initialized');
+
+        write_log('info', 'Loading model operator_model');
+        $this->load->model('operator_model');
+        write_log('info', 'Model operator_model loaded');
+
+        write_log('info', 'Loading model api_model');
+        $this->load->model('api_model');
+        write_log('info', 'Model api_model loaded');
+
+        write_log('info', 'Loading model chart_model');
+        $this->load->model('chart_model');
+        write_log('info', 'Model chart_model loaded');
+
+        $this->load->library('ci_chart');
+        $this->load->model('navigation_model');
+
+        $this->ci_smarty->assign('navigation', $this->navigation_model->getMenuHtml());
+        //$this->ci_smarty->assign('menu', $this->privileges->parseMenu('admin', array('dashboard', 'operator', 'close_reason', 'traffic', 'service', 'subject', 'subscriber', 'content_download','user_report','signOut')));
+        $this->ci_smarty->assign('defaultShortCode', '');
+    }
+
+    public function index() {
+        $shortCode = $operator = null;
+
+        $result = $this->api_model->getShortCode(API_USERNAME, API_PASSWORD, 0, 99999);
+        $shortCode = ($result['status'] == 'OK') ? $result['data'][1] : null;
+        $this->ci_smarty->assign('shortCode', $shortCode);
+
+        $result = $this->api_model->getOperator(API_USERNAME, API_PASSWORD, DEFAULT_SHORTCODE, 0, 99999);
+        $operator = ($result['status'] == 'OK') ? $result['data'][1] : null;
+        //{$row.operator_code}" title="{$row.operator}
+        $this->ci_smarty->assign('operator', $operator);
+
+        $chart = array();
+        array_push($chart, $this->getDailyRevenueReportChart());
+        array_push($chart, $this->getTopRevenueChart());
+        array_push($chart, $this->getDailyTrafficReportChart());
+
+        $dummyData = array(array('label' => 'LOADING', 'value' => array(0, 0)));
+        $chartScript = $this->ci_chart->canvas('chart_revenue', 940, 200, $this->ci_chart->lineChart($dummyData));
+        array_push($chart, $chartScript);
+
+        $jsFile = array('json2.js', 'chart.js', 'swfobject.js', 'internal_reporting_operator.js');
+        $this->ci_smarty->assign('jsFile', $jsFile);
+        $this->ci_smarty->assign('jsScript', $chart);
+
+        $this->ci_smarty->assign('title', 'XMP Internal :: Operator Report');
+        $this->ci_smarty->assign('template', 'tpl_operator_report_show.tpl');
+        $this->ci_smarty->display('document.tpl');
+    }
+
+    public function getOperatorReportForTable() {
+        $period = $this->input->post('period', 1);
+        $shortCode = $this->input->post('shortCode', 1);
+        $operatorId = trim($this->input->post('operatorId', 1));
+
+        $period = (empty($period)) ? date("Y-m") : $period;
+//        $shortCode = (empty($shortCode)) ? DEFAULT_SHORTCODE : $shortCode;
+        $shortCode = (empty($shortCode)) ? 'all' : $shortCode;
+        $operatorId = (empty($operatorId)) ? '' : $operatorId;
+       
+        // check if 1st day on current month
+        if ($period == date("Y-m") && date("d") == '01') {
+            $period = date("Y") . '-' . ((int) date("m") - 1);
+        }
+
+        $result = array();
+        $apiResult = $this->operator_model->getOperatorReport(API_USERNAME, API_PASSWORD, $period, $shortCode, $operatorId);
+
+        setDataSession(__CLASS__, $apiResult);
+
+        if ('OK' != $apiResult['status']) {
+            $result = array(
+                'status' => 'NOK',
+                'message' => 'There was a problem preparing the data from database. Please try again later.',
+                'data' => ''
+            );
+            die(json_encode($result));
+        }
+
+        if (0 == $apiResult['data'][0]) {
+            $result = array(
+                'status' => 'OK',
+                'message' => 'There is no data available matching the selected criteria',
+                'data' => ''
+            );
+            die(json_encode($result));
+        }
+
+        $rawRevenuePerOperator = $apiResult['data'][1];
+        $columnName = array_merge(array('TOTAL', 'AVG', 'MONTH'), array_keys($rawRevenuePerOperator[0]['moDaily']));
+        $mostLeftColumn = array();
+
+        $revenuePerOperator = $rows = array();
+        $dataType = array('MO', 'MT', 'DELIVERED', 'GROSS');
+
+        $rawRevenuePerOperatorTemp = array_pop($rawRevenuePerOperator);
+        array_unshift($rawRevenuePerOperator, $rawRevenuePerOperatorTemp);
+
+        $count = count($rawRevenuePerOperator);
+        for ($i = 0; $i < $count; $i++) {
+            $currentMandatory = $currentOptional = array();
+            $revenuePerOperator[$i]['name'] = $rawRevenuePerOperator[$i]['operatorName'];
+            $mostLeftColumn[] = array('id' => $rawRevenuePerOperator[$i]['operatorId'], 'name' => $rawRevenuePerOperator[$i]['operatorName']);
+
+            $count2 = count($dataType);
+            for ($j = 0; $j < $count2; $j++) {
+                $currentOptional = array();
+                $mostLeftColumn[] = array('id' => $rawRevenuePerOperator[$i]['operatorId'], 'name' => $dataType[$j]);
+
+                if ('MO' == $dataType[$j]) {
+                    $currentMandatory = array(
+                        0 => array('total' => number_format($rawRevenuePerOperator[$i]['moTotal'], 0, ',', '.')),
+                        1 => array('total' => number_format($rawRevenuePerOperator[$i]['moAverage'], 0, ',', '.')),
+                        2 => array('total' => number_format($rawRevenuePerOperator[$i]['moMonthEnd'], 0, ',', '.'))
+                    );
+
+                    foreach ($rawRevenuePerOperator[$i]['moDaily'] AS $key => $value) {
+                        $currentOptional[] = array(
+                            'total' => number_format($value['total'], 0, ',', '.'),
+                            'color' => $value['color']
+                        );
+                    }
+
+                    $revenuePerOperator[$i]['child'][] = array_merge($currentMandatory, $currentOptional);
+                } else if ('MT' == $dataType[$j]) {
+                    $currentMandatory = array(
+                        0 => array('total' => number_format($rawRevenuePerOperator[$i]['mtTotal'], 0, ',', '.')),
+                        1 => array('total' => number_format($rawRevenuePerOperator[$i]['mtAverage'], 0, ',', '.')),
+                        2 => array('total' => number_format($rawRevenuePerOperator[$i]['mtMonthEnd'], 0, ',', '.'))
+                    );
+
+                    foreach ($rawRevenuePerOperator[$i]['mtDaily'] AS $key => $value) {
+                        $currentOptional[] = array(
+                            'total' => number_format($value['total'], 0, ',', '.'),
+                            'color' => $value['color']
+                        );
+                    }
+
+                    $revenuePerOperator[$i]['child'][] = array_merge($currentMandatory, $currentOptional);
+                } else if ('DELIVERED' == $dataType[$j]) {
+                    $currentMandatory = array(
+                        0 => array('total' => number_format($rawRevenuePerOperator[$i]['deliveredTotal'], 0, ',', '.')),
+                        1 => array('total' => number_format($rawRevenuePerOperator[$i]['deliveredAverage'], 0, ',', '.')),
+                        2 => array('total' => number_format($rawRevenuePerOperator[$i]['deliveredMonthEnd'], 0, ',', '.'))
+                    );
+
+                    foreach ($rawRevenuePerOperator[$i]['deliveredDaily'] AS $key => $value) {
+                        $currentOptional[] = array(
+                            'total' => number_format($value['total'], 0, ',', '.'),
+                            'color' => $value['color']
+                        );
+                    }
+
+                    $revenuePerOperator[$i]['child'][] = array_merge($currentMandatory, $currentOptional);
+                } else if ('GROSS' == $dataType[$j]) {
+                    $currentMandatory = array(
+                        0 => array('total' => number_format($rawRevenuePerOperator[$i]['grossTotal'], 2, ',', '.')),
+                        1 => array('total' => number_format($rawRevenuePerOperator[$i]['grossAverage'], 2, ',', '.')),
+                        2 => array('total' => number_format($rawRevenuePerOperator[$i]['grossMonthEnd'], 2, ',', '.'))
+                    );
+
+                    foreach ($rawRevenuePerOperator[$i]['grossDaily'] AS $key => $value) {
+                        $currentOptional[] = array(
+                            'total' => number_format($value['total'], 2, ',', '.'),
+                            'color' => $value['color']
+                        );
+                    }
+
+                    $revenuePerOperator[$i]['child'][] = array_merge($currentMandatory, $currentOptional);
+                }
+            }
+        }
+
+        $this->ci_smarty->assign('columnName', $columnName);
+        $this->ci_smarty->assign('columnLength', count($columnName));
+        $this->ci_smarty->assign('mostLeftColumn', $mostLeftColumn);
+        $this->ci_smarty->assign('revenuePerOperator', $revenuePerOperator);
+
+        $result = array(
+            'status' => 'OK',
+            'message' => '',
+            'data' => toString($this->ci_smarty->fetch('tpl_operator_report_table.tpl'))
+        );
+        die(json_encode($result));
+    }
+
+    public function getOperatorChargingReportForTable() {
+        $period = $this->input->post('period', 1);
+        $operatorId = $this->input->post('operatorId', 1);
+        $type = $this->input->post('type', 1);
+        $shortCode = $this->input->post('shortCode', 1);
+
+        $period = (empty($period)) ? date("Y-m") : $period;
+//        $shortCode = (empty($shortCode)) ? DEFAULT_SHORTCODE : $shortCode;
+        $shortCode = (empty($shortCode)) ? 'all' : $shortCode;
+        $operatorId = (empty($operatorId)) ? '' : $operatorId;
+
+        // check if 1st day on current month
+        if ($period == date("Y-m") && date("d") == '01') {
+            $period = date("Y") . '-' . ((int) date("m") - 1);
+        }
+
+
+        $result = array();
+        $apiResult = $this->operator_model->getOperatorChargingReport(API_USERNAME, API_PASSWORD, $period, $operatorId, $type, $shortCode);
+
+        if ('OK' != $apiResult['status']) {
+            $result = array(
+                'status' => 'NOK',
+                'message' => 'There was a problem preparing the data from database. Please try again later.',
+                'data' => ''
+            );
+            die(json_encode($result));
+        }
+
+        if (0 == $apiResult['data'][0]) {
+            $result = array(
+                'status' => 'OK',
+                'message' => 'There is no data available matching the selected criteria',
+                'data' => ''
+            );
+            die(json_encode($result));
+        }
+//error_log(print_r($apiResult['data'],1)."sapi\n",3,"/tmp/sapi");
+        $rawCharging = $apiResult['data'][1][$type];
+        $charging = $mostLeftColumn = $rightColumn = $currentRowColumn = array();
+        $row = 0;
+
+        $count3 = count($rawCharging);
+        foreach ($rawCharging AS $key => $value) {
+            $currentRowColumn = array();
+            $daily = array();
+            $mostLeftColumn[] = $value['id'];
+            $daily = $value['daily'];
+
+            $count4 = count($daily);
+            for ($j = 1; $j < $count4; $j++) {
+                $daily[$j]['total'] = number_format($daily[$j]['total'], 0, ',', '.');
+                $daily[$j]['color'] = $daily[$j]['color'];
+            }
+
+            $rightColumn[$row][] = array_merge(array(
+                0 => array('total' => number_format($value['total'], 0, ',', '.')),
+                1 => array('total' => number_format($value['average'], 0, ',', '.')),
+                2 => array('total' => number_format($value['monthEnd'], 0, ',', '.'))), $daily
+            );
+        }
+
+        $this->ci_smarty->assign('operatorId', $operatorId);
+        $this->ci_smarty->assign('type', $type);
+        $this->ci_smarty->assign('mostLeftColumn', $mostLeftColumn);
+        $this->ci_smarty->assign('rightColumn', $rightColumn[0]);
+
+        die(json_encode(array(
+                    'status' => 'OK',
+                    'message' => '',
+                    'data' => array(
+                        'left' => toString($this->ci_smarty->fetch('tpl_operator_report_table_subject_left.tpl')),
+                        'right' => toString($this->ci_smarty->fetch('tpl_operator_report_table_subject_right.tpl'))
+                    )
+                )));
+    }
+
+    public function getChartData() {
+        $data = getDataSession(__CLASS__);
+        $chartData = array();
+
+        if ($data != false && $data['status'] == 'OK') {
+            //check if data exists
+            if (!isset($data['data'][1][0])) {
+                echo '{}';
+                exit;
+            }
+
+            // zero fill, avoid php notice
+            $chartData[0] = 0;
+            foreach ($data['data'][1] as $row) {
+                foreach ($row['grossDaily'] as $i => $daily) {
+                    $chartData[$i] = 0;
+                }
+            }
+
+            foreach ($data['data'][1] as $row) {
+                foreach ($row['grossDaily'] as $i => $daily) {
+                    $chartData[$i] += $daily['total'];
+                }
+            }
+        }
+
+        ksort($chartData);
+
+        $finalData = array(
+            array(
+                'label' => 'Total Traffic',
+                'value' => $chartData
+            )
+        );
+
+        echo json_encode(json_decode($this->ci_chart->lineChart($finalData), 1));
+    }
+
+    public function getDailyRevenueReportChart() {
+        $param = array();
+        $period = trim($this->input->post('period', true));
+        $shortcode = trim($this->input->post('shortcode', true));
+        $ajaxCall = $this->input->post('ajaxCall', true);
+        $operatorId = '';
+        if ($period != true) {
+            $period = date('Y-m');
+        }
+
+        list($year, $month) = explode('-', $period);
+        $maxDate = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+
+        if (date("Y") == $year && (int) date("m") == (int) $month) {
+            $totalDate = (int) date("d") - 1;
+        } else {
+            $totalDate = $maxDate;
+        }
+
+        $daterange = $period . '-01 - ' . $period . '-' . $totalDate;
+        $top = 5;
+        $group = 'operator';
+        $chartData = $this->getDailyRevenueReport($daterange, $operatorId, $shortcode, $top, $group);
+
+        if ($chartData == false) {
+            $param['nodata'] = true;
+            $chartData = null;
+        }
+
+        if ($ajaxCall != true) {
+            return $this->ci_chart->canvas('chart_box_1', 940, 180, $this->ci_chart->stackedBarChart($chartData, '', $param));
+        } else {
+            $result['status'] = "OK";
+            $result['message'] = "Success";
+            $result['data'] = json_decode($this->ci_chart->stackedBarChart($chartData, '', $param));
+
+            echo json_encode($result);
+        }
+    }
+
+    public function getTopRevenueChart() {
+        $param = array();
+        $period = trim($this->input->post('period', true));
+        $shortcode = trim($this->input->post('shortcode', true));
+        $ajaxCall = $this->input->post('ajaxCall', true);
+        $operatorId = "";
+
+
+
+        if ($period != true) {
+            $period = date('Y-m');
+        }
+
+        list($year, $month) = explode('-', $period);
+        $maxDate = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+
+        if (date("Y") == $year && (int) date("m") == (int) $month) {
+            $totalDate = (int) date("d") - 1;
+        } else {
+            $totalDate = $maxDate;
+        }
+
+        $daterange = $period . '-01 - ' . $period . '-' . $totalDate;
+        $top = '';
+        $group = 'operator';
+        $chartData = $this->getTopRevenue($daterange, $operatorId, $shortcode, $top, $group);
+
+        if ($chartData == false) {
+            $param['nodata'] = true;
+            $chartData = null;
+        }
+
+        if ($ajaxCall != true) {
+            return $this->ci_chart->canvas('chart_box_2', 450, 180, $this->ci_chart->pieChart($chartData, '', $param));
+        } else {
+            $result['status'] = "OK";
+            $result['message'] = "Success";
+            $result['data'] = json_decode($this->ci_chart->pieChart($chartData, '', $param));
+
+            echo json_encode($result);
+        }
+    }
+
+    public function getDailyTrafficReportChart() {
+        $param = array();
+        $period = trim($this->input->post('period', true));
+        $shortcode = trim($this->input->post('shortcode', true));
+        $operatorId = trim($this->input->post('operatorId', true));
+        $ajaxCall = $this->input->post('ajaxCall', true);
+
+        if (!$period) {
+            $period = date('Y-m');
+        }
+
+        if (!$shortcode) {
+            $shortcode = DEFAULT_SHORTCODE;
+        }
+
+        list($year, $month) = explode('-', $period);
+
+//        $chartData = $this->getDailyTrafficReport($daterange, $shortcode, $top, $group);
+        $result = $this->chart_model->getDailyTrafficServicePercentageChart(
+                API_USERNAME, API_PASSWORD, $month, $year, $shortcode, $operatorId
+        );
+
+        if ($result['status'] == 'NOK') {
+            $param['nodata'] = true;
+            $chartData = array(array('label' => 'NO DATA', 'value' => array(0, 0)));
+        } else {
+            $chartData = $result['data'];
+        }
+
+        if ($ajaxCall != true) {
+            return $this->ci_chart->canvas('chart_box_3', 450, 180, $this->ci_chart->lineChart($chartData, '', $param));
+        } else {
+            $result['status'] = "OK";
+            $result['message'] = "Success";
+            $result['data'] = json_decode($this->ci_chart->lineChart($chartData, '', $param));
+
+            echo json_encode($result);
+        }
+    }
+
+    private function getDailyRevenueReport($rangedate, $operatorId, $shortcode, $top, $grouping) {
+        // check if rangedate format is double date
+        if (stripos($rangedate, ' - ') !== false) {
+            // is double date format
+            list($startDate, $endDate) = explode(' - ', trim($rangedate));
+        } else {
+            // single date format
+            $startDate = trim($rangedate);
+            $endDate = trim($rangedate);
+        }
+
+        $result = $this->chart_model->getDailyRevenueReportChart(API_USERNAME, API_PASSWORD, $startDate, $endDate, $operatorId, $shortcode, $top, $grouping);
+
+        if ($result['status'] == "OK") {
+            if (!is_array($result['data']))
+                $data[0] = $result['data'];
+            else
+                $data = $result['data'];
+        }
+        else {
+            $data = false;
+        }
+
+        return $data;
+    }
+
+    private function getDailyTrafficReport($rangedate, $shortcode, $top, $grouping) {
+        // check if rangedate format is double date
+        if (stripos($rangedate, ' - ') !== false) {
+            // is double date format
+            list($startDate, $endDate) = explode(' - ', trim($rangedate));
+        } else {
+            // single date format
+            $startDate = trim($rangedate);
+            $endDate = trim($rangedate);
+        }
+
+        $result = $this->chart_model->getDailyTrafficReportChart(API_USERNAME, API_PASSWORD, $startDate, $endDate, $shortcode, $top, $grouping);
+
+        if ($result['status'] == "OK") {
+            if (!is_array($result['data']))
+                $data[0] = $result['data'];
+            else
+                $data = $result['data'];
+        }
+        else {
+            $data = false;
+        }
+
+        return $data;
+    }
+
+    private function getTopRevenue($rangedate, $operatorId, $shortcode, $top, $grouping) {
+        // check if rangedate format is double date
+        if (stripos($rangedate, ' - ') !== false) {
+            // is double date format
+            list($startDate, $endDate) = explode(' - ', trim($rangedate));
+        } else {
+            // single date format
+            $startDate = trim($rangedate);
+            $endDate = trim($rangedate);
+        }
+        $result = $this->chart_model->getRevenueChart(API_USERNAME, API_PASSWORD, $startDate, $endDate, $operatorId, $shortcode, $top, $grouping);
+
+        if ($result['status'] == "OK") {
+            if (!is_array($result['data']))
+                $data[0] = $result['data'];
+            else
+                $data = $result['data'];
+        }
+        else {
+            $data = false;
+        }
+
+        return $data;
+    }
+
+}
+

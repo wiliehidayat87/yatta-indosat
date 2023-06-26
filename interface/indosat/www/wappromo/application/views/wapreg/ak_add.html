@@ -1,0 +1,36 @@
+{include file='common/tpl_header.html'}
+<style type="text/css">
+<!--
+{literal}
+a.content_submenu{
+    padding:2px 4px 2px 4px; border:1px solid #929292; background-color: #C4C4C4; text-decoration:none; margin:2px; color:#2D2D2D;
+}
+a.content_submenu:hover{
+    background-color: #D4D4D4;
+}
+{/literal}
+-->
+</style>
+    <div id="content" class="clearfix">
+      <div id="maincontent">
+      	<div class="pageTitle"><span>:: Insert New AK Schedule ::</span></div>
+        <h6>{$error}</h6><br />
+        <div class="actionbar">
+            <div class="clearfix fl">
+                <a href="{$base_url}wap/subscription/" class="btnAdd"><span>Subscription&nbsp;</span></a>
+                <a href="{$base_url}wapreg/wapreg_ak" class="btnAdd"><span>AK Schedule&nbsp;</span></a><br/>
+            </div>
+        </div>
+        
+        <form action="{$base_url}wapreg/wapreg_ak/add/" style="margin-left:40px;" method="post" name="add">
+          <p><label for="name">Name *</label><input type="text" name="name" value="{$name}"></p>
+          <p><label for="description">Description</label><textarea name="description" cols="40" rows="8">{$description}</textarea></p> 
+					<p><input type="submit" name="submit" value="Submit"><input type="reset" value="Reset"></p>
+        </form>
+        <hr /><br />
+        <b>NOTE:</b><br />
+        - Field with asterix (*) must be filled<br />
+      </div>
+    </div>
+
+{include file='common/tpl_footer.html'}

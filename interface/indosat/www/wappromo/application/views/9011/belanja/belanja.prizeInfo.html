@@ -1,0 +1,51 @@
+<html>
+  <head>
+    {include file='tpl_head.html'}
+    <script type="text/javascript" src="{$base_url}lib/jquery-1.3.2.min.js"></script>
+    <script type="text/javascript" src="{$base_url}lib/jquery-ui-1.7.2.custom.min.js"></script>
+    <script type="text/javascript">
+    {literal}
+      $(function(){
+    	  
+      });
+    {/literal}
+    </script>
+  </head>
+  <body>
+    {include file='tpl_navigation.html'}
+    <div id="wrapper">
+      <div id="content_1000">
+      	<div id="module">:: Obral Menu ::</div>
+      	<div id="module"><a href="{$base_url}9011/belanja/Belanja_9011_Main/content">Content</a> | <a href="{$base_url}9011/belanja/Belanja_9011_Main/prize">Prize</a> | <a href="{$base_url}9011/belanja/Belanja_9011_Main/claim">Claim List</a></div>
+      	<br />
+      	<div style="font-weight: bold;">Prize Information</div>
+      	<div style="border-bottom:1px solid #666;" class="cititation">Show prize information.</div>
+      	
+      	<div><input type="button" name="prize" value="Back to Prize Per Day" onclick="location='{$base_url}9011/belanja/Belanja_9011_Main/prize'"/> <input type="button" name="prizeInfo" value="New Prize" onclick="location='{$base_url}9011/belanja/Belanja_9011_Main/prizeInfo/new'"/> {if isset($msg)}<font color="red">{$msg}</font>{/if}</div>
+      	
+      	<div style="margin-top:2px;">
+      	  <div class="headTable clear float-left" style="width:150px;">Name</div>
+      	  <div class="headTable float-left" style="width:300px;">Description</div>
+      	  <div class="headTable float-left" style="width:80px;">Keyword</div>
+      	  <div class="headTable float-left" style="width:80px;">KeyPoint</div>      	  
+      	  <div class="headTable float-left" style="width:80px;">Edit</div>
+      	  <div class="headTable float-left" style="width:80px;">Remove</div>		
+      	<div>	
+      	{if isset($prizeInfo) }
+      	  {foreach from=$prizeInfo item=item}
+      	    {if $item.name!=''}
+      	    <div style="margin-top:2px;">
+		          <div class="bodyTable clear float-left" style="width:150px;">{$item.name}</div>
+		          <div class="bodyTable float-left" style="width:300px;">{$item.desc}</div>
+		          <div class="bodyTable float-left" style="width:80px;" align="center">{$item.keyword}</div>
+		          <div class="bodyTable float-left" style="width:80px;" align="center">{$item.keyword_point}</div>		          
+		          <div class="bodyTable float-left" style="width:80px;" align="center"><a href="{$base_url}9011/belanja/Belanja_9011_Main/prizeInfo/edit/{$item.id}">Edit</a></div>
+		          <div class="bodyTable float-left" style="width:80px;" align="center"><a href="{$base_url}9011/belanja/Belanja_9011_Main/prizeInfo/remove/{$item.id}" onclick="return confirm ('Are you sure want to remove it?')">Remove</a></div>      
+		        <div>
+		        {/if}
+      	  {/foreach}
+      	{/if}
+      </div>
+    </div>
+  </body>
+</html>

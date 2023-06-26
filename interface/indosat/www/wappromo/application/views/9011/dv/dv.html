@@ -1,0 +1,74 @@
+<html>
+  <head>
+    {include file='tpl_head.html'}
+  </head>
+  <body>
+    {include file='tpl_navigation.html'}
+    <div id="wrapper">
+      <div id="content_1000">
+      	<div id="module">:: DV Menu ::</div>
+      	<div id="module"><a href="{$base_url}9011/dv/DV_9011_Main/dv_content">Content</a> | <a href="{$base_url}9011/dv/DV_9011_Main/prizeInfo">Prize</a> | <a href="{$base_url}9011/dv/DV_9011_Main/undian">Pemenang</a></div>
+      	<br /><br />
+      	<div id="form">
+      		<form action="{$base_url}lelang/status" method="post"><input type="hidden" value="{$periode_id}" name="id" />
+      			<p>Current Periode: <b>Periode {$periode_name}</b> <br /> Status service: {$status}</p>
+      			{if $status eq 'Active'}
+      			<p><input type="submit" name="submit" value="Stop"></p>
+      			{else}
+      			<p><input type="submit" name="submit" value="Start"></p>
+      			{/if}
+      		</form>
+      	</div>
+      	<hr />
+      	<br /><b>Price list for the day</b><br /><a href="{$base_url}lelang/add">Add Price</a><br /><br />
+      	{if count($price) gt 0 && $price.0.price != ''}
+      	<div class="width_700">
+        <div class="rows">
+        	<div class="width_100 float_left border align_center padding head_color">No</div>
+        	<div class="width_100 float_left border align_center padding head_color">Periode</div>
+          <div class="width_100 float_left border align_center padding head_color">Price</div>
+          <div class="width_200 float_left border align_center padding head_color">Status</div>
+          <div class="width_100 float_left border align_center padding head_color">Tools</div>
+        </div>
+        {foreach from=$price item=item name=price}
+        <div class="rows">
+        	<div class="width_100 float_left border align_center padding">{$smarty.foreach.price.index+1}</div>
+        	<div class="width_100 float_left border align_center padding">Periode {$item.name}</div>
+        	<div class="width_100 float_left border align_center padding">{$item.price}</div>
+          <div class="width_200 float_left border align_center padding">{$item.status}</div>
+          <div class="width_100 float_left border align_center padding"><a href="{$base_url}lelang/price/{$item.id}">{if $item.status eq 0}Activate{else}Un-Activate{/if}</a></div>
+        </div>
+        {/foreach}
+        </div><br /><br /><br />
+        - Activate price to use it
+      	{else}
+      	No Price Yet
+      	{/if}
+      	<br/><br/><hr /><br/><b>Top 5 User</b><br /><a href="{$base_url}lelang" id="refresh">Refresh</a><br /><br />
+      	{if count($user) gt 0}
+      	{foreach from=$user item=item name=periode}
+      	{if count($item) gt 0}
+      	<hr /><b>Periode {$item.0.name}</b><br /><br />
+      	<div class="width_500">
+        <div class="rows">
+        	<div class="width_100 float_left border align_center padding head_color">No</div>
+          <div class="width_200 float_left border align_center padding head_color">MSISDN</div>
+          <div class="width_200 float_left border align_center padding head_color">Time</div>
+        </div>
+        {foreach key=key item=item from=$item name=child}
+        <div class="rows">
+        	<div class="width_100 float_left border align_center padding">{$smarty.foreach.child.index+1}</div>
+        	<div class="width_200 float_left border align_center padding">{$item.msisdn}</div>
+          <div class="width_200 float_left border align_center padding">{$item.date}</div>
+        </div>
+        {/foreach}<br /><br/>
+        </div>
+        {/if}
+        {/foreach}
+      	{else}
+      	No User Yet
+      	{/if}
+    	</div>
+    </div>
+  </body>
+</html>

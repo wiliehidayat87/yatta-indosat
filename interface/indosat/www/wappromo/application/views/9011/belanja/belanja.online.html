@@ -1,0 +1,50 @@
+<html>
+  <head>
+    {include file='tpl_head.html'}
+    <script type="text/javascript" src="{$base_url}lib/jquery-1.3.2.min.js"></script>
+    <script type="text/javascript" src="{$base_url}lib/jquery-ui-1.7.2.custom.min.js"></script>
+  </head>
+  <body>
+    {include file='tpl_navigation.html'}
+    <div id="wrapper">
+      <div id="content_1000">
+      	<div id="module">:: Belanja Online Menu ::</div><br />
+      	<div id="module">
+      		<a href="{$base_url}9011/belanja/Belanja_9011_Main/online_claim">Belanja Online User</a> | 
+      		<a href="{$base_url}9011/belanja/Belanja_9011_Main/claim">Belanja Offline User</a> |
+            <a href="{$base_url}9011/belanja/Belanja_9011_Main/beli_list">Belanja Beli List</a>
+      	</div>
+      	<br />
+      	<div style="font-weight: bold;">Claim List</div>
+      	<div style="border-bottom:1px solid #666;" class="cititation">Show user list that claim for the prize.</div>
+      	         	     	
+      	<div style="margin-top:2px;">
+	      	<form method="post" action="{$base_url}9011/belanja/Belanja_9011_Main/online_claim">        
+	        <div style="margin:4px 0">Date: {html_select_date start_year=2010 end_year=2014 field_order=DMY time=$date} <input type="submit" name="submit" value="submit"/></div>
+	        </form>
+      	  <div class="headTable clear float-left" style="width:100px;">MSISDN</div>
+      	  <div class="headTable float-left" style="width:150px;">Date</div>
+      	  <div class="headTable float-left" style="width:80px;">IsWinner</div>
+      	  <div class="headTable float-left" style="width:80px;">Processed</div>    	  		
+      	<div>	
+      	{if isset($user_list) }
+      	  {foreach from=$user_list item=item}
+      	    {if isset($item.id) && $item.id!=''}
+      	    <div style="margin-top:2px;">
+		          <div class="bodyTable clear float-left" style="width:100px;">{$item.msisdn}</div>
+		          <div class="bodyTable float-left" style="width:150px;" align="center">{$item.date_modified}</div>
+		          <div class="bodyTable float-left" style="width:80px;" align="center">{if $item.status==0}<a href="{$base_url}9011/belanja/Belanja_9011_Main/online_claim/winner/{$item.id}">No</a>{elseif $item.status==2}<a href="{$base_url}9011/belanja/Belanja_9011_Main/online_claim/unWinner/{$item.id}"><font color="red"><b>Yes</b></font></a>{else}Yes{/if}</div>
+		          <div class="bodyTable float-left" style="width:80px;" align="center">{if $item.status==2}<a href="{$base_url}9011/belanja/Belanja_9011_Main/online_claim/processedWinner/{$item.id}">No</a>{elseif $item.status==3}Yes{else}No{/if}</div>		                
+		        <div>		        
+		        {/if}
+      	  {/foreach}
+      	{/if}     	      
+      </div>
+      
+      {* paging *}
+      {if isset($hasPage) && $hasPage!=0}                
+        <div class="clear paging">Page: {section name=page start=1 loop=$hasPage step=1}<a href="{$base_url}9011/belanja/Belanja_9011_Main/online_claim/page/{$smarty.section.page.index}/day/{$day}/month/{$month}/year/{$year}">{$smarty.section.page.index}</a> {/section}</div>
+      {/if}
+    </div>
+  </body>
+</html>

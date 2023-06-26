@@ -1,0 +1,116 @@
+{include file='common/tpl_header.html'}
+
+<script src="{$base_url}assets/js/module/wap/wapreg_layout.js" type="text/javascript"></script>
+<script type="text/javascript" src="{$base_url}assets/js/tiny_mce/jquery.tinymce.js"></script>
+<script type="text/javascript">
+        {literal}
+        $(document).ready(function() {
+                $('textarea.tinymce').tinymce({
+                        script_url : '{/literal}{$base_url}{literal}assets/js/tiny_mce/tiny_mce.js',
+                        theme : "advanced",
+                        plugins : "pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,advlist",
+
+                        // Theme options
+                        theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,formatselect,fontselect,fontsizeselect,forecolor",
+                        theme_advanced_buttons2 : "",
+                        theme_advanced_buttons3 : "",
+                        theme_advanced_buttons4 : "",
+                        theme_advanced_toolbar_location : "top",
+                        theme_advanced_toolbar_align : "left",
+                        theme_advanced_statusbar_location : "bottom",
+                        theme_advanced_resizing : false,
+
+                        // Example content CSS (should be your site CSS)
+                        content_css : "{/literal}{$base_url}{literal}assets/css/content.css",
+
+                        // Drop lists for link/image/media/template dialogs
+                        // template_external_list_url : "lists/template_list.js",
+                        // external_link_list_url : "lists/link_list.js",
+                        // external_image_list_url : "lists/image_list.js",
+                        // media_external_list_url : "lists/media_list.js",
+
+                        // Replace values for the template plugin
+                        template_replace_values : {
+                                username : "Some User",
+                                staffid : "991234"
+                        }
+                });
+        });
+        {/literal}
+</script>
+
+<div id="content" class="clearfix">
+    <div id="maincontent">
+        <div class="pageTitle">
+            <span>Add Wap Components</span>
+        </div>
+
+        <div class="actionbar">
+            <div class="cb"></div>
+            <div class="loadContainer">
+                <div class="form-loader">Please wait...</div>
+               	<!-- 
+                <form action="{$base_url}{$activeShortcode}/wapreg/wapreg_layout/add/{$wapsite_id}" enctype="multipart/form-data" method="post" name="add">
+               	 -->
+                <form action="{$base_url}wap/wapreg_layout/add/{$wapsite_id}" name="wapreg-components-form" id="wapreg-components-form" enctype="multipart/form-data" method="post" name="add">
+                    <div class="verticalContainer">
+                        <p><label for="fld-name">Component Name *</label>
+                            <input type="text" name="fld-name" id="fld-name" value="" maxlength="30" />
+                            <span id="inf-fld-name"></span>
+                        </p>    
+                        <p><label for="fld-type">Type </label>
+                                <select name="fld-type" id="fld-type">
+                                    <option value="">----</option>
+                                    {foreach from=$type_component item=item_component}
+                                    <option value="{$item_component}" {if $type eq $item_component}selected="selected"{/if}>{$item_component|upper}</option>
+                                    {/foreach}
+                                </select>
+                            <span id="inf-fld-type"></span>
+                        </p> 
+                        <p><label for="fld-value">Unreg Confirm Text </label>
+                            <textarea name="fld-value" id="fld-value" class="tinymce"></textarea>
+                            <span id="inf-fld-value"></span>
+                        </p>
+                        <p><label for="fld-is_link">Clickable </label>
+                                <select name="fld-is_link" id="fld-is_link">
+                                    <option value="">-----</option>
+                                    {foreach from=$type_link item=item_link}
+                                    <option value="{$item_link}" {if $is_link eq $type__key}selected="selected"{/if}>{$item_link}</option>
+                                    {/foreach}
+                                </select>
+                            <span id="inf-is_link"></span>
+                        </p>
+                        <p><label for="fld-image-1">Image 1</label>
+                            <input type="file" name="fld-image-1">
+                            <span id="inf-fld-image-1"></span>
+                        </p>
+                        <p><label for="fld-image-2">Image 2</label>
+                            <input type="file" name="fld-image-2">
+                            <span id="inf-fld-image-2"></span>
+                        </p>
+                        <p><label for="fld-image-3">Image 3</label>
+                            <input type="file" name="fld-image-3">
+                            <span id="inf-fld-image-1"></span>
+                        </p>
+                    </div>
+                    <div class="cb"></div>
+                    <p class="submit-area">
+                        <input type="submit" name="submit" id="submit" class="button" value="Update" />&nbsp;&nbsp;
+                        <input type="reset" name="reset" id="reset" class="button" value="Reset" />
+                    </p>
+					<input type="hidden" name="fld-wapsite-id" id="fld-wapsite-id" value="{$wapsite_id}" maxlength="30" />
+					<input type="hidden" name="fld-component-id" id="fld-component-id" value="" maxlength="30" />
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{if isset($component_id) && $component_id != ''}
+<script type="text/javascript">
+	readComponentById({$component_id});
+</script>
+{/if}
+
+{include file='common/tpl_footer.html'}

@@ -1,0 +1,16 @@
+<div>
+	<form action="{$base_url}wapreg_log/wapreglog_ua/get_ua" method="POST" >
+    	<input type="hidden" name="tx_service" value="{$v_service}" />
+    	<input type="hidden" name="tx_begindate" value="{$v_begindate}" />
+    	<input type="hidden" name="tx_enddate" value="{$v_enddate}" />
+    	<input type="hidden" name="tx_jadr" value="{$v_jadr}" />
+		<div><input type="text" name="tx_ua" value="" size="20"/><input class="popup_ua" type="button" value="Search" /></div>
+	</form>
+    <br/>
+	<div class="ua_left"><b>User Agent</b></div><div class="ua_right"><b>Quantity</b></div>
+	<table width="100%" cellpadding="0" cellspacing="0">
+		{foreach from=$hasil key=key item=item}
+			<tr class="ua_row"><td class="ua_coll">{$item.ua_show}&nbsp;</td><td class="ua_colr">{$item.jml}&nbsp;</td></tr>
+		{/foreach}
+	</table>
+</div>

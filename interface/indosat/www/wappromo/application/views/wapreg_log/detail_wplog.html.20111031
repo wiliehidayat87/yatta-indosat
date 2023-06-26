@@ -1,0 +1,19 @@
+<div>
+<form action="{$base_url}wapreg_log/wapreglog_ua/get_ua" method="POST" >
+    <input type="hidden" name="tx_service" value="{$v_service}" />
+    <input type="hidden" name="tx_begindate" value="{$v_begindate}" />
+    <input type="hidden" name="tx_enddate" value="{$v_enddate}" />
+<div><input type="text" name="tx_ua" value="" size="20"/><input class="popup_ua" type="button" value="Search" /></div>
+</form><br/>
+<div class="ua_left"><b>User Agent</b></div><div class="ua_right"><b>Quantity</b></div>
+{foreach from=$hasil key=key item=item}
+<div class="ua_left">{$item.ua}</div><div class="ua_right">{$item.jml}</div>
+{/foreach}
+</div>
+
+
+
+
+
+
+

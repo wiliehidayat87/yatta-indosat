@@ -1,0 +1,147 @@
+{include file='common/tpl_header.html'}
+{literal}
+    <script type="text/javascript">
+		$(document).ready(function() {
+			$('#btnAdd').click(function() {
+				var num		= $('.Time').length;
+				var newNum	= new Number(num + 1);
+				
+				var newElem = $('#input' + num).clone().attr('id', 'input' + newNum);
+				
+				$('#input' + num).after(newElem);
+
+				$('#btnDel').attr('disabled','');
+			});
+
+			$('#btnDel').click(function() {
+				var num	= $('.Time').length;
+				$('#input' + num).remove();
+
+				$('#btnAdd').attr('disabled','');
+
+				if (num-1 == 1)
+					$('#btnDel').attr('disabled','disabled');
+			});
+
+			$('#btnDel').attr('disabled','disabled');
+		});
+	</script>
+{/literal}
+
+<style type="text/css">
+<!--
+{literal}
+a.content_submenu{
+    padding:2px 4px 2px 4px; border:1px solid #929292; background-color: #C4C4C4; text-decoration:none; margin:2px; color:#2D2D2D;
+}
+a.content_submenu:hover{
+    background-color: #D4D4D4;
+}
+div.head_list{
+    float:left; clear:right; background-color:#DCDCDC; border-top:2px solid #9A9A9A; border-bottom:1px solid #9A9A9A;
+    padding: 3px 5px 3px 5px; font-weight:bold;
+}
+div.content_list{
+    float:left; clear:right; background-color:none; border-bottom:1px solid #9A9A9A;
+    padding: 2px 5px 2px 5px; 
+}
+div.rows_list{
+    clear:both; margin: 0px 0px 0px 15px;
+}
+div.w1{
+    width:150px;
+}
+div.w2{
+    width:250px;
+}
+div.w3{
+    width:400px;
+}
+div.w9{
+    width:900px;
+}
+{/literal}
+-->
+</style>
+    <div id="content" class="clearfix">
+      <div id="maincontent">
+      	<div class="pageTitle"><span>:: Edit AK Schedule ::</span></div>
+        <h6>{$error}</h6><br />
+        <div class="actionbar">
+            <div class="clearfix fl" style="width:100%; margin:2px 0px 12px 0px; ">
+                <a href="{$base_url}wap/subscription/" class="btnAdd"><span>Subscription&nbsp;</span></a>
+                <a href="{$base_url}wapreg/wapreg_ak" class="btnAdd"><span>AK Schedule&nbsp;</span></a><br/>
+            </div>
+            <div style="margin:20px 0px 4px 0px; border-bottom:1px solid #666; font-size:14px;">Edit for Schedule : <b>{$ak.0.name}</b></div>
+                <a class="content_submenu" href="{$base_url}wapreg/wapreg_ak_detail/index/{$id}">Show AK Schedule</a>
+        </div>
+        <div></div><br />
+        
+        
+        
+       
+    <form action="{$base_url}wapreg/wapreg_ak_detail/edit/{$ak_id}/{$id}" method="post" name="add">
+        
+        <div id="input1" class="Time">
+            <p>
+            Day
+                <select name="day">
+                    <option value="">----</option>
+                    {foreach from=$day item=day_item key=day_key}
+                    <option value="{$day_key}"{if $day_key eq $day_input} selected="selected"{/if}>{$day_item}</option>
+                    {/foreach}
+                </select>
+            From 
+                <select name="from_hour">
+                    <option value="">----</option>
+                    {section name=from_hour start=0 loop=24 step=1}
+                    <option value="{$smarty.section.from_hour.index}"{if $smarty.section.from_hour.index eq $from_hour} selected="selected"{/if}>
+                        {$smarty.section.from_hour.index}
+                    </option>
+                        {/section}
+                </select>
+                <select name="from_minute">
+                    <option value="">----</option>
+                    {section name=from_minute start=0 loop=60 step=1}
+                    <option value="{$smarty.section.from_minute.index}"{if $smarty.section.from_minute.index eq $from_min} selected="selected"{/if}>
+                        {$smarty.section.from_minute.index}
+                    </option>
+                        {/section}
+                </select>
+            To
+                <select name="to_hour">
+                    <option value="">----</option>
+                    {section name=to_hour start=0 loop=24 step=1}
+                    <option value="{$smarty.section.to_hour.index}"{if $smarty.section.to_hour.index eq $to_hour} selected="selected"{/if}>
+                        {$smarty.section.to_hour.index}
+                    </option>
+                        {/section}
+                </select>
+                <select name="to_minute">
+                    <option value="">----</option>
+                    {section name=to_minute start=0 loop=60 step=1}
+                    <option value="{$smarty.section.to_minute.index}"{if $smarty.section.to_minute.index eq $to_min} selected="selected"{/if}>
+                        {$smarty.section.to_minute.index}
+                    </option>
+                        {/section}
+                </select>
+            </p>
+        </div><br />
+        <hr />
+        <div>
+        <input type="submit" name="submit" value="Submit"><input type="reset" value="Reset">
+        </div>
+    </form>
+    <hr /><br />
+    <b>NOTE:</b><br />
+    - All fields must be filled<br />
+       
+       
+        
+        
+        
+        
+      </div>
+    </div>
+
+{include file='common/tpl_footer.html'}

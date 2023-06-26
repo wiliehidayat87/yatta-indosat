@@ -1,0 +1,19 @@
+<?php
+class config_sdmcode {
+
+#namaservice => sdmcode
+public $sdm = array(
+'SPMSERVICE' => array
+(
+'dg' => 'dg_9879',
+'sehat' => 'sehat9879',
+'hits' => 'hit9879',
+'hot' => 'hhot9879',
+'dangdut' => 'dangdut9879',
+'jodoh' => 'jodoh_99879',
+'video' => 'video',
+'puasa' => 'puasa_99879'
+),
+);
+}
+?>

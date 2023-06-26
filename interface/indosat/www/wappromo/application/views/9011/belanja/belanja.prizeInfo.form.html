@@ -1,0 +1,32 @@
+<html>
+  <head>
+    {include file='tpl_head.html'}    
+  </head>
+  <body>
+    {include file='tpl_navigation.html'}
+    <div id="wrapper">
+      <div id="content_1000">
+      	<div id="module">:: Obral Menu ::</div>
+      	<div id="module"><a href="{$base_url}9011/belanja/Belanja_9011_Main/content">Content</a> | <a href="{$base_url}9011/belanja/Belanja_9011_Main/prize">Prize</a> | <a href="{$base_url}9011/belanja/Belanja_9011_Main/claim">Claim List</a></div>
+      	<br />
+      	<div style="font-weight: bold;">Prize Information / {if isset($isNew)}New{else}Edit{/if}</div>
+      	<div style="border-bottom:1px solid #666;" class="cititation">{if isset($isNew)}Add new prize information.{else}Edit prize information.{/if}</div>
+      	
+      	<div style="margin-top:2px;">
+          {if isset($msg)}<div><font color="red">{$msg}</font></div>{/if}
+          <form method="post" action="{if isset($isNew)}{$base_url}9011/belanja/Belanja_9011_Main/formPrizeInfo/new/submit{else}{$base_url}9011/belanja/Belanja_9011_Main/formPrizeInfo/edit/submit{/if}">         
+          <div class="clear float-left" style="width:100px;margin:4px 4px 0 0;" align="right">Name :</div>{if isset($isEdit)}<input type="hidden" name="id" value="{$prizeInfo.id}">{/if}
+          <div class="float-left" style="width:200px;margin:4px 4px 0 0;"><input type="text" name="name" size="40" value="{if isset($prizeInfo.name)}{$prizeInfo.name}{/if}"/></div>
+          <div class="clear float-left" style="width:100px;margin:4px 4px 0 0;" align="right">Desc :</div>
+          <div class="float-left" style="width:200px;margin:4px 4px 0 0;"><textarea name="desc">{if isset($prizeInfo.desc)}{$prizeInfo.desc}{/if}</textarea></div>       
+          <div class="clear float-left" style="width:100px;margin:4px 4px 0 0;" align="right">Keyword :</div>
+          <div class="float-left" style="width:200px;margin:4px 4px 0 0;"><input type="text" name="keyword" value="{if isset($prizeInfo.keyword)}{$prizeInfo.keyword}{/if}"/></div>
+          <div class="clear float-left" style="width:100px;margin:4px 4px 0 0;" align="right">Keyword Point :</div>
+          <div class="float-left" style="width:200px;margin:4px 4px 0 0;"><input type="text" name="keyword_point" value="{if isset($prizeInfo.keyword_point)}{$prizeInfo.keyword_point}{/if}"/></div>          
+          <div class="clear float-left" style="width:190px; margin:10px 4px 0 0;" align="right"><input type="button" name="back" value="Back" onclick="location='{$base_url}9011/belanja/Belanja_9011_Main/prizeInfo'"/> <input type="submit" name="submit" value="Submit"/></div>
+          </form>       
+        <div>  
+        
+    </div>
+  </body>
+</html>

@@ -1,0 +1,108 @@
+<html>
+    <head>{include file='tpl_head.html'}</head>
+
+    <body>
+        {include file='tpl_navigation.html'}
+        <div id="wrapper">
+            <div id="content_1000">
+                <div style="font-family:Verdana, Geneva, sans-serif; font-size:10pt; margin-bottom:20px; font-weight:bold;">
+	            	<a style="color:#06F; text-decoration:underline;" href="{$service_url}">Langsung Harian</a> | 
+    	            <a style="color:#06F; text-decoration:underline;" href="{$service_url}grand_prize">Langsung Grand Prize</a>
+                </div>
+                <hr style="border:5px dashed #C6C6C6; margin-bottom:20px;">
+                <div style="font-weight: bold;font-size:10pt; color:#858585; margin-bottom:20px;">Langsung Grand Prize - Add</div>
+                
+                {if $error}<div class="error">{$error}</div>{/if}
+                
+                <script language="javascript">
+				{literal}
+				function check_form(){
+					if(document.getElementById('content').value==''){
+						alert("Content cannot empty");
+						document.getElementById('content').focus();
+						return false;
+					}else{
+						alert("Data has been saved");
+						return true;
+					}
+				}
+				{/literal}
+				</script>
+                
+                <form method="post" action="{$service_url}save_grand_prize" onSubmit="return check_form();">
+                <table style="font-family:Verdana, Geneva, sans-serif; font-size:10pt; line-height:25pt;">
+                	<tr><td style="font-weight:bold;">Code</td><td> : </td><td><input id="pin" name="pin" type="hidden" value="{$pin}" />{$pin}</td></tr>
+                    <tr><td style="font-weight:bold;">Content</td><td> : </td><td><textarea id="content" name="content" cols="40" rows="5"></textarea></td></tr>
+                    <tr><td style="font-weight:bold;">Date</td><td> : </td>
+                    	<td>
+                        	<select name="thn" id="thn">
+                            {foreach from=$thn item=val}
+                            	<option value="{$val}">{$val}</option>
+                            {/foreach}
+                            </select>
+                            -
+                            <select name="bln" id="bln">
+                            {foreach from=$bln item=val}
+                            	<option value="{$val}">{$val}</option>
+                            {/foreach}
+                            </select>
+                            -
+                            <select name="tgl" id="tgl">
+                            {foreach from=$tgl item=val}
+                            	<option value="{$val}">{$val}</option>
+                            {/foreach}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr><td style="font-weight:bold;">Type</td><td> : </td>
+                    	<td>
+                        	<select name="type" id="type">
+                            	<option value="Pull">Pull</option>
+                                <option value="Push">Push</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr><td style="font-weight:bold;">Is Delivered</td><td> : </td>
+                    	<td>
+                        	<select name="delivered" id="delivered">
+                            	<option value="Yes">Yes</option>
+                                <option value="No" selected="selected">No</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr><td colspan="3"><hr style="border:1px solid #CCC; margin-top:10px; margin-bottom:10px;" /></td></tr>
+                </table>
+                <input type="submit" name="submit" id="submit" value="Save" />
+				<input type="reset" name="reset" id="reset" value="Reset" />
+				<input type="button" value="Cancel" onClick="javascript: history.go(-1);" />
+                </form>
+            </div>
+        </div>
+        
+        <script language="javascript">
+        {literal}
+        function validateForm(form){
+        	var error = '';
+        	var to_focus = null;
+
+        	if (form.order.value.trim() == '') {
+        		error += "- Order number can not be blank.\n";
+        		if (to_focus == null) to_focus = form.order;
+        	}
+        	if (form.content.value.trim() == '') {
+        		error += "- SMS content can not be blank.";
+        		if (to_focus == null) to_focus = form.content;
+        	}
+
+        	if (error.length > 0) {
+        		alert(error);
+        		to_focus.focus();
+        		return false;
+        	}
+
+        	return true;
+        }
+        {/literal}
+        </script>
+    </body>
+</html>

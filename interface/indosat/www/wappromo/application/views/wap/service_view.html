@@ -1,0 +1,87 @@
+{include file='common/tpl_header.html'}
+
+<script src="{$base_url}assets/js/module/wap/service.js" type="text/javascript"></script>
+
+<div id="content" class="clearfix">
+    <div id="maincontent">
+        <div class="pageTitle">
+            <span>Wap Services</span>
+        </div>
+
+        <div class="actionbar">
+            <div class="clearfix fl">
+                <span><a id="btnOpenPanel" class="btnAdd"><span>Create New Service&nbsp;</span></a></span>&nbsp;&nbsp;
+            </div>
+            <div class="search-area">
+                <form name="search-form" id="search-form">
+                    <input type="text" name="search-field" id="search-field" class="search-field" />
+                    <input type="submit" name="search-button" id="search-button" class="search-button" value="&nbsp;" />
+                </form>
+            </div>
+            <div class="cb"></div>
+            <div id="loadContainer" class="loadContainer closePanel">
+                <div class="form-loader">Please wait...</div>
+                <form name="wap-service-form" id="wap-service-form">
+                    <div class="verticalContainer">
+                        <p><label for="txt-wap-service">Wap Service *</label>
+                            {$wap_service}
+                            <span id="inf-wap-service"></span>
+                        </p>
+                        <p><label for="txt-wap-name">Wap Name *</label>
+                            <input type="text" name="txt-wap-name" id="txt-wap-name" class="inputtext-1" value="" maxlength="30" />
+                            <span id="inf-wap-name"></span>
+                        </p>                        
+                        <p><label for="txt-adn">ADN *</label>
+                            {$adn}
+                            <span id="inf-adn"></span>
+                        </p>
+                        <p><label for="txt-mechanism">Mechanism *</label>
+                            <input type="text" name="txt-mechanism" id="txt-mechanism" class="inputtext-1" value="" maxlength="128" />
+                            <span id="inf-mechanism"></span>
+                        </p>
+                    </div>
+                    <div class="cb"></div>
+                    <p class="submit-area">
+                        <input type="submit" name="submit" id="submit" class="button" value="Save" />&nbsp;&nbsp;
+                        <input type="button" name="btnClosePanel" id="btnClosePanel" class="button" value="Close" />
+                        
+                    </p>
+                </form>
+            </div>
+        </div>
+
+        <div class="table-list-area">
+            <div class="ajax-loader">Loading...</div>
+            <table id="service-list-table" class="datagrid2" width="100%">
+                <thead>
+                    <tr>
+                        <th width="20%">Wap Service</th>
+                        <th width="20%">Wap Name</th>
+                        <th width="10%">ADN</th>
+                        <th width="15%">Mechanism</th>
+                        <th width="20%">Date Created</th>
+                        <th width="25">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody></tbody>
+
+                <tfoot>
+                    <tr>
+                        <td colspan="6">
+                            <div id="pagination" class="fl">
+                                Page: <span id="paging"></span>
+                            </div>
+                            <div id="pagination-info" class="fr">
+                                <span id="from" class="fwb">0</span> - <span id="to" class="fwb">0</span> from <span id="total" class="fwb">0</span>
+                            </div>
+                            <div class="cb"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+{include file='common/tpl_footer.html'}

@@ -1,0 +1,111 @@
+{include file="common/tpl_header.tpl"}
+
+    <div class="pagetitle">Manage Creator</div>
+    <div class="middletop">
+        <div class="roundedbox bluebox">
+            <div class="boxheader">
+                <a href="{$base_url}service/add_service"><div class="boxtoggle">Add Service</div></a>
+<div class="filterby" style="width:300px; float:left; padding:6px; margin-left:250px">
+Filter By <select name="filter_service" id="filter_service"><option value="0">All Services</option>
+{foreach from=$service item=service_item key=service_key}
+<option value="{$service_item.id}">{$service_item.name}</option>
+{/foreach}
+</select>
+                                <select name="filter_operator" id="filter_operator" >
+<option value="0">All Operators</option>
+									{foreach from=$operator item=operator_item key=operator_key}
+										<option value="{$operator_item.id}">{$operator_item.name}</option>
+									{/foreach}
+								</select>
+<a id="filterby" onClick="javascript:filterby()" >Filter</a>
+</div>
+                <div class="search-area">
+                    <form name="search-form" id="search-form">
+                        <input type="text" name="search-field" id="search-field" class="search-field" />
+                        <input type="submit" name="search-button" id="search-button" class="search-button" value="&nbsp;" />
+                    </form>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div id="searchBar" class="boxcontent" style="width: auto; min-height:0; padding-bottom: 15px;">
+				<form name="creator-form" id="creator-form"> 
+                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td width="20%">
+                                <label for="txt-pattern">Keyword * </label>
+                            </td>
+                            <td>
+                                <input type="text" class="inputtext-1" id="txt-pattern" name="txt-pattern" size="30" maxlength="50" />
+                                &nbsp;<span id="inf-pattern"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="operatorId">Operator  </label>
+                            </td>
+                            <td>
+                                <select name="operatorId" id="operatorId" >
+									{foreach from=$operator item=operator_item key=operator_key}
+										<option value="{$operator_item.id}">{$operator_item.name}</option>
+									{/foreach}
+								</select>
+                                &nbsp;<span id="inf-operatorId"></span>
+                            </td>
+						</tr>
+                        <tr>
+                            <td>
+                                <label for="serviceId">Service  </label>
+                            </td>
+                            <td>
+                                <select name="serviceId" id="serviceId" >
+									{foreach from=$service item=service_item key=service_key}
+										<option value="{$service_item.id}">{$service_item.name}</option>
+									{/foreach}
+								</select>
+                                &nbsp;<span id="inf-serviceId"></span>
+                            </td>
+						</tr>
+                        <tr>
+                            <td>
+                                <input type="submit" name="save" id="save" class="button" value="Save" />&nbsp;&nbsp;
+								<input type="button" name="btnResetPanel" id="btnResetPanel" class="button" value="Reset" />
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="midlemidle">
+		<div class="boxheader reporttable">
+            <table id="service-list-table" width="100%" border="0" cellspacing="0" cellpadding="0">
+                 <thead>
+                    <tr><!--
+                        <th>Keyword</th>
+                        <th>Handler</th>
+                        <th>Operator</th> -->
+                        <th>Service</th>
+                        <th>Date Created</th>
+                        <th width="20">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody></tbody>
+            </table>
+        </div>
+        <div class="pagination">
+            <ul>
+                <div class="clear"></div>
+            </ul>
+        </div>
+        <div class="viewlimit">
+            View limit : 
+			<select name="pageLimit" id="pageLimit">
+				{foreach from=$pageLimit item=item key=key}
+					<option value="{$item}">{$item}</option>
+				{/foreach}
+			</select> &nbsp; | &nbsp; Total Data : <span id="total_data"></span>
+		</div>
+	</div>
+
+{include file="common/tpl_footer.tpl"}

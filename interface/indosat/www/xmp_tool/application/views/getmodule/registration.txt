@@ -1,0 +1,5 @@
+<br />
+<p><b>Reply Attribute</b></p>
+<textarea handler="msg_isregistered" name="repAttrMessage[mechanism_id][msg_isregistered][]" rows="5" cols=40" mechanism="mechanism_id" ></textarea>
+<br />
+<input type="checkbox" name="chkRepAttrMsg[mechanism_id][rereg_welcome][]" id="chkRepAttrMsg" checked="checked" value="1" othervalue = "mechanism_id-rereg_welcome-2" /><span>rereg_welcome&nbsp;</span>

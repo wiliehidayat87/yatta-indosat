@@ -1,0 +1,121 @@
+<?php
+/*
+ * "http://103.58.100.168:8087/?uid=%UID%&pwd=%PWD%&serviceid=%SID%&msisdn=%MSISDN%&sms=%SMS%&transid=%TRXID%&smstype=0";
+ */
+class config_mt {
+    /* server config */
+    public $profile = array(
+        'default' => array(
+            'type' => 'activemq',
+            'protocol' => 'tcp',
+            'server' => '127.0.0.1',
+            'port' => '61613',
+            'prefix' => 'indosatMT',
+            'slot' => '3',
+            'retry' => '5',
+		    //'sendUrl' => array('http://127.0.0.1:8053/indosat/simulate/operator/smspull.php'),
+		    //'sendUrl' => array('http://103.58.100.168:8087/?uid=%UID%&pwd=%PWD%&serviceid=%SID%&msisdn=%MSISDN%&sms=%SMS%&transid=%TRXID%&smstype=0'),
+		    'sendUrl' => array('http://103.58.100.168:8087/mt/'),
+    		'SendTimeOut' => '10',
+            'throttle' => 3
+        ),
+        'text' => array(
+            'type' => 'activemq',
+            'protocol' => 'tcp',
+            'server' => '127.0.0.1',
+            'port' => '61613',
+            'prefix' => 'indosatText',
+            'slot' => '10',
+            'retry' => '5',
+		    //'sendUrl' => array('http://103.58.100.168:8087/?uid=%UID%&pwd=%PWD%&serviceid=%SID%&msisdn=%MSISDN%&sms=%SMS%&transid=%TRXID%&smstype=0'),
+		    'sendUrl' => array('http://103.58.100.168:8087/mt/'),
+            //'sendUrl' => array('http://202.3.219.203:55000/cp/submitSM.jsp'),
+            'SendTimeOut' => '10',
+            'throttle' => 1000,
+            'priority' => 6
+        ),
+        'push' => array(
+            'type' => 'activemq',
+            'protocol' => 'tcp',
+            'server' => '127.0.0.1',
+            'port' => '61613',
+            'prefix' => 'indosatMTPush',
+            'slot' => '2',
+            'retry' => '0',
+		    //'sendUrl' => array('http://103.58.100.168:8087/?uid=%UID%&pwd=%PWD%&serviceid=%SID%&msisdn=%MSISDN%&sms=%SMS%&transid=%TRXID%&smstype=0'),
+		    'sendUrl' => array('http://103.58.100.168:8087/mt/'),
+        	//'sendUrl' => array('http://127.0.0.1:8053/indosat/simulate/operator/smspull.php'),
+            'SendTimeOut' => '10',
+            'throttle' => 2000,
+            'priority' => 5
+        ),
+        'wappush' => array(
+            'type' => 'activemq',
+            'protocol' => 'tcp',
+            'server' => '127.0.0.1',
+            'port' => '61613',
+            'prefix' => 'indosatMTWapPush',
+            'slot' => '3',
+            'retry' => '5',
+		    //'sendUrl' => array('http://103.58.100.168:8087/?uid=%UID%&pwd=%PWD%&serviceid=%SID%&msisdn=%MSISDN%&sms=%SMS%&transid=%TRXID%&smstype=0'),
+		    'sendUrl' => array('http://103.58.100.168:8087/mt/'),
+            //'sendUrl' => array('http://127.0.0.1:8053/indosat/simulate/operator/smspull.php'),
+            'SendTimeOut' => '10',
+            'throttle' => 3
+        ),
+        'optin' => array(
+            'type' => 'activemq',
+            'protocol' => 'tcp',
+            'server' => '127.0.0.1',
+            'port' => '61613',
+            'prefix' => 'indosatMTOptin',
+            'slot' => '3',
+            'retry' => '5',
+            'sendUrl' => array('http://127.0.0.1/'),
+            'SendTimeOut' => '10',
+            'throttle' => 3
+        ),
+        'dailypush' => array(
+            'type' => 'activemq',
+            'protocol' => 'tcp',
+            'server' => '127.0.0.1',
+            'port' => '61613',
+            'prefix' => 'indosatMTDailyPush',
+            'slot' => '10',
+            'retry' => '5',
+		    //'sendUrl' => array('http://103.58.100.168:8087/?uid=%UID%&pwd=%PWD%&serviceid=%SID%&msisdn=%MSISDN%&sms=%SMS%&transid=%TRXID%&smstype=0'),
+		    'sendUrl' => array('http://103.58.100.168:8087/mt/'),
+            //'sendUrl' => array('http://127.0.0.1:8053/indosat/sendurl/apa.php'),
+            'SendTimeOut' => '3',
+            'throttle' => 900
+        ),
+        'delaypush' => array(
+            'type' => 'activemq',
+            'protocol' => 'tcp',
+            'server' => '127.0.0.1',
+            'port' => '61613',
+            'prefix' => 'indosatMTDelayPush',
+            'slot' => '3',
+            'retry' => '5',
+		    //'sendUrl' => array('http://103.58.100.168:8087/?uid=%UID%&pwd=%PWD%&serviceid=%SID%&msisdn=%MSISDN%&sms=%SMS%&transid=%TRXID%&smstype=0'),
+		    'sendUrl' => array('http://103.58.100.168:8087/mt/'),        
+		    //'sendUrl' => array('http://127.0.0.1:8053/indosat/simulate/operator/smspull.php'),
+            'SendTimeOut' => '10',
+            'throttle' => 3
+        ),
+        'delaywappush' => array(
+            'type' => 'activemq',
+            'protocol' => 'tcp',
+            'server' => '127.0.0.1',
+            'port' => '61613',
+            'prefix' => 'indosatDelayWapPush',
+            'slot' => '3',
+            'retry' => '5',
+		    //'sendUrl' => array('http://103.58.100.168:8087/?uid=%UID%&pwd=%PWD%&serviceid=%SID%&msisdn=%MSISDN%&sms=%SMS%&transid=%TRXID%&smstype=0'),
+		    'sendUrl' => array('http://103.58.100.168:8087/mt/'),      
+            //'sendUrl' => array('http://127.0.0.1/'),
+            'SendTimeOut' => '10',
+            'throttle' => 3
+        )
+    );
+}

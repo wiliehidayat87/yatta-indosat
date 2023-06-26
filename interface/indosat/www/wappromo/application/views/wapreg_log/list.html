@@ -1,0 +1,252 @@
+<html>
+<head>
+{include file='common/tpl_header.html'}
+<script src="{$base_url}assets/js/popup.js"></script>
+{literal}
+<style type="text/css">
+    #mytable {
+        padding: 0;
+        margin: 0;
+    }
+    th {
+        font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica,
+        sans-serif;
+        color: #6D929B;
+        border-right: 1px solid #C1DAD7;
+        border-bottom: 1px solid #C1DAD7;
+        border-top: 1px solid #C1DAD7;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        text-align: center;
+        padding: 3px 3px 3px 9px;
+        background: #CAE8EA url(images/bg_header.jpg) no-repeat;
+    }
+    th.nobg {
+        border-top: 0;
+        border-left: 0;
+        border-right: 1px solid #C1DAD7;
+        background: none;
+    }
+    th.red{
+        background-color: #e1bfc7 ;
+    }
+    th.yellow{
+        background-color: #f4eda1;
+    }
+    td {
+        border-right: 1px solid #C1DAD7;
+        border-bottom: 1px solid #C1DAD7;
+        background: #fff;
+        padding: 3px 3px 3px 9px;
+        color: #6D929B;
+        font-size: 12px;
+    }
+    td.alt {
+        background: #F5FAFA;
+        color: #B4AA9D;
+    }
+</style>
+<style type="text/css">
+    .ua_left{
+        float:left; clear:right; width:69%; overflow:hidden; border-bottom:1px solid #cccccc; text-align:center;
+    }
+    .ua_right{
+        float:right; clear:right; width:30%; border-bottom:1px solid #cccccc; text-align:center;
+    }
+    .ua_row td{
+        border-bottom:1px solid #cccccc; border-left: none; border-right: none;
+    }
+    .ua_coll{
+        width:75%;
+    }
+    .ua_colr{
+        width:25%; text-align: center;
+    }
+</style>
+{/literal}
+{literal}
+<script type="text/javascript">
+    var base_url   = "{$base_url}";
+    $(document).ready(function() {
+        hide_loaderIndicator();
+    });
+    $(function(){
+        $(".datepicker").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'yy-mm-dd'
+        });
+        $("#dialog").hide();
+    });
+    function ajaxGetMsiDetails(url){
+        if (url == '')
+            url = base_url + "/wapreg_log/wapreglog/ajaxGetMsiDetails";
+        	$.ajax({
+            async: "true",
+            data: "",
+            dataType: "json",
+            url: url,
+            type: 'POST',
+            success: function(data) {
+                $("#jd-details tbody").html(data.tbody);
+                $( "#dialog" ).dialog();
+                return false;
+            }
+        });
+    }
+    function show_loaderIndicator() {
+        $("#loaderIndicator").show();
+    }
+    function hide_loaderIndicator() {
+        $("#loaderIndicator").hide();
+    }
+</script>
+{/literal}
+{literal}
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".service").focus(function(){
+            if($.trim($(".service").val()) == "keyword"){
+                $(".service").val("");
+                $(".service").attr("style", "color:#000000");
+            }
+        });
+        $(".service").blur(function(){
+            if($.trim($(".service").val()) == ""){
+                $(".service").val("keyword");
+                $(".service").attr("style", "color:#cccccc");
+            }
+        });
+    });
+</script>
+{/literal}
+</head>
+<body>
+<div id="wrapper">
+    <div id="content_1000">
+        <div id="module">:: Wapreg Visit Log ::</div><br />
+        <form name="wapreg-form" id="wapreg-form" method="post" action="{$base_url}wapreg_log/wapreglog/">
+            <div style="padding: 5px 0;">
+                Date Start : <input type="text" name="dstart" id="dstart" value="{$dstart}" class="datepicker" maxlength="10" readonly="readonly" />
+                Date End : <input type="text" name="dend" id="dend" value="{$dend}" class="datepicker" maxlength="10" readonly="readonly" />
+                Service : <input type="text" name="service" id="service" value="{$service}" class="service" style="color:#cccccc"  />
+                <input type="submit" name="" id="" value="Show" />&nbsp;&nbsp;&nbsp;&nbsp;
+                <span id="loaderIndicator">Loading...</span>
+            </div>
+        </form>
+ 		<table id="mytable">
+            <tr>
+                <th rowspan="2">DATE</th>
+                <th rowspan="2">SERVICE</th>
+                <th rowspan="2">LANDING PAGE</th>
+                <th colspan="3">MSISDN</th>
+                <th colspan="3" class="red">OPERATOR</th>
+                <th colspan="2">AUTO REFRESH</th>
+                <th colspan="8" class="yellow">JAVA</th>
+                <th rowspan="2" class="red">CONFIRM</th>
+                <th colspan="2" class="red">MO</th>
+                <th rowspan="2" class="red">THANK YOU</th>
+                <th rowspan="2">MO DEL</th>
+                <th rowspan="2">%</th>
+            </tr>
+            <tr>
+                <th class="red">GET MSISDN</th>
+                <th class="yellow">JAVA DOWNLOAD</th>
+                <th>Etc</th>
+                <th class="red">MOBILINK</th>
+                <th class="red">UFONE</th>
+                <th class="red">ZONG</th>
+                <th class="red">MSISDN</th>
+                <th class="yellow">JAVA</th>
+                
+                <th class="yellow">DEF JAD</th>
+                <th class="yellow">MISS JAD</th>
+                <th class="yellow">GET JAD</th>
+                <th class="yellow">GOT JAD</th>
+                <th class="yellow">MISS JAD VAL</th>
+                <th class="yellow">MISS JAR</th>
+                <th class="yellow">GET JAR</th>
+                <th class="yellow">GOT JAR</th>
+                
+                <th class="red">Send</th>
+                <th class="red">Failed</th>
+            </tr>
+			<tbody>
+			{if count($result) > 0}
+            	{foreach from=$result item=item}
+                    <tr>
+                        <td>{$item.date}&nbsp;</td>
+                        <td>{$item.service}&nbsp;</td>
+                        <td>{$item.lp}&nbsp;</td>
+                        <!--<td><a onClick="javascript: ajaxGetMsiDetails();" style="cursor:pointer">{$item.msi}</a></td>-->
+                        <td>{$item.msi}</td>
+                        <td>{$item.jd}</td>
+                        <td>{$item.etc}</td>
+                        <td>{$item.tsel}</td>
+                        <td>{$item.isat}</td>
+                        <td>{$item.xl}</td>
+                        <td>{$item.ak_msisdn}</td>
+                        <td>{$item.ak_java}</td>
+                        <td> <a href="#" class="btn_jad" rel="{$item.date}|{$dend}|{$item.service}|def_jad">{$item.def_jad}</a></td>
+                        <td> <a href="#" class="btn_jad" rel="{$item.date}|{$dend}|{$item.service}|miss_jad">{$item.miss_jad}</a></td>
+                        <td> <a href="#" class="btn_jad" rel="{$item.date}|{$dend}|{$item.service}|start_jad">{$item.start_jad}</a></td>
+                        <td> <a href="#" class="btn_jar" rel="{$item.date}|{$dend}|{$item.service}|jad">{$item.jad}</a></td>
+                        <td> <a href="#" class="btn_jad" rel="{$item.date}|{$dend}|{$item.service}|miss_jad_val">{$item.miss_jad_val}</a></td>
+                        <td> <a href="#" class="btn_jad" rel="{$item.date}|{$dend}|{$item.service}|miss_jar">{$item.miss_jar}</a></td>
+                        <td> <a href="#" class="btn_jad" rel="{$item.date}|{$dend}|{$item.service}|start_jar">{$item.start_jar}</a></td>
+                        <td> <a href="#" class="btn_jar" rel="{$item.date}|{$dend}|{$item.service}|jar">{$item.jar}</a></td>
+                        <td>{$item.conf}</td>
+                        <td>{$item.mo_send}</td>
+                        <td>{$item.mo_failed}</td>
+                        <td>{$item.thank}</td>
+                        <td>{$item.mo_del}</td>
+						{if $item.lp lte 0}
+                            <td align="center">0&nbsp;&nbsp;&nbsp;</td>
+						{else}
+                            <td align="center">{math equation="(mo / lp) * 100" mo=$item.mo_del lp=$item.lp  format="%.2f"}&nbsp;</td>
+						{/if}
+					</tr>
+             	{/foreach}
+             	<tr>
+					<td colspan="25">{$pagination}</td>
+				</tr>
+             {else}
+                 <tr>
+					<td colspan="25">No data yet</td>
+				</tr>
+			{/if}
+			</tbody>
+			<tfoot></tfoot>
+		</table>
+        <div id="dialog-modal" style="display:none;" title="Detail">tes</div>
+        <input type="hidden" id="hid_base_url" value="{$base_url}" /> 
+	</div>
+</div>
+<div id="dialog" title="Java Donwload">
+	<p>
+	<table id="jd-details" border="0">
+		<thead>
+			<tr>
+                <th>MOBILINK</th>
+                <th>UFONE</th>
+                <th>ZONG</th>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+	</p>
+</div>
+<script type="text/javascript">
+var base_url = "{$base_url}";
+{literal}
+function delete_banner(id) {
+	var answer = confirm("Are you sure?");
+	if (answer)
+		window.location = base_url+"wap_portal/banner/delete/"+id;
+}
+{/literal}
+</script>
+</body>
+</html>
+{include file='common/tpl_footer.html'}

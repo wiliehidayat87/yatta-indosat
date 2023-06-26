@@ -1,0 +1,84 @@
+{include file='common/tpl_header.html'}
+<style type="text/css">
+<!--
+{literal}
+a.content_submenu{
+    padding:2px 4px 2px 4px; border:1px solid #929292; background-color: #C4C4C4; text-decoration:none; margin:2px; color:#2D2D2D;
+}
+a.content_submenu:hover{
+    background-color: #D4D4D4;
+}
+div.head_list{
+    float:left; clear:right; background-color:#DCDCDC; border-top:2px solid #9A9A9A; border-bottom:1px solid #9A9A9A;
+    padding: 3px 5px 3px 5px; font-weight:bold;
+}
+div.content_list{
+    float:left; clear:right; background-color:none; border-bottom:1px solid #9A9A9A;
+    padding: 2px 5px 2px 5px; 
+}
+div.rows_list{
+    clear:both; margin: 0px 0px 0px 15px;
+}
+div.w1{
+    width:150px;
+}
+div.w2{
+    width:210px;
+}
+div.w3{
+    width:400px;
+}
+div.w9{
+    width:900px;
+}
+{/literal}
+-->
+</style>
+    <div id="content" class="clearfix">
+      <div id="maincontent">
+      	<div class="pageTitle"><span>:: Wap Registration AK Schedule Time Detail ::</span></div>
+        <h6>{$error}</h6><br />
+        <div class="actionbar">
+            <div class="clearfix fl" style="width:100%; margin:2px 0px 12px 0px; ">
+                <a href="{$base_url}wap/subscription/" class="btnAdd"><span>Subscription&nbsp;</span></a>
+                <a href="{$base_url}wapreg/wapreg_ak" class="btnAdd"><span>AK Schedule&nbsp;</span></a><br/>
+            </div>
+            <div style="margin:20px 0px 4px 0px; border-bottom:1px solid #666; font-size:14px;">View Detail for Schedule : <b>{$ak.0.name}</b></div>
+                <a class="content_submenu" href="{$base_url}wapreg/wapreg_ak_detail/add/{$id}">Add New AK Schedule</a>
+        </div>
+        <div></div><br />
+        
+        
+        
+        <div class="w9">
+        {if count($result) gt 0 && $result.0.id != ''}
+      	
+        <div class="rows_list">
+          <div class="head_list w2">Day</div>
+          <div class="head_list w2">From</div>
+          <div class="head_list w2">To</div>
+          <div class="head_list w2">&nbsp;</div>
+        </div>
+        {foreach from=$result item=item}
+        <div class="rows_list">
+        	<div class="content_list w2">{foreach from=$day item=day_item key=day_key}{if $day_key eq $item.day_num}{$day_item}{/if}{/foreach}</div>{* cant find a better way right now *}
+          <div class="content_list w2">{$item.hour_start}</div>
+          <div class="content_list w2">{$item.hour_stop}</div>
+          <div class="content_list w2 menulink">
+          	<a href="{$base_url}wapreg/wapreg_ak_detail/edit/{$id}/{$item.id}">Edit</a> | 
+          	<a href="{$base_url}wapreg/wapreg_ak_detail/delete/{$id}/{$item.id}">Delete</a>
+          </div>
+        </div>
+        {/foreach}
+      	{else}
+      		<br /><br />No data yet
+      	{/if}
+      </div>
+        
+        
+        
+        
+      </div>
+    </div>
+
+{include file='common/tpl_footer.html'}

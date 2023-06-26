@@ -1,0 +1,89 @@
+{if $homepage_size_1 neq '0'}
+            <div id="content_800"><br /><br /><br /><br /><br />
+                Landing Page 1 size (as previewed with Sony Ericsson W800i User Agent): {$homepage_size_1} kb<hr /><br />
+                {if count($download_speed_1) neq '0'}
+                <div class="width_900">
+                    <div class="rows">
+                        <div class="width_100 float_left border align_center padding head_color">System</div>
+                        <div class="width_100 float_left border align_center padding head_color">Speed</div>
+                        <div class="width_100 float_left border align_center padding head_color">Download Time</div>
+                    </div>
+                    {foreach from=$download_speed_1 item=download_item}
+                    <div class="rows">
+                        <div class="width_100 float_left border align_center padding">{$download_item.arch}</div>
+                        <div class="width_100 float_left border align_center padding">{$download_item.speed} kbps</div>
+                        <div class="width_100 float_left border align_center padding">{$download_item.download_speed} s</div>
+                    </div>
+                    {/foreach}
+                </div>
+                {/if}
+
+                {if $homepage_html_1 neq ''}
+                <br /><br /><br/>
+                Preview Page 1 <span class="info-img">(176 x 220 px)</span><hr /><br /><br />
+                <span class="preview_wap">
+                {$homepage_html_1}
+                </span>
+                {/if}
+            </div>
+            {/if}
+
+            {if $homepage_size_2 neq '0'}
+            <div id="content_800"><br /><br /><br /><br /><br />
+                Landing Page 2 size (as previewed with Nokia 6120 User Agent): {$homepage_size_2} kb<hr /><br />
+                {if count($download_speed_2) neq '0'}
+                <div class="width_900">
+                    <div class="rows">
+                        <div class="width_100 float_left border align_center padding head_color">System</div>
+                        <div class="width_100 float_left border align_center padding head_color">Speed</div>
+                        <div class="width_100 float_left border align_center padding head_color">Download Time</div>
+                    </div>
+                    {foreach from=$download_speed_2 item=download_item}
+                    <div class="rows">
+                        <div class="width_100 float_left border align_center padding">{$download_item.arch}</div>
+                        <div class="width_100 float_left border align_center padding">{$download_item.speed} kbps</div>
+                        <div class="width_100 float_left border align_center padding">{$download_item.download_speed} s</div>
+                    </div>
+                    {/foreach}
+                </div>
+                {/if}
+
+                {if $homepage_html_2 neq ''}
+                <br /><br /><br/>
+                Preview Page 2 <span class="info-img">(240 x 320 px)</span><hr /><br /><br />
+                <span class="preview_wap">
+                {$homepage_html_2}
+                </span>
+                {/if}
+            </div>
+            {/if}
+
+            {if $homepage_size_3 neq '0'}
+            <div id="content_800"><br /><br /><br /><br /><br />
+                Landing Page 3 size (as previewed with Blackberry Bold 9000 User Agent): {$homepage_size_3} kb<hr /><br />
+                {if count($download_speed_3) neq '0'}
+                <div class="width_900">
+                    <div class="rows">
+                        <div class="width_100 float_left border align_center padding head_color">System</div>
+                        <div class="width_100 float_left border align_center padding head_color">Speed</div>
+                        <div class="width_100 float_left border align_center padding head_color">Download Time</div>
+                    </div>
+                    {foreach from=$download_speed_3 item=download_item}
+                    <div class="rows">
+                        <div class="width_100 float_left border align_center padding">{$download_item.arch}</div>
+                        <div class="width_100 float_left border align_center padding">{$download_item.speed} kbps</div>
+                        <div class="width_100 float_left border align_center padding">{$download_item.download_speed} s</div>
+                    </div>
+                    {/foreach}
+                </div>
+                {/if}
+
+                {if $homepage_html_3 neq ''}
+                <br /><br /><br/>
+                Preview Page 3 <span class="info-img">(480 x 320 px)</span><hr /><br /><br />
+                <span class="preview_wap">
+                {$homepage_html_3}
+                </span>
+                {/if}
+            </div>
+            {/if}

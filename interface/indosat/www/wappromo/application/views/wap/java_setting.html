@@ -1,0 +1,72 @@
+{include file='common/tpl_header.html'}
+    
+    
+  	<div id="content" class="clearfix">
+		<div id="maincontent">
+      		<div id="pageheading">
+				<h2>Java Download Configuration</h2>
+        	</div>
+          	<div class="actionbar">
+                <form name="form1" method="post" action="{$base_url}wap/java_setting/show_ver" id="form1">
+                <b>Show:</b> 
+                
+               <select name="show" onChange="document.getElementById('form1').submit();">
+                                   
+                                    {foreach from=$type_array item=item key=type_key}
+                                    <option value="{$type_key}" {if $show eq $type_key}selected="selected"{/if}>{$item}</option>
+                                    {/foreach}
+                </select>
+                </form>
+            </div>
+			<div>
+            	<form name="form1" method="post" action="{$base_url}wap/java_setting/submit_ver" id="form2">
+                <input type="hidden" name="set" value="{$show}">
+                <table align="left" style="font-family:Verdana, Geneva, sans-serif; font-size:9pt;">
+          			<tr>
+                    	<td> 
+                        	<b>Filter:</b>
+							<input type="text" id="box1Filter" />
+              				<button type="button" id="box1Clear">X</button>
+              				<br /><br>
+                            <select id="box1View" name="box1[]" multiple="multiple" style="height:300px;width:220px;">
+                            	{foreach from=$service1 item=item}
+                                    <option value="{$item.id}">{$item.wap_name}</option>
+                                {/foreach}
+                            </select>
+							<br/>
+              				<span id="box1Counter" class="countLabel"></span>
+              				<select id="box1Storage" name="box2">
+                      		</select>
+					</td>
+                    <td>
+                    	<button id="to2" type="button" style="width:50px; margin-bottom:10px;">&nbsp;>&nbsp;</button><br>
+                        <button id="allTo2" type="button" style="width:50px; margin-bottom:10px">&nbsp;>>&nbsp;</button><br>
+                        <button id="allTo1" type="button" style="width:50px; margin-bottom:10px">&nbsp;<<&nbsp;</button><br>
+                        <button id="to1" type="button" style="width:50px; margin-bottom:10px">&nbsp;<&nbsp;</button>
+					</td>
+                    <td> 
+                    	<!--<b>Filter:</b>
+                        <input type="text" id="box2Filter" />
+                        <button type="button" id="box2Clear">X</button>-->
+                        Version {$titlever}
+                        <br /><br>
+                        <select id="box2View" name="box2[]" multiple="multiple" style="height:300px;width:220px;">
+                        	{foreach from=$service2 item=item}
+                                <option value="{$item.id}">{$item.wap_name}</option>
+                            {/foreach}
+                        </select>
+                        <br/>
+                        <span id="box2Counter" class="countLabel"></span>
+                        <select id="box2Storage"></select>
+					</td>
+				</tr>
+                <tr><td colspan="2">
+                    <input type="submit" value="Save All">
+                </td></tr>
+			</table>
+            </form>
+		</div>
+    </div>
+</div>
+
+    {include file='common/tpl_footer.html'}

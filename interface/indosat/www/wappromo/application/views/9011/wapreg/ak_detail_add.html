@@ -1,0 +1,91 @@
+<html>
+  <head>
+    {include file='tpl_head.html'}
+    <script type="text/javascript" src="{$base_url}lib/jquery-1.3.2.min.js"></script>
+    {literal}
+    <script type="text/javascript">
+		$(document).ready(function() {
+			$('#btnAdd').click(function() {
+				var num		= $('.Time').length;
+				var newNum	= new Number(num + 1);
+				
+				var newElem = $('#input' + num).clone().attr('id', 'input' + newNum);
+				
+				$('#input' + num).after(newElem);
+
+				$('#btnDel').attr('disabled','');
+			});
+
+			$('#btnDel').click(function() {
+				var num	= $('.Time').length;
+				$('#input' + num).remove();
+
+				$('#btnAdd').attr('disabled','');
+
+				if (num-1 == 1)
+					$('#btnDel').attr('disabled','disabled');
+			});
+
+			$('#btnDel').attr('disabled','disabled');
+		});
+	</script>{/literal}
+  </head>
+  <body>
+    {include file='tpl_navigation.html'}
+    <div id="wrapper">
+      <div id="content_800">
+        <div id="container"><div id="form">
+        <form action="{$base_url}{$activeShortcode}/wapreg/wapreg_ak_detail/add/{$id}" method="post" name="add">
+          <h3>Insert New AK Schedule</h3>
+          <h6>{$error}</h6><br />
+          <div>
+						<input type="submit" name="submit" value="Submit"><input type="reset" value="Reset">
+					</div><br /><hr /><br />
+          <p><input type="button" id="btnAdd" value="Add" />
+						<input type="button" id="btnDel" value="Remove" />
+					</p>
+          <div id="input1" class="Time">
+          	<p>
+          		Day
+          		 <select name="day[]">
+          			<option value="">----</option>
+          			{foreach from=$day item=day_item key=day_key}
+          			<option value="{$day_key}">{$day_item}</option>
+          			{/foreach}
+          		</select>
+          		From 
+          			<select name="from_hour[]">
+          				<option value="">----</option>
+          				{section name=from_hour start=0 loop=24 step=1}
+  								<option value="{$smarty.section.from_hour.index}">{$smarty.section.from_hour.index}</option>
+									{/section}
+          			</select>
+          			<select name="from_minute[]">
+          				<option value="">----</option>
+          				{section name=from_minute start=0 loop=60 step=15}
+  								<option value="{$smarty.section.from_minute.index}">{$smarty.section.from_minute.index}</option>
+									{/section}
+          			</select>
+          		To
+          			<select name="to_hour[]">
+          				<option value="">----</option>
+          				{section name=to_hour start=0 loop=24 step=1}
+  								<option value="{$smarty.section.to_hour.index}">{$smarty.section.to_hour.index}</option>
+									{/section}
+          			</select>
+          			<select name="to_minute[]">
+          				<option value="">----</option>
+          				{section name=to_minute start=0 loop=60 step=15}
+  								<option value="{$smarty.section.to_minute.index}">{$smarty.section.to_minute.index}</option>
+									{/section}
+          			</select>
+          	</p>
+          </div>
+        </form>
+        </div></div><hr /><br />
+        <b>NOTE:</b><br />
+        - All fields must be filled<br />
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,30 @@
+<html>
+  <head>
+    {include file='tpl_head.html'}
+  </head>
+  <body>
+    {include file='tpl_navigation.html'}
+    <div id="wrapper">
+      <div id="content_800">
+        <div id="container"><div id="form">
+        <form action="{$base_url}9011/belanja/Belanja_9011_Main/add" method="post" name="add">
+          <h3>Insert New Price</h3>
+          <h6>{$error.message}</h6>
+          <p><label for="price">Price</label><input type="text" name="price" value="{$error.price}"></p>
+          {* <p><label for="periode">Periode</label>
+          	<select name="periode">
+          		<option value="">-----</option>
+          		{foreach from=$periode item=item}
+          		<option value="{$item.id}">{$item.name}</option>
+          		{/foreach}
+          	</select>
+          </p> *}
+          <p><input type="submit" name="submit" value="Submit"><input type="reset" value="Reset"></p>
+        </form>
+        </div></div><hr /><br />
+        {*<b>NOTE:</b><br />
+        - If date not supplied, current date will be used<br /> *}
+      </div>
+    </div>
+  </body>
+</html>

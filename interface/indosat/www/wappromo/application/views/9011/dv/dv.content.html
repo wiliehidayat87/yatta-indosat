@@ -1,0 +1,40 @@
+<html>
+  <head>
+    {include file='tpl_head.html'}
+  </head>
+  <body>
+    {include file='tpl_navigation.html'}
+    <div id="wrapper">
+      <div id="content_1000">
+      	<div id="module">:: DV Menu ::</div>
+      	<div id="module"><a href="{$base_url}9011/dv/DV_9011_Main/dv_content">Content</a> | <a href="{$base_url}9011/dv/DV_9011_Main/prizeInfo">Prize</a> | <a href="{$base_url}9011/dv/DV_9011_Main/undian">Pemenang</a></div>
+      	<br />
+      	<div style="font-weight: bold;">Content</div>
+      	<div style="border-bottom:1px solid #666;" class="cititation">Show content that listed on wap dv.</div>
+      	
+      	<div><input type="button" name="add" value="Add Content" onClick="location='{$base_url}9011/dv/DV_9011_Main/add_dv_content'"/> {if isset($msg)}<font color="red">{$msg}</font>{/if}</div>
+      	<div style="margin-top:2px;">
+      	  <div class="headTable clear float-left" style="width:50px;">Sort</div>
+      	  <div class="headTable float-left" style="width:500px;">Message</div>
+      	  <div class="headTable float-left" style="width:150px;">Lastupdate</div>
+      	  <div class="headTable float-left" style="width:80px;">Edit</div>
+      	  <div class="headTable float-left" style="width:80px;">Remove</div>	
+          {foreach from=$pemenang item=item}
+        	{assign var="rowCount" value="`$rowCount+1`"}
+            <div style="margin-top:2px;">
+            	<div class="{if ($rowCount%2)=='1'}bodyTable{else}bodyTable2{/if} clear float-left" style="width:50px;">{$item.sort}</div>
+            	<div class="{if ($rowCount%2)=='1'}bodyTable{else}bodyTable2{/if} float-left" style="width:500px;">{$item.message}</div>
+                <div class="{if ($rowCount%2)=='1'}bodyTable{else}bodyTable2{/if} float-left" style="width:150px; text-align:center">{$item.lastupdate}</div>
+                <div class="{if ($rowCount%2)=='1'}bodyTable{else}bodyTable2{/if} float-left" style="width:80px; text-align:center">
+                	<a href="{$base_url}9011/dv/DV_9011_Main/edit_dv_content/id/{$item.id}">Edit</a>
+                </div>
+                <div class="{if ($rowCount%2)=='1'}bodyTable{else}bodyTable2{/if} float-left" style="width:80px; text-align:center">
+                    <a href="{$base_url}9011/dv/DV_9011_Main/delete_dv_content/id/{$item.id}" onClick="return confirm('Are you sure to delete this content?');">Delete</a>
+                </div>
+            <div>
+        {/foreach}	
+      	<div>	
+      </div>
+    </div>
+  </body>
+</html>

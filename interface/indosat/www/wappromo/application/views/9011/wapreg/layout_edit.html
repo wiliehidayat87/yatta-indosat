@@ -1,0 +1,43 @@
+<html>
+    <head>
+        {include file='tpl_head.html'}
+        {include file='tpl_head_tinymce.html'}
+    </head>
+
+  <body>
+    {include file='tpl_navigation.html'}
+    <div id="wrapper">
+      <div id="content_800">
+        <div id="container"><div id="form">
+        <form action="{$base_url}{$activeShortcode}/wapreg/wapreg_layout/edit/{$wapsite_id}/{$component_id}" enctype="multipart/form-data" method="post" name="add">
+          <h3>Edit Wap Component</h3>
+          <h6>{$error}</h6><br />
+          <p><label for="name">Comp. Name *</label><input type="text" name="name" value="{$name}"></p>
+          <p><label for="type">Type *</label>
+          		<select name="type">
+          			<option value="">----</option>
+          			{foreach from=$type_component item=item_component}
+          			<option value="{$item_component}" {if $type eq $item_component}selected="selected"{/if}>{$item_component|upper}</option>
+          			{/foreach}
+          		</select>
+          </p>
+          <p><label for="value">Value *</label><textarea name="value" class="tinymce">{$value}</textarea></p>
+          <p>
+          	<label for="is_link">Clickable</label>
+          		<select name="is_link">
+          		<option value="">-----</option>
+          		{foreach from=$type_link item=item_link}
+          		<option value="{$item_link}" {if $is_link eq $item_link}selected="selected"{/if}>{$item_link}</option>
+          		{/foreach}
+          	</select>
+          </p>
+          <p><label for="component_image">Image</label><input type="file" name="component_image"></p>     
+          <p><input type="submit" name="submit" value="Submit"><input type="reset" value="Reset"></p>
+        </form>
+        </div></div><hr /><br />
+        <b>NOTE:</b><br />
+        - Field with asterix (*) must be filled<br />
+      </div>
+    </div>
+  </body>
+</html>

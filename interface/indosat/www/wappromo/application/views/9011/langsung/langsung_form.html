@@ -1,0 +1,66 @@
+<html>
+    <head>{include file='tpl_head.html'}</head>
+
+    <body>
+        {include file='tpl_navigation.html'}
+        <div id="wrapper">
+            <div id="content_1000">
+                <div style="font-family:Verdana, Geneva, sans-serif; font-size:10pt; margin-bottom:20px; font-weight:bold;">
+	            	<a style="color:#06F; text-decoration:underline;" href="{$service_url}">Langsung Harian</a> | 
+    	            <a style="color:#06F; text-decoration:underline;" href="{$service_url}grand_prize">Langsung Grand Prize</a>
+                </div>
+                <hr style="border:5px dashed #C6C6C6; margin-bottom:20px;">
+                <div style="font-weight: bold;font-size:10pt; color:#858585; margin-bottom:20px;">Langsung Harian - Add</div>
+                
+                {if $error}<div class="error">{$error}</div>{/if}
+                
+                <form method="post" action="" onSubmit="return validateForm(this);">
+                <table width="100%" class="list" cellpadding="3" cellspacing="0" border="0">
+               	<tr>
+               		<th align="right" width="10%">Order Number</th>
+               		<td><input type="text" name="order" id="order" value="{$order}" size="3" /></td>
+               	</tr>
+               	<tr>
+               		<th align="right" valign="top">SMS Content</th>
+               		<td><input type="text" name="content" id="content" value="{$content}" size="80" maxlength="95" /></td>
+               	</tr>
+               	<tr>
+               		<td>&nbsp;</td>
+               		<td>
+                    <input type="submit" name="submit" id="submit" value="Save" />
+                    <input type="reset" name="reset" id="reset" value="Reset" />
+                    <input type="button" value="Cancel" onClick="javascript: history.go(-1);" />
+                    </td>
+               	</tr>
+                </table>
+                </form>
+            </div>
+        </div>
+        
+        <script language="javascript">
+        {literal}
+        function validateForm(form){
+        	var error = '';
+        	var to_focus = null;
+
+        	if (form.order.value.trim() == '') {
+        		error += "- Order number can not be blank.\n";
+        		if (to_focus == null) to_focus = form.order;
+        	}
+        	if (form.content.value.trim() == '') {
+        		error += "- SMS content can not be blank.";
+        		if (to_focus == null) to_focus = form.content;
+        	}
+
+        	if (error.length > 0) {
+        		alert(error);
+        		to_focus.focus();
+        		return false;
+        	}
+
+        	return true;
+        }
+        {/literal}
+        </script>
+    </body>
+</html>

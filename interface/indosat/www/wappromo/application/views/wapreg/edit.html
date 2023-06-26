@@ -1,0 +1,134 @@
+<html>
+    <head>
+        {include file='tpl_head.html'}
+        {include file='tpl_head_tinymce.html'}
+        <script type="text/javascript">
+            var base_url  = "{$base_url}",
+                shortcode = "{$activeShortcode}";
+                
+            {literal}
+            $(function() {
+                $(".delete-image").click(function() {
+                    var datapost = "filename=" + $(this).attr('alt'),
+                        url      = base_url + shortcode + "/wapreg/wapreg_home/delete_image";
+                    
+                    $.ajax({
+                        async: "true",
+                        data: datapost,
+                        dataType: "json",
+                        url: url,
+                        type: 'POST',
+                        success: function(data) {
+                            alert(data.message);
+
+                            return false;
+                        }
+                    });
+                });
+            });
+            {/literal}
+        </script>
+    </head>
+
+    <body>
+    {include file='tpl_navigation.html'}
+    <div id="wrapper">
+      <div id="content_800">
+        <div id="container"><div id="form">
+        <form action="{$base_url}{$activeShortcode}/wapreg/wapreg_home/edit/{$id}" enctype="multipart/form-data" method="post" name="edit">
+          <h3>Edit Wap Registration</h3>
+          <h6>{$error}</h6><br />
+          <p><label for="wap_name">Wap Name *</label><input type="text" name="wap_name" value="{$wap_name}"></p>
+          <p><label for="service">Service *</label><input type="text" name="service" value="{$service}"></p>
+          <p><label for="wap_title">Wap Title *</label><input type="text" name="wap_title" value="{$wap_title}"></p>
+          <p><label for="autoreg">Auto Reg</label><input type="text" name="autoreg" value="{$autoreg}"></p>
+          <p><label for="ak_id">AK Schedule</label>
+          	<select name="ak_id">
+          		<option value="">-----</option>
+          		{foreach from=$ak item=ak_item}
+          		<option value="{$ak_item.id}"{if $ak_id eq $ak_item.id} selected="selected"{/if}>{$ak_item.name}</option>
+          		{/foreach}
+          	</select>
+          </p>
+          <p>
+          	<label for="homepage">Homepage</label>
+          	<select name="homepage">
+          		<option value="">-----</option>
+          		{foreach from=$type_array item=item key=type_key}
+          		<option value="{$type_key}"{if $homepage eq $type_key} selected="selected"{/if}>{$item}</option>
+          		{/foreach}
+          	</select>
+          </p>
+          <p>
+          	<label for="confirmation_page">Conf. Page</label>
+          		<select name="confirmation_page">
+          		<option value="">-----</option>
+          		{foreach from=$type_array item=item key=type_key}
+          		<option value="{$type_key}" {if $confirmation_page eq $type_key}selected="selected"{/if}>{$item}</option>
+          		{/foreach}
+          	</select>
+          </p>
+          <p>
+          	<label for="always_enable">Always Enable</label>
+          		<select name="always_enable">
+          			<option value="">------</option>
+          			{foreach from=$t item=item key=key}
+          			<option value="{$key}"{if $always_enable eq $key} selected="selected"{/if}>{$item}</option>
+          			{/foreach}
+          		</select>
+          </p>
+          		<p>
+                    <label for="java_setting">Java Setting</label>
+                    <select name="java_setting">
+                        <option value="on">On</option>
+                        <option value="off">Off</option>
+                        <option value="default">Default</option>
+                    </select>
+				</p>
+          <p>
+              <label for="confirmation_text">Conf. Text</label>
+              <textarea name="confirmation_text" class="tinymce">{$confirmation_text}</textarea>
+          </p>
+          <p>
+              <label for="unavailable_text">Unavailable Text *</label>
+              <textarea name="unavailable_text" class="tinymce">{$unavailable_text}</textarea>
+          </p>
+          <p>
+              <label for="success_text">Success Text *</label>
+              <textarea name="success_text" class="tinymce">{$success_text}</textarea>
+          </p>
+          <p>
+              <label for="service_promo">URL Promo</label>
+              <input type="text" name="service_promo" value="{$service_promo}">
+          </p>
+          <p>
+              <label for="service_promo_text">Service Promo Text</label>
+              <textarea name="service_promo_text" class="tinymce">{$service_promo_text}</textarea>
+          </p>
+            <p><label for="xts_token">XTS Token *</label><input type="text" name="xts_token" value="{$xts_token}"></p>
+            <hr /><br />
+            <p>
+                <label for="header_image">Header Image</label><input type="file" name="header_image" />
+                <input type="button" name="delete-header-image" id="delete-header-image" class="delete-image" value="Delete" alt="{$wap_name}_header" />
+            </p>
+            <p>
+                <label for="footer_image">Footer Image</label><input type="file" name="footer_image" />
+                <input type="button" name="delete-footer-image" id="delete-footer-image" class="delete-image" value="Delete" alt="{$wap_name}_footer" />
+            </p>
+            <p>
+                <label for="promo_image">Promo Image</label><input type="file" name="promo_image" />
+                <input type="button" name="delete-promo-image" id="delete-promo-image" class="delete-image" value="Delete" alt="{$wap_name}_promo" />
+            </p>
+            <p>
+                <label for="bg_image">Background Image</label><input type="file" name="bg_image" />
+                <input type="button" name="delete-background-image" id="delete-background-image" class="delete-image" value="Delete" alt="background_{$wap_name}"  />
+            </p>
+            <p><input type="submit" name="submit" value="Submit"><input type="reset" value="Reset"></p>
+        </form>
+        </div></div><hr /><br />
+        <b>NOTE:</b><br />
+        - Field with asterix (*) must be filled<br />
+      </div>
+    </div>
+  </body>
+</html>

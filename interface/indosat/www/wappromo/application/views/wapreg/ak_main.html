@@ -1,0 +1,70 @@
+{include file='common/tpl_header.html'}
+<style type="text/css">
+<!--
+{literal}
+a.content_submenu{
+    padding:2px 4px 2px 4px; border:1px solid #929292; background-color: #C4C4C4; text-decoration:none; margin:2px; color:#2D2D2D;
+}
+a.content_submenu:hover{
+    background-color: #D4D4D4;
+}
+div.head_list{
+    float:left; clear:right; background-color:#DCDCDC; border-top:2px solid #9A9A9A; border-bottom:1px solid #9A9A9A;
+    padding: 3px 5px 3px 5px; font-weight:bold;
+}
+div.content_list{
+    float:left; clear:right; background-color:none; border-bottom:1px solid #9A9A9A;
+    padding: 2px 5px 2px 5px; 
+}
+div.rows_list{
+    clear:both; margin: 0px 0px 0px 15px;
+}
+div.w1{
+    width:150px;
+}
+div.w2{
+    width:250px;
+}
+div.w3{
+    width:400px;
+}
+{/literal}
+-->
+</style>
+    <div id="content" class="clearfix">
+      <div id="maincontent">
+      	<div class="pageTitle"><span>:: Wap Registration AK Schedule ::</span></div>
+        <div class="actionbar">
+            <div class="clearfix fl">
+                <a href="{$base_url}wap/subscription/" class="btnAdd"><span>Subscription&nbsp;</span></a>
+                <a href="{$base_url}wapreg/wapreg_ak" class="btnAdd"><span>AK Schedule&nbsp;</span></a><br/>
+            <div style="border-bottom:1px solid #666; margin-bottom:2px;">Show wap registration AK Schedule Template</div>
+                <a class="content_submenu" href="{$base_url}wapreg/wapreg_ak/add">Add new</a>
+            </div>
+        </div>
+        {if count($result) gt 0 && $result.0.id != ''}
+            <div class="width_900">
+                <div class="rows_list">
+                  <div class="head_list w2">Name</div>
+                  <div class="head_list w3">Description</div>
+                  <div class="head_list w2">&nbsp;</div>
+                </div>
+                {foreach from=$result item=item}
+                <div class="rows_list">
+                    <div class="content_list w2">{$item.name}</div>
+                    <div class="content_list w3">{$item.description}</div>
+                      <div class="content_list w2 menulink">
+                        <a href="{$base_url}wapreg/wapreg_ak/edit/{$item.id}">Edit</a> | 
+                        <a href="{$base_url}wapreg/wapreg_ak/delete/{$item.id}">Delete</a> |
+                        <a href="{$base_url}wapreg/wapreg_ak_detail/index/{$item.id}">View Time</a>
+                      </div>
+                </div>
+                {/foreach}
+            {else}
+                <br /><br />No data yet
+            {/if}
+          </div>
+      </div>
+    </div>
+
+{include file='common/tpl_footer.html'}

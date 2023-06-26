@@ -1,0 +1,89 @@
+{include file='common/tpl_header.html'}
+
+<script src="{$base_url}assets/js/module/wap/content.js" type="text/javascript"></script>
+
+<div id="content" class="clearfix">
+    <div id="maincontent">
+        <div class="pageTitle">
+            <span>Wap Contents</span>
+        </div>
+
+        <div class="actionbar">
+            <div class="clearfix fl">
+                <span><a id="btnOpenPanel" class="btnAdd"><span>Create New Content&nbsp;</span></a></span>&nbsp;&nbsp;
+            </div>
+            <div class="search-area">
+                <form name="search-form" id="search-form">
+                    <input type="text" name="search-field" id="search-field" class="search-field" />
+                    <input type="submit" name="search-button" id="search-button" class="search-button" value="&nbsp;" />
+                </form>
+            </div>
+            <div class="cb"></div>
+            <div id="loadContainer" class="loadContainer closePanel">
+                <div class="form-loader">Please wait...</div>
+                <form name="wap-content-form" id="wap-content-form">
+                    <div class="verticalContainer">
+                        <p><label for="txt-site">Site Name *</label>
+                            {$site}
+                            <span id="inf-site"></span>
+                        </p>
+                        <p><label for="txt-code">Code *</label>
+                            {$code}
+                            <span id="inf-code"></span>
+                        </p>
+                        <p><label for="txt-price">Price *</label>
+                            <input type="text" name="txt-price" id="txt-price" class="inputtext-1" value="" maxlength="20" />
+                            <span id="inf-price"></span>
+                        </p>
+                        <div id="sort">
+                        <p><label for="txt-sort">Sort *</label>
+                            <input type="text" name="txt-sort" id="txt-sort" class="inputtext-1" value="" maxlength="11" />
+                            <span id="inf-sort"></span>
+                        </p>
+                        </div>
+                    </div>
+                    <div class="cb"></div>
+                    <p class="submit-area">
+                        <input type="submit" name="submit" id="submit" class="button" value="Save" />&nbsp;&nbsp;
+                        <input type="button" name="btnClosePanel" id="btnClosePanel" class="button" value="Close" />
+                        
+                    </p>
+                </form>
+            </div>
+        </div>
+
+        <div class="table-list-area">
+            <div class="ajax-loader">Loading...</div>
+            <table id="content-list-table" class="datagrid2" sortable="sortable" width="100%">
+                <thead>
+                    <tr>
+                        <th width="25%">Site Name</th>
+                        <th width="25%">Content Name</th>
+                        <th width="10%">Code</th>
+                        <th width="15%">Price</th>
+                        <th width="10%">Sort</th>
+                        <th width="25">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody></tbody>
+
+                <tfoot>
+                    <tr>
+                        <td colspan="6">
+                            <div id="pagination" class="fl">
+                                Page: <span id="paging"></span>
+                            </div>
+                            <div id="pagination-info" class="fr">
+                                <span id="from" class="fwb">0</span> - <span id="to" class="fwb">0</span> from <span id="total" class="fwb">0</span>
+                            </div>
+                            <div class="cb"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+{include file='common/tpl_footer.html'}

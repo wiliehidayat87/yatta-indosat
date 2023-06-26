@@ -1,0 +1,109 @@
+<?php
+
+class indosat_mt_processor_text extends default_mt_processor_text {
+
+    private static $instance;
+
+    private function __construct() {
+        
+    }
+
+    public static function getInstance() {
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "Start"));
+
+        if (!self::$instance) {
+            self::$instance = new self ();
+        }
+        return self::$instance;
+    }
+
+    public function saveToQueue($mt_data) {
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "Start : " . serialize($mt_data)));
+
+       if ($mt_data->charging->messageType == 'mtpush' || (!isset($mt_data->mo->msgId) && empty($mt_data->mo->msgId)) )
+        {
+            if (empty($mt_data->msgId)) $mt_data->msgId =  date("YmdHis") . str_replace('.', '', microtime(true));
+        }
+        // Otherwise, take from MO
+        else
+            $mt_data->msgId = $mt_data->mo->msgId;
+return $this->process($mt_data);
+}
+
+       public function process($mt) {
+
+	$this->send_mt($mt);
+}
+
+    public function send_mt($mt) {
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "Start" . $slot));
+
+        $loader_config = loader_config::getInstance();
+        $configMT = $loader_config->getConfig('mt');
+	$configSDM = $loader_config->getConfig('sdmcode');
+        $profile = 'text';
+        
+        //print_r($queue);
+        
+            
+            //echo('start-----');
+            //print_r($mt);
+            //http://202.152.162.221:55000/?uid=%UID%&pwd=%PWD%&serviceid=%SID%&msisdn=%MSISDN%&sms=%SMS%&transid=%TRXID%&smstype=0
+            //?uid={UID}&pwd={PWD}&serviceid=%s&msisdn=%s&sms=%s&transid=%s&smstype=0
+            
+            //var_dump($queuePop, $mt);
+            
+            $param = 'uid=' . $mt->charging->username;
+            $param .= '&pwd=' . $mt->charging->password;
+            $param .= '&serviceid=' . $mt->charging->chargingId;
+            $param .= '&msisdn=' . $mt->msisdn;
+            $param .= '&sms=' . urlencode($mt->msgData);
+            $param .= '&transid=' . $mt->msgId;
+            $param .= '&smstype=0';
+
+	    if(isset($configSDM->sdm['SPMSERVICE'][$mt->service]))
+	    {
+		$sdmcode=$configSDM->sdm['SPMSERVICE'][$mt->service];
+		$param .= '&sdmcode='. $sdmcode;
+	    }
+
+	    $url = $configMT->profile [$profile] ['sendUrl'] [0];
+          
+            $hit = http_request::get($url, $param, $configMT->profile [$profile] ['SendTimeOut']);
+	    $log->write ( array ('level' => 'debug', 'message' => "MT Url:" . $url . '?' . $param . ', Result:' . $hit ) );
+
+            $_hit = trim($hit);
+            $smsc_response = simplexml_load_string($_hit);
+            
+            $configDr = loader_config::getInstance()->getConfig('dr');
+            if ($configDr->synchrounous === TRUE) {
+                if ($_hit == 1) {
+                    $mt->msgStatus = 'DELIVERED';
+                } else {
+                    $mt->msgStatus = 'FAILED';
+                }
+                $mt->closeReason = $_hit;
+            } else {
+            	if ($smsc_response->STATUS == 0) {
+			//change from $mt->msgStatus = 'DELIVERED'; because when we don't get DR for spesific message, message will be count as revenue, make like PROXL behaviour 
+            		$mt->msgStatus = '';
+            	} else {
+            		$mt->msgStatus = 'FAILED';
+            	}
+            	$status = $smsc_response->STATUS;
+            	$mt->closeReason = $status."|".$configDr->responseACK[(int)$status];
+            	//var_dump($configDr->responseACK[(int)$status], $smsc_response->STATUS, $mt->closeReason);
+            }
+            
+            //var_dump($url, $param, $_hit);
+
+            
+            $mt->msgLastStatus = 'DELIVERED';
+            $this->saveMTToTransact($mt);
+        return true;
+    }
+
+}

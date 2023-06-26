@@ -1,0 +1,73 @@
+<?php
+
+class config_logging {
+
+    public $timeDigit = 8;
+    
+    public $lineFormat = "{uniqueId} {level} {datetime} {exectime} {class} {function} {message} {response}";
+    public $loglevel = 2; //1; //set to 9 to disable debug level logging
+    
+	public $profile = array(
+        'default' => array(
+            'path' => '/app/xmp2012/logs/indosat/default',
+            'type' => 'file',
+            'filename' => 'default'
+        ),
+        'mo_receiver' => array(
+            'path' => '/app/xmp2012/logs/indosat/mo_receiver',
+            'type' => 'file',
+            'filename' => 'mo_receiver'
+        ),
+        'mo_processor' => array(
+            'path' => '/app/xmp2012/logs/indosat/mo_processor',
+            'type' => 'file',
+            'filename' => 'mo_processor'
+        ),
+        'mt_processor' => array(
+            'path' => '/app/xmp2012/logs/indosat/mt_processor',
+            'type' => 'file',
+            'filename' => 'mt_processor'
+        ),
+        'mo_subscriber' => array(
+            'path' => '/app/xmp2012/logs/indosat/mo_subscriber',
+            'type' => 'file',
+            'filename' => 'mo_subscriber'
+        ),
+        'broadcast' => array(
+            'path' => '/app/xmp2012/logs/indosat/broadcast',
+            'type' => 'file',
+            'filename' => 'broadcast'
+        ),
+        'call_center' => array(
+            'path' => '/app/xmp2012/logs/indosat/callcenter',
+            'type' => 'file',
+            'filename' => 'callcenter'
+        ),
+        'dr_receiver' => array(
+            'path' => '/app/xmp2012/logs/indosat/dr_receiver',
+            'type' => 'file',
+            'filename' => 'dr_receiver'
+        ),
+        'dr_processor' => array(
+            'path' => '/app/xmp2012/logs/indosat/dr_processor',
+            'type' => 'file',
+            'filename' => 'dr_processor'
+        ),
+        'dr_updater' => array(
+            'path' => '/app/xmp2012/logs/indosat/dr_updater',
+            'type' => 'file',
+            'filename' => 'dr_updater'
+        ),
+	'retry_processor' => array(
+            'path' => '/app/xmp2012/logs/indosat/retry_processor',
+            'type' => 'file',
+            'filename' => 'retry_processor'
+        ),
+        'cmp_processor' => array(
+            'path' => '/app/xmp2012/logs/indosat/cmp_processor',
+            'type' => 'file',
+            'filename' => 'cmp_processor'
+        )
+    );
+
+}

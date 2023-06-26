@@ -1,0 +1,84 @@
+<html>
+    <head>
+        {include file='tpl_head.html'}
+        <style type="text/css">
+            {literal}
+            .tal { text-align: left; }
+            table tbody td {
+                font-family: Arial,Helvetica,sans-serif;
+                font-size: 12px;
+                padding: 2px 4px;
+            }
+            .nrow { background-color: #e5e5e5; }
+            {/literal}
+        </style>
+        <script type="text/javascript">
+            var base_url  = "{$base_url}",
+                shortcode = "{$activeShortcode}";
+                
+            {literal}
+            $(document).ready(function() {
+                search_keyword('');
+
+                $("#ppi-polling-form").submit(function() {
+                    search_keyword('');
+
+                    return false;
+                });
+            });
+
+            function search_keyword(url) {
+                if (url == '')
+                    url = base_url + shortcode + "/ppi/ppi_home/ajaxGetPPIList";
+
+                $.ajax({
+                    async: "false",
+                    data: "search=" + $("#txt-search").val(),
+                    dataType: "json",
+                    url: url,
+                    type: 'POST',
+                    success: function(data) {
+                        $("#ppi-polling-table tbody").html(data.result);
+                        //$("#ppi-polling-table tfoot #paging").html(data.paging);
+                        //$("#ppi-polling-table tfoot #from").html(data.from);
+                        //$("#ppi-polling-table tfoot #to").html(data.to);
+                        //$("#ppi-polling-table tfoot #total").html(data.total);
+
+                        return false;
+                    }
+                });
+            }
+            {/literal}
+        </script>
+    </head>
+
+    <body>
+        {include file='tpl_navigation.html'}
+        <div id="wrapper">
+            <div id="content_1000">
+                <div id="module">:: Polling Putri Pariwisata Indonesia ::</div>
+                <br />
+                <div style="font-weight: bold;">Polling PPI</div>
+                <div style="border-bottom:1px solid #666;" class="cititation">Show Polling PPI list</div>
+                <br />
+                <form name="ppi-polling-form" id="ppi-polling-form">
+                    Search Keywords : <input type="text" name="txt-search" id="txt-search" />
+                    <input type="submit" name="submit" value="Show" />
+                </form>
+
+                <table id="ppi-polling-table" cellpadding="0" cellspacing="0" style="border: 0; width: 100%;">
+                    <thead>
+                        <tr>
+                            <th class="headTable tal" width="10%">No.</th>
+                            <th class="headTable tal" width="50%">Daerah Pemilihan</th>
+                            <th class="headTable tal" width="20%">Jumlah Polling</th>
+                            <th class="headTable tal" width="20%">Persentase</th>
+                        </tr>
+                    </thead>
+
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

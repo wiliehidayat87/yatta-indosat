@@ -1,0 +1,60 @@
+<?php
+
+class config_database {
+
+    public $profile = array(
+        'connDatabase1' =>
+        array(
+            'username' => 'xmp',
+            'password' => 'pu5k0mxdj.',
+            'host' => '192.168.1.34',
+            'database' => 'xmp',
+            'driver' => 'mysql'
+        ),
+         'connDatabase2' =>
+        array(
+            'username' => 'root',
+            'password' => '',
+            'host' => '192.168.1.34',
+            'database' => 'xmp_bak',
+            'driver' => 'mysql'
+        ),
+        'connBroadcast' =>
+        array(
+            'username' => 'dbpush',
+            'password' => 'pu5k0mxdj.',
+            'host' => '192.168.1.34',
+            'database' => 'dbpush',
+            'driver' => 'mysql'
+        ),
+        'reports' =>
+        array(
+            'username' => 'reports',
+            'password' => 'pu5k0mxdj.',
+            'host' => '192.168.1.34',
+            'database' => 'reports',
+            'driver' => 'mysql'
+        ),
+        'connWap' =>
+        array(
+            'username' => 'wap',
+            'password' => 'pu5k0mxdj.',
+            'host' => '192.168.1.34',
+            'database' => 'wap',
+            'driver' => 'mysql'
+        ),
+		 'connDr' =>
+        array(
+            'username' => 'cdr',
+            'password' => 'pu5k0mxdj.',
+            'host' => '192.168.1.34',
+            'database' => 'cdr',
+            'driver' => 'mysql'
+        ),
+        'connHadoop' =>
+        array(
+            'driver' => 'hadoop'
+        )
+    );
+
+}

@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+
+		<title>Login XMP - Service Creator</title>
+
+        <link rel="stylesheet" href="{$base_url}assets/css/login.css" type="text/css" />
+	</head>
+    
+	<body>
+        <div id="container">
+            <div id="panel-login">
+                <div class="wrapper">
+                    <div class="formwrapper">
+                        <form action="" method="post">
+                            {if $errormessage neq ""}
+                            <div class="errormsg">{$errormessage}</div>
+                            {else}
+                            <br>
+                            {/if}
+                            <p>
+                                <label id="icon-username">Username</label>
+                                <input type="text" class="textfield" name="username" />
+                            </p>
+                            <p>
+                                <label id="icon-password">Password</label>
+                                <input type="password" class="textfield" name="password" />
+                            </p>
+                            <p>
+                               <input type="submit" value="Login" name="login" id="btn-login" />
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div id="footer"> Copyright &copy; 2011 LinkIT 360&deg; All Rights Reserved. </div>
+        </div>
+    </body>
+</html>

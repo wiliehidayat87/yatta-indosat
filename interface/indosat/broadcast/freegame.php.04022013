@@ -1,0 +1,147 @@
+<?php
+
+class proxl_broadcast_freegame extends default_broadcast_wappush {
+
+    /**
+     * @param $broadcast_data
+     */
+    public function push(broadcast_data $broadcast_data) {
+    	
+        if ($broadcast_data->contentSelect == "custom") {
+            $custombase = new default_broadcast_custombase($broadcast_data);
+            return $custombase->push($broadcast_data);
+        }
+
+        $content_manager = content_manager::getInstance();
+        $broadcast_content = $content_manager->getBroadcastContent($broadcast_data);
+
+        if ($broadcast_content == false) {
+            return false;
+        }
+
+        $model_operator = loader_model::getInstance()->load('operator', 'connDatabase1');
+        $operator_name = $broadcast_data->operator;
+        $operator_id = $model_operator->getOperatorId($operator_name);
+
+        $users = $this->populateUser($broadcast_data);
+
+        if ($users !== false) {
+            $pushproject_data = new model_data_pushproject();
+            $pushproject_data->sid = $broadcast_data->id;
+            $pushproject_data->src = $broadcast_data->adn;
+            $pushproject_data->oprid = $operator_id;
+            $pushproject_data->service = $broadcast_data->service;
+            $pushproject_data->subject = strtoupper("MT;PUSH;SMS;DAILYPUSH");
+            $pushproject_data->message = $broadcast_content->content;
+            $pushproject_data->price = $broadcast_data->price;
+
+            $mPushProject = loader_model::getInstance()->load('pushproject', 'connBroadcast');
+            $pid = $mPushProject->save($pushproject_data);
+
+            $amount = 0;
+            foreach ($users as $users_data) {
+                $pushbuffer_data = new model_data_pushbuffer ();
+                $pushbuffer_data->pid = $pid;
+                $pushbuffer_data->src = $broadcast_data->adn;
+                $pushbuffer_data->dest = $users_data ['msisdn'];
+                $pushbuffer_data->oprid = $operator_id;
+                $pushbuffer_data->service = $broadcast_data->service;
+                $pushbuffer_data->subject = strtoupper("MT;PUSH;SMS;DAILYPUSH");
+                $dlSession = $this->rand_string();
+                $pushbuffer_data->message = $broadcast_content->content.'&s='.$dlSession;
+                $pushbuffer_data->price = $broadcast_data->price;
+                $pushbuffer_data->stat = "ON_QUEUE";
+                $pushbuffer_data->tid = date("YmdHis") . str_replace('.', '', microtime(true));
+
+	            // save session 
+	            $wap_session = new model_data_wapsession();
+	            
+	            $wap_session->token = $dlSession;
+	            $wap_session->siteId = 1;
+	            $wap_session->service = $broadcast_data->service;
+	            $wap_session->operator = $operator_name;
+	            $wap_session->msisdn = $users_data['msisdn'];
+	            $wap_session->status = 1;
+	            $wap_session->initialcharge = 'not charge';
+	            $wap_session->limit = 4;
+	            $wap_session->dateCreated = date("Y-m-d H:i:s");
+	            $wap_session->dateModified = date("Y-m-d H:i:s");
+	            
+	            $model_freegame = loader_model::getInstance ()->load('freegame', 'connWap');
+				$model_freegame->saveDLSession($wap_session);
+				// save session
+                
+                $mt_data = $this->createMT($pushbuffer_data, $broadcast_data);
+                $pushbuffer_data->obj = serialize($mt_data);
+
+                $mPushBuffer = loader_model::getInstance()->load('pushbuffer', 'connBroadcast');
+
+                if ($mPushBuffer->save($pushbuffer_data)) {
+                    $amount++;
+                }
+            }
+
+            $pushproject_data = new model_data_pushproject();
+            $pushproject_data->pid = $pid;
+            $pushproject_data->amount = $amount;
+            $mPushProject->update($pushproject_data);
+        }
+
+        return true;
+    	
+	 
+    }
+
+    /**
+     * @param $broadcast_data
+     */
+    public function populateUser(broadcast_data $broadcast_data) {
+        $log = manager_logging::getInstance ();
+        $log->write(array('level' => 'debug', 'message' => "Start"));
+
+        $model_user = loader_model::getInstance ()->load('user', 'connDatabase1');
+        return $model_user->populateUser($broadcast_data);
+    }
+
+    /**
+     * @param $broadcast_data
+     * @param $pushbuffer_data
+     */
+   public function createMT(model_data_pushbuffer $pushbuffer_data, broadcast_data $broadcast_data) {
+        $log = manager_logging::getInstance();
+
+        $log->write(array('level' => 'debug', 'message' => "Start"));
+
+        $mt_data = loader_data::get('mt');
+        $mt_data->inReply = NULL;
+        $mt_data->msgId = date("YmdHis") . str_replace('.', '', microtime(true));
+        $mt_data->adn = $pushbuffer_data->src;
+        $mt_data->msgData = $pushbuffer_data->message;
+        $mt_data->price = $pushbuffer_data->price;
+        $mt_data->operatorId = $pushbuffer_data->oprid;
+        $mt_data->channel = "sms";
+        $mt_data->service = $pushbuffer_data->service;
+        $mt_data->subject = $pushbuffer_data->subject;
+        $mt_data->operatorName = $broadcast_data->operator;
+        $mt_data->msisdn = $pushbuffer_data->dest;
+        $mt_data->type = "dailypush";
+
+        return $mt_data;
+    }
+
+    /**
+     * @param $str_length, default = 6;
+     */
+	protected function rand_string( $length=6 ) {
+		$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";	
+	
+		$str = '';
+		$size = strlen( $chars );
+		for( $i = 0; $i < $length; $i++ ) {
+			$str .= $chars[ rand( 0, $size - 1 ) ];
+		}
+	
+		return $str;
+	}    
+}
+

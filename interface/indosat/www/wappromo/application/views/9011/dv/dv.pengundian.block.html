@@ -1,0 +1,225 @@
+<html>
+<head>
+	{include file='tpl_head.html'}
+    <script  type="text/javascript" src="{$base_url}lib/jquery/jquery.1.4.2.min.js"></script> 
+    <link href="{$base_url}css/jquery-ui-1.8.5.custom.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="{$base_url}lib/jquery-ui-1.8.5.custom.min.js"></script>
+	<script type="text/javascript">
+	var base_url = "{$base_url}";
+	{literal}
+	$(function() 
+	{
+		$( "#tabs" ).tabs();
+		$( "button").button();
+		$( "#dialog" ).hide();
+		if ($( "#type" ).val != '')
+		{
+			get_prize(document.getElementById('type').value);
+		}
+
+	});
+
+	function get_prize(prize)
+	{
+		$.get(base_url+"9011/dv/DV_9011_Main/getPrize/"+prize,
+		  {},
+		  function(data){
+			$( "#prize" ).empty();
+			$( "#prize" ).append(data);
+		    	$( "#prize" ).show();
+		  }
+		);
+	}
+	
+	function func(){
+		var awal=document.getElementById('thn_mulai').value+"-"+document.getElementById('bln_mulai').value+"-"+document.getElementById('tgl_mulai').value+" "+document.getElementById('jam_mulai').value+":"+document.getElementById('menit_mulai').value+":00";
+		var akhir=document.getElementById('thn_akhir').value+"-"+document.getElementById('bln_akhir').value+"-"+document.getElementById('tgl_akhir').value+" "+document.getElementById('jam_akhir').value+":"+document.getElementById('menit_akhir').value+":00";
+		
+		$.getJSON(base_url+"9011/dv/DV_9011_Main/undi_block/prize/"+document.getElementById('typeList').value+"/awal/"+awal+"/akhir/"+akhir,
+			{},
+		  	function(json){
+				if(json[0].id=='NODATA'){
+					$("#dialog").empty();
+					$("#dialog").append("<div style='width:100%;text-align:center;'><h1>NO DATA</h1></div>");
+				}else{
+					$("#dialog").empty();
+					$("#dialog").append("<div style='width:100%;text-align:center;'><h1>The Winner is : </h1>");
+					$("#dialog").append("<h2>MSISDN : "+json[0].msisdn+"</h2>");
+					$("#dialog").append("<h2>POIN : "+json[0].pin+"</h2>");
+					$("#dialog").append("</div>");
+				}
+		  	}
+		);
+		
+		/*$.get(base_url+"9011/dv/DV_9011_Main/undi_block/prize/"+document.getElementById('typeList').value+"/awal/"+awal+"/akhir/"+akhir,
+			{},
+			function(data){
+				alert(data);
+			}
+		);*/
+	}
+	
+	function funcDelay(undi){
+		setTimeout("func()", 5000);
+	}
+	
+	function nongol(){ 
+		$( "#dialog" ).dialog({
+			draggable:false,
+			modal:true,
+			position:'center',
+			resizable:false,
+			width:400,
+			open: function(event, ui) {
+				funcDelay();
+			},
+			close: function(event, ui) {
+				location.href=base_url+"9011/dv/DV_9011_Main/pengundian_block";
+			}
+		});
+	}
+	
+	function do_undi(){
+		if(document.getElementById('type').value == 0)
+		{
+			alert("Select type first");
+			return false;
+		}
+		else if(document.getElementById('typeList').value == 0)
+		{
+			alert("Select prize first");
+			return false;
+		}
+		else	
+		{
+			nongol();
+		}
+		
+	}
+	
+	function do_reset(){
+		$.get(
+			"reset.php", 
+			function(data){
+				
+			}
+		);
+	}
+	{/literal}
+	</script>
+</head>
+<body>
+{include file='tpl_navigation.html'}
+<div id="wrapper">
+	<div id="content_1000">
+    
+    	<div id="dialog" title="Pengundian" style="font-family:Verdana, Geneva, sans-serif; font-size:9pt; text-align:center; padding-top:100px; padding-bottom:100px;">
+            <img src="{$base_url}images/load.gif" width="100" height="100">
+            <br><br><br>
+            <marquee direction="left" behavior="scroll" truespeed scrollamount="5" width="200">Don't Close this Window Until Progress Finished.</marquee>
+        </div>
+    
+		<div id="module">:: DV Menu ::</div>
+		<div id="module"><a href="{$base_url}9011/dv/DV_9011_Main/dv_content">Content</a> | <a href="{$base_url}9011/dv/DV_9011_Main/prizeInfo">Prize</a> | <a href="{$base_url}9011/dv/DV_9011_Main/undian">Pemenang</a></div>
+		<br />
+		<div style="font-weight: bold;">Seleksi Pemenang Block</div>
+		<div style="border-bottom:1px solid #666;" class="cititation">Seleksi pemenang on dv service.</div>
+        <div>
+        	<input type="button" name="add" value="     Daftar Pemenang Harian     " onClick="location='{$base_url}9011/dv/DV_9011_Main/undian'"/>&nbsp;&nbsp;
+            <input type="button" name="prizeInfo" value="     Seleksi Pemenang Harian     " onClick="location='{$base_url}9011/dv/DV_9011_Main/pengundian'"/>&nbsp;&nbsp;
+            <input type="button" name="add" value="     Daftar Pemenang Block     " onClick="location='{$base_url}9011/dv/DV_9011_Main/undian_block'"/>&nbsp;&nbsp;
+            <input type="button" name="prizeInfo" value="     Seleksi Pemenang Block     " onClick="location='{$base_url}9011/dv/DV_9011_Main/pengundian_block'"/>&nbsp;&nbsp;
+            {if isset($msg)}<font color="red">{$msg}</font>{/if}
+        </div>
+        <div style="margin-top:20px; margin-bottom:20px; line-height:18pt;">
+        	<input type="hidden" value="Block" name="type" id="type">
+            
+            <span>
+            	Dari : 
+                <select id="tgl_mulai" name="tgl_mulai">
+                	{foreach from=$tgl item=foo}
+                    	<option value="{$foo}">{$foo}</option>
+                    {/foreach}
+                </select>
+                -
+                <select id="bln_mulai" name="bln_mulai">
+                	{foreach from=$bln item=foo}
+                    	<option value="{$foo}">{$foo}</option>
+                    {/foreach}
+                </select>
+                -
+                <select id="thn_mulai" name="thn_mulai">
+                	{foreach from=$thn item=foo}
+                    	<option value="{$foo}">{$foo}</option>
+                    {/foreach}
+                </select>
+                &nbsp;
+                <select id="jam_mulai" name="jam_mulai">
+                	<option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option>
+                    <option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option>
+                     {foreach from=$jam item=foo}
+                    	<option value="{$foo}">{$foo}</option>
+                    {/foreach}
+                </select>
+                :
+                <select id="menit_mulai" name="menit_mulai">
+                	<option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option>
+                    <option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option>
+                     {foreach from=$menit item=foo}
+                    	<option value="{$foo}">{$foo}</option>
+                    {/foreach}
+                </select>
+                :
+                00
+                <br><br>
+                Sampai :
+                <select id="tgl_akhir" name="tgl_akhir">
+                	{foreach from=$tgl item=foo}
+                    	<option value="{$foo}">{$foo}</option>
+                    {/foreach}
+                </select>
+                -
+                <select id="bln_akhir" name="bln_akhir">
+                	{foreach from=$bln item=foo}
+                    	<option value="{$foo}">{$foo}</option>
+                    {/foreach}
+                </select>
+                -
+                <select id="thn_akhir" name="thn_akhir">
+                	{foreach from=$thn item=foo}
+                    	<option value="{$foo}">{$foo}</option>
+                    {/foreach}
+                </select>
+                &nbsp;
+                <select id="jam_akhir" name="jam_akhir">
+                	<option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option>
+                    <option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option>
+                     {foreach from=$jam item=foo}
+                    	<option value="{$foo}">{$foo}</option>
+                    {/foreach}
+                </select>
+                :
+                <select id="menit_akhir" name="menit_akhir">
+                	<option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option>
+                    <option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option>
+                     {foreach from=$menit item=foo}
+                    	<option value="{$foo}">{$foo}</option>
+                    {/foreach}
+                </select>
+                :
+                00
+            </span>
+			<br><br>
+            <span id="prize">
+            <select>
+            <option value="">Select Prize</option>
+                </select>
+            </span>
+            <br><br>
+            <button style="font-family:Verdana, Geneva, sans-serif; font-size:9pt; font-weight:normal; width:100px; height:30px;" id="btn_undi" onClick="do_undi();">   Saring   </button>
+            
+        </div>
+    </div>
+</div>
+</body>
+</html>
