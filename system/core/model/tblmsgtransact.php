@@ -352,4 +352,42 @@ class model_tblmsgtransact extends model_base {
 			return false;
 		}
 	}
+    
+    // Retry renewal
+    public function getTrxRenewalFailed($service, $rc) {
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "Start"));
+
+        //$sql = "SELECT ID,MSISDN FROM tbl_msgtransact WHERE DATE(msgtimestamp) = CURRENT_DATE AND SUBJECT LIKE '{$subject}' AND TRIM(closereason) IN ('3','3|System Error')";
+        $sql = "SELECT ID,MSISDN,SERVICE FROM xmp.tbl_msgtransact WHERE DATE(msgtimestamp) = CURRENT_DATE AND SERVICE = '" . $service . "' AND SUBJECT = 'MT;PUSH;SMS;DAILYPUSH' AND msgstatus = 'FAILED' AND closereason IN (" . $rc . ")";
+        
+        $result = $this->databaseObj->fetch($sql);
+        if (count($result) > 0) {
+            return $result;
+        } else {
+            return array();
+        }
+    }
+    
+    public function addDataRetry($data) {
+   
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "Start : " . serialize($data)));
+        
+        $sql = "INSERT INTO xmp.data_retry (id, msisdn, service, timestamp) VALUES (DEFAULT, '".$data['msisdn']."', '".$data['service']."', NOW())";
+        $this->databaseObj->set_charset();
+        $this->databaseObj->query($sql);
+        return $this->databaseObj->numRows;
+    }
+
+    public function updateOnQueue($data) {
+   
+        $log = manager_logging::getInstance();
+        $log->write(array('level' => 'debug', 'message' => "Start : " . serialize($data)));
+        
+        $sql = "UPDATE dbpush.push_buffer SET stat = 'ON_QUEUE' WHERE msisdn = '" . $data['msisdn'] . "' AND service = '" . $data['service'] . "'";
+        $this->databaseObj->set_charset();
+        $this->databaseObj->query($sql);
+        return true;
+    }
 }
