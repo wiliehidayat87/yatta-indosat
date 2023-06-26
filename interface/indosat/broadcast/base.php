@@ -280,4 +280,55 @@
 		}
 		return true;
 	}
+    
+    /**
+     * Step :
+     * 1. Confirm checking all stat = PUSHED
+     * 2. Populate System Error Or status 3 Dailypush Subject from transact table
+     * 3. Delete All Status System Error in Transact table
+     * 4. Update stat = PUSHED to stat = ON_QUEUE from msisdn system error
+    **/
+    
+    public function retryDP()
+    {
+        $now = time();
+        $check = strtotime("22:59:59");
+        
+        if($now <= $check)
+        {
+            $log_profile = 'broadcast';
+            $log = manager_logging::getInstance();
+            $log->setProfile($log_profile);
+            $log->write(array('level' => 'debug', 'message' => "Start"));
+        
+            $trx = loader_model::getInstance ()->load ( 'tblmsgtransact', 'connDatabase1' );
+            
+            $data = $trx->getTrxRenewalFailed("game", "'3','4','5','6'");
+            
+            if(count($data) > 0){
+                
+                for($i=0; $i<count($data); $i++)
+                {
+                    $id = $data[$i]['ID'];
+                    $msisdn = $data[$i]['MSISDN'];
+                    $service = $data[$i]['SERVICE'];
+                    
+                    // Delete Existing Record in Trx
+                    $trx->removeTrxRenewalFailed($id);
+                    
+                    $trx->addDataRetry(array(
+                        'msisdn' => $msisdn,
+                        'service' => $service
+                    ));
+                    
+                    // Update ON_QUEUE
+                    $trx->updateToOnQueueBuffer($msisdn, $service);
+                }
+                //echo $i;
+                return true;
+            }
+            else { return false; }
+            
+        }else return false;
+    }
 }
