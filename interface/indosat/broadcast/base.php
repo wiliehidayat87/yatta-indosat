@@ -322,7 +322,10 @@
                     ));
                     
                     // Update ON_QUEUE
-                    $trx->updateToOnQueueBuffer($msisdn, $service);
+                    $trx->updateOnQueue(array(
+                      'msisdn' => $msisdn,
+                      'service' => $service
+                    ));
                 }
                 //echo $i;
                 return true;
