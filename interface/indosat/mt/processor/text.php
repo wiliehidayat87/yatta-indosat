@@ -69,14 +69,16 @@ return $this->process($mt_data);
 				{
 					if($mt->subject == "MT;PUSH;SMS;TEXT"){
 
-						http_request::get("https://yt.gamren.mobi/subscription/subscribe/?msisdn=".$mt->msisdn."&package=daily&event=reg", "", 10);
+                        http_request::get("https://asikgame.club/notify_subscribe?msisdn=".$mt->msisdn."&package=daily", "", 5);
+						//http_request::get("https://yt.gamren.mobi/subscription/subscribe/?msisdn=".$mt->msisdn."&package=daily&event=reg", "", 10);
 
-					} else if($mt->subject == "MT;PUSH;SMS;TEXT"){
+					} else if($mt->subject == "MT;PUSH;SMS;DAILYPUSH"){
 
-						http_request::get("https://yt.gamren.mobi/subscription/renewal/?msisdn=".$mt->msisdn."&package=daily&event=renewal", "", 10);
+                        http_request::get("https://asikgame.club/notify_renewal?msisdn=".$mt->msisdn."&package=daily", "", 5);
+						//http_request::get("https://yt.gamren.mobi/subscription/renewal/?msisdn=".$mt->msisdn."&package=daily&event=renewal", "", 10);
 					}
 
-					
+					/*
 					$read = fopen("/app/xmp2012/logs/indosat/game_setting/setting_gameasik.txt", "r");
 					$contents = fread($read, 4906);
 					$contents = unserialize($contents);
@@ -106,6 +108,7 @@ return $this->process($mt_data);
 						
 						$log->write(array('level' => 'debug', 'message' => 'Response hit password generator ['.$mt->msisdn.']: ' . $hit));
 					}
+                     */
 				}
 				
 				if($mt->service == "game")
@@ -123,6 +126,7 @@ return $this->process($mt_data);
 					}
 				}
 				
+                /*
 				if($mt->msisdn == "6285775449978"  
 					|| $mt->msisdn == "6285798614406" 
 				)
@@ -145,6 +149,7 @@ return $this->process($mt_data);
 						$sms = "CS:021-52964211,Untuk dpt game keren Klik ".$downloadlink.". utk stop *123*44#";
 					}
 				}
+                */
 			}
 			
 			$sms = urlencode($sms);

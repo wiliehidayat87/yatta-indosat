@@ -115,7 +115,9 @@ class indosat_mo_processor extends default_mo_processor {
 
 			if($mo_data->flagKeyword = "UNREG" && strtoupper($servicename) == 'ASIK'){
 
-        	http_request::get("https://yt.gamren.mobi/subscription/unsubscribe/?msisdn=".$mo_data->msisdn."&event=unreg", "", 10);
+            http_request::get("https://asikgame.club/notify_unsubscribe?msisdn=".$mo_data->msisdn, "", 5);
+            
+        	//http_request::get("https://yt.gamren.mobi/subscription/unsubscribe/?msisdn=".$mo_data->msisdn."&event=unreg", "", 10);
         }
 		}
 
